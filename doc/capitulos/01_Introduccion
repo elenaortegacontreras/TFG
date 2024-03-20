@@ -1,0 +1,18 @@
+\chapter{Introducción}
+\section{Descripción y contexto}
+
+\section{Motivación}
+
+
+\section{Objetivos} \label{sect:goals}
+Siendo la meta final desarrollar una aplicación que permita llevar a cabo un análisis de gastos claro y detallado donde el usuario introduzca los datos de forma sencilla y rápida.
+Los objetivos concretos que nos planteamos son:
+
+\begin{enumerate}
+    \item Usar tecnología de reconocimiento óptico de caracteres (OCR) que permita escanear y analizar tickets de compra para añadir automáticamente los datos a la aplicación.
+    \item Integrar en la aplicación capacidades de geolocalización para una identificación del comercio en el que se ha realizado la compra y propuesta de categorización de gasto. 
+    \item Integrar en la aplicación un sistema de reconocimiento de voz que permita al usuario introducir los datos de forma rápida y sencilla?????????
+    \item Permitir al usuario introducir los datos de forma manual en caso de que no quiera o no pueda usar las otras dos opciones.
+    \item Permitir al usuario consultar los datos almacenados y realizar búsquedas y filtrados de los mismos.
+    \item Generar gráficos y resúmenes de forma automática que permitan analizar los patrones de gasto y ayudar al usuario a realizar un seguimiento sencillo de los mismos.
+\end{enumerate}
