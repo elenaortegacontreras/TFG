@@ -5,14 +5,29 @@
 
 
 \section{Objetivos} \label{sect:goals}
-Siendo la meta final desarrollar una aplicación que permita llevar a cabo un análisis de gastos claro y detallado donde el usuario introduzca los datos de forma sencilla y rápida.
-Los objetivos concretos que nos planteamos son:
+\subsection{Objetivo general}
+Desarrollar una aplicación móvil?, que usando tecnologías de reconocimiento
+óptico de caracteres (OCR) y geolocalización, permita llevar a cabo un 
+análisis de gastos detallado y facilite al usuario una gestión eficiente de su dinero
+a través de un monedero virtual, introduciendo los datos de 
+forma sencilla.
 
+\subsection{Subobjetivos}
 \begin{enumerate}
-    \item Usar tecnología de reconocimiento óptico de caracteres (OCR) que permita escanear y analizar tickets de compra para añadir automáticamente los datos a la aplicación.
-    \item Integrar en la aplicación capacidades de geolocalización para una identificación del comercio en el que se ha realizado la compra y propuesta de categorización de gasto. 
-    \item Integrar en la aplicación un sistema de reconocimiento de voz que permita al usuario introducir los datos de forma rápida y sencilla?????????
-    \item Permitir al usuario introducir los datos de forma manual en caso de que no quiera o no pueda usar las otras dos opciones.
-    \item Permitir al usuario consultar los datos almacenados y realizar búsquedas y filtrados de los mismos.
-    \item Generar gráficos y resúmenes de forma automática que permitan analizar los patrones de gasto y ayudar al usuario a realizar un seguimiento sencillo de los mismos.
+    \item Diseñar e implementar la interfaz de usuario de la aplicación facilitando
+        la gestión personalizada del dinero.
+    \item Integrar tecnología de reconocimiento óptico de caracteres (OCR) que 
+        permita escanear y analizar tickets de compra para añadir automáticamente 
+        los datos a la aplicación.
+    \item ??? Desarrollar una funcionalidad que permita al usuario introducir los datos 
+        de forma manual, como alternativa a la opción de escaneo.
+    \item Integrar en la aplicación capacidades de geolocalización para una 
+        identificación del comercio en el que se ha realizado la compra y 
+         propuesta de categorización del tipo de gasto.     
+    \item Implementar herramientas de visualización de datos con gráficos y resúmenes 
+        automatizados que permitan analizar los patrones de gasto y ayudar al usuario 
+        a realizar un seguimiento claro de los mismos.
+    \item Implementar medidas de seguridad para proteger los datos personales y 
+        financieros de los usuarios.
+    
 \end{enumerate}
