@@ -6,7 +6,7 @@
 
 \section{Objetivos} \label{sect:goals}
 \subsection{Objetivo general}
-Desarrollar una aplicación móvil?, que usando tecnologías de reconocimiento
+Desarrollar una aplicación móvil, que usando tecnologías de reconocimiento
 óptico de caracteres (OCR) y geolocalización, permita llevar a cabo un 
 análisis de gastos detallado y facilite al usuario una gestión eficiente de su dinero
 a través de un monedero virtual, introduciendo los datos de 

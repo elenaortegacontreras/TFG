@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1711890806.18035 "c:/Users/ele30/Documents/TFG/TFG/doc/proyecto.tex" "proyecto.pdf" "proyecto" 1711890807.8926 2
+["pdflatex"] 1711894935.60991 "c:/Users/ele30/Documents/TFG/TFG/doc/proyecto.tex" "proyecto.pdf" "proyecto" 1711894937.46106 2
   "C:/Users/ele30/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1711736255 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
   "C:/Users/ele30/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1710876060 24236047 48fe210a201f50b098dad3d13577b466 ""
   "C:/Users/ele30/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmbx10.tfm" 1136765053 1328 c834bbb027764024c09d3d2bf908b5f0 ""
@@ -94,15 +94,15 @@
   "C:/Users/ele30/AppData/Local/Programs/MiKTeX/tex/latex/tools/verbatim.sty" 1700599895 7500 db31c3d04f8bc9010e47a5efbbace9ff ""
   "C:/Users/ele30/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "c:/Users/ele30/Documents/TFG/TFG/doc/proyecto.tex" 1710925495 5389 f9bd8bbfd0034c5a555ba95cd1a500e3 ""
-  "capitulos/01_Introduccion" 1711890799 1626 b53439b3aefc37c3141c412615901f1a ""
+  "capitulos/01_Introduccion" 1711894931 1625 6558329d7bf1c4526e008b475f0e8584 ""
   "imagenes/etsiit_logo.png" 1710437703 15686 96fbb972320ee192b868b64d57775747 ""
   "imagenes/logo.png" 1710437703 1777 295250e5d133385e1e48c10cf4ff6255 ""
   "imagenes/logo_ugr.jpg" 1710437703 85532 25866cc28cc667a1cdd972180571e7be ""
   "portada/portada.tex" 1710925068 1043 5d41f778390edf5ae31ad82ac23aabda ""
   "portada/portada_2.tex" 1710437703 1222 adad9c7e9cdff8bb7e4889da82b17ee4 ""
   "prefacios/prefacio.tex" 1710437703 2600 ffe1c63353aeca8f90722bbf883253cc ""
-  "proyecto.aux" 1711890807 1172 ff06abc0f98c3d550e7c4617d63768d6 "pdflatex"
-  "proyecto.out" 1711890807 750 cd5c7f2848201d251975af1d721eacd7 "pdflatex"
+  "proyecto.aux" 1711894937 1172 ff06abc0f98c3d550e7c4617d63768d6 "pdflatex"
+  "proyecto.out" 1711894937 750 cd5c7f2848201d251975af1d721eacd7 "pdflatex"
   "proyecto.tex" 1710925495 5389 f9bd8bbfd0034c5a555ba95cd1a500e3 ""
   (generated)
   "proyecto.aux"
