@@ -1,7 +1,33 @@
 \chapter{Introducción}
-\section{Descripción y contexto}
+\section{Descripción y contexto} / \section{Descripción del problema}
+
+Según su definición en la RAE la economía es la https://dle.rae.es/econom%C3%ADa:
+"Administración eficaz y razonable de los bienes", dicho esto y teniendo en 
+cuenta que nos concierne a todos, es crucial tener control sobre ella. 
+
+En una época en la todo está muy caro, pero a la vez el consumo parece estar 
+desvocado, es importante consumir de manera responsable nuestro dinero. Esto 
+implica planificación y control sobre cómo y dónde lo gastamos.
+
+Sin embargo, no es fácil hacer el seguimiento de nuestras finanzas. Podemos tener 
+varias fuentes de ingresos y/o gastos, por lo que resulta tedioso 
+llevar las cuentas al día para analizar adecuadamente nuestro consumo. 
+
+En el ámbito de la economía personal, la digitalización ha supuesto (entre 
+otros) la creación de aplicaciones que nos ayudan a gestionar nuestros 
+gastos, ahorros, inversiones, etc.
+
+La transición hacia lo digital está cambiando nuestra forma de interactuar con 
+la información, nos permite acceso frecuente, práctico y sencillo a ella.
+Al agrupar todo en un solo dispositivo que consultamos en cualquier momento o 
+lugar podemos olvidarnos de ordenar y almacenar cientos de papeles.
 
 \section{Motivación}
+La motivación para la realización de este proyecto surge de la necesidad de 
+tener un control más exhaustivo de los gastos y ahorros que a la vez nos brinde 
+la comodidad de tener todo en un solo lugar y sea sencillo de usar.
+
+------------------ COMPLETAR ------------------
 
 
 \section{Objetivos} \label{sect:goals}
