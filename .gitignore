@@ -301,6 +301,7 @@ typings/
 
 #vscode file
 .vscode/*
+.workspace
 
 #vagrant stuff
 
