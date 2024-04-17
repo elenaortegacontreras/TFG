@@ -1,11 +1,11 @@
 \chapter{Estado del arte}
 \section{Crítica al estado del arte}
 
-\section{Análisis de las posibles soluciones al problema propuesto}
+\section{Análisis de soluciones actualmente disponibles al problema planteado}
 En la búsqueda de soluciones al problema encontramos varias alternativas. A parte 
 de la propia gestión manual, ya sea por la vía tradicional \textit{usando \textbf{papel} y boli} , 
-o bien algo más automatizado? como el uso de \textbf{hojas de cálculo}, existen aplicaciones 
-que nos facilitan esa tarea e incorporan resúmenes detallados. 
+o bien algo más estructurado como el uso de \textbf{hojas de cálculo}, existen aplicaciones 
+que nos facilitan esta tarea e incorporan resúmenes detallados. 
 
 1. En la actualidad la mayoría de \textbf{aplicaciones bancarias} incorporan análisis de gastos. 
 Aunque nos permiten ver un resumen mensual de los gastos o incluso por categorías, en 
@@ -14,154 +14,137 @@ de manera automática los céntimos de euro que sobran al redondear cada compra 
 de ahorro virtual, o apartar una cantidad al final del mes. En este caso, nos centraremos 
 en el ahorro guiado por la planificación, anticipación y previsión de gastos.
 
-???????????????????
-¿Cómo indico que he preguntado a clientes potenciales para la app?
-?????????????????
-
 Primero analizamos las características más interesantes (en relación al proyecto) 
-de las aplicaciones de los primeros en la lista 
-de bancos españoles más grandes https://es.wikipedia.org/wiki/Anexo:Bancos_de_Espa%C3%B1a :
+de las aplicaciones de los primeros bancos españoles más grandes según 
+este\cite{este} artículo en wikipedia:
 
-- \textbf{CaixaBank} En la aplicación de \textbf{ImaginBank}, con el servicio MyMonz https://www.imagin.com/app/mymonz 
-se recibe un informe mensual de gastos e ingresos que podemos ver por categorías. 
-En cuanto a los planes de ahorro, con Mi Hucha podemos crear retos (máximo 5 huchas diferentes) 
-https://www.imagin.com/ahorro/retos-ahorro 
-con aportaciones periódicas mes a mes o puntuales, pero de forma global.
-No aparece la opción de establecer un plan de consumo por categoría del gasto, 
-con el que nos adelantemos y seamos conscientes en cada pago del cumplimiento 
-de nuestros objetivos. 
+-----------
+¿Cómo indico que he preguntado a clientes potenciales para la app? para 
+conocer las aplicaciones que usan
+-----------
 
-- \textbf{Banco Santander}
-https://www.bancosantander.es/particulares/banca-online/apps/santander
-La aplicación de este banco tiene una zona de "Análisis de gastos", que nos crea 
-informes similares a los de ImaginBank. 
-Por otro lado, ésta sí nos permite establecer un 
-presupuesto por categorías que podemos revisar eventualmente para guiarnos en el 
-cumplimiento de nuestro objetivo y recibir alertas al acercarnos al límite.
 
-- \textbf{BBVA}
-Esta última parece ser la más completa en cuanto a opciones de ahorro y análisis de gastos.
+\begin{itemize}
 
-Con "Mi día a día" https://www.bbva.es/personas/banca-online/control-gastos-mi-dia-a-dia.html 
-obtenemos, al igual que en el resto de aplicaciones, el resumen con los movimientos de la cuenta.
-Respecto a los métodos para ahorrar existe una cuenta gratuita denominada 
-cuenta metas https://www.bbva.es/personas/productos/cuentas/cuenta-ahorro-metas.html#establece-tus-datos-de-contacto-y-acceso 
-en la que apartar dinero a modo de hucha para conseguir hasta un máximo de 5 objetivos. 
+    \item \textbf{CaixaBank} 
+    En la aplicación ImaginBank, con el servicio \textit{MyMonz\cite{MyMonz}}
+    se recibe un informe mensual de gastos e ingresos que podemos ver por categorías. 
 
-El apartado presupuestos https://www.bbva.es/general/salud-financiera/economia-domestica/gestor-de-gastos-y-presupuestos.html 
-es el lugar donde definir una cantidad máxima de gasto deseada 
-al mes y por categoría, mide con códigos de colores la evolución del consumo 
-respecto al presupuesto.
-Encontramos también Apartados https://www.bbva.es/finanzas-vistazo/tu-guia-bbva/app/apartados-una-nueva-forma-de-ahorrar.html#:~:text=Apartados%2C%20de%20BBVA%2C%20es%20un,manera%20m%C3%A1s%20c%C3%B3moda%20y%20eficiente. 
-donde el objetivo es el mismo que en presupuestos, con la diferencia de 
-que es un espacio para separar visualmente tu dinero según tus necesidades,
-apartando la cantidad que quieras para cada tipo de gasto.
+    En cuanto a los planes de ahorro, en el apartado \textit{Mi Hucha} podemos crear retos\cite{retos} (máximo 5 huchas diferentes)
+    con aportaciones periódicas mes a mes o puntuales, pero de forma global.
+    A diferencia de otras aplicaciones similares, no aparece la opción de establecer un plan de 
+    consumo por categoría del gasto que nos ayude a planificarnos.
 
-2. Además, los gastos y configuración que se hacen en la aplicación que ofrece 
-el banco, generalmente no se pueden exportar a otras aplicaciones,
-por lo que si se quiere cambiar de banco, se pierde toda la información, 
-y con ella los planes de ahorro.
+    \item \textbf{Banco Santander}
+    La aplicación del Banco Santander\cite{Santander} tiene una zona de \textit{Análisis de gastos}, que nos crea 
+    informes similares a los de ImaginBank. 
 
-3. Por otro lado, existen aplicaciones de terceros que permiten unificar los gastos 
+    Por otro lado, ésta sí nos permite establecer un 
+    presupuesto por categorías que podemos revisar eventualmente para guiarnos en el 
+    cumplimiento de nuestro objetivo y recibir alertas al acercarnos al límite.
+
+    \item \textbf{BBVA}
+    Esta última parece ser la más completa en cuanto a opciones de ahorro y análisis de gastos.
+
+    Con \textit{Mi día\cite{día} a día}  
+    obtenemos, al igual que en el resto de aplicaciones, el resumen con los movimientos de la cuenta.
+    Respecto a los métodos para ahorrar existe una cuenta gratuita denominada 
+    cuenta metas\cite{metas} 
+    en la que apartar dinero a modo de hucha para conseguir hasta un máximo de 5 objetivos. 
+
+    El apartado Presupuestos\cite{Presupuestos} 
+    es el lugar donde definir una cantidad máxima de gasto deseada 
+    al mes y por categoría, mide con códigos de colores la evolución del consumo 
+    respecto al presupuesto.
+
+    Encontramos también Apartados\cite{Apartados} 
+    donde el objetivo es el mismo que en presupuestos, con la diferencia de 
+    que es un espacio para separar visualmente tu dinero según tus necesidades,
+    apartando la cantidad que quieras para cada tipo de gasto.
+
+\end{itemize}
+
+
+2- A pesar de que se están incluyendo opciones para importar los 
+datos de movimientos en la cuenta, las configuraciones que se hacen dentro de la aplicación 
+que ofrece el banco generalmente no se pueden exportar a otras aplicaciones.
+Si se quiere cambiar de banco se pierde toda la información 
+y con ella los planes de ahorro o presupuestos personalizados.
+
+3. Por otro lado, existen \textbf{aplicaciones de terceros} que permiten unificar los gastos 
 independientemente del banco al que pertenezca el usuario. Entre las más conocidas 
 encontramos:
----------- cosas que investigar de cada una de las aplicaciones ----------
-- coste 
-- cómo se introducen los datos
-- necesita credenciales de acceso al banco?
-- hace analisis?
-- exportación de datos??
-- permite hacer objetivos por categorías?
 
---> 1a web caracteristicas destacables: https://n26.com/es-es/blog/9-apps-para-controlar-tus-gastos 
---> 2da web: https://www.20minutos.es/tecnologia/aplicaciones/8-apps-para-gestionar-tu-economia-y-ahorrar-a-final-de-mes-4939558/ 
---> 3a web: https://www.bbva.com/es/salud-financiera/las-10-apps-para-gestionar-y-compartir-tus-gastos/ 
---> 2da web: https://www.ionos.es/digitalguide/online-marketing/vender-en-internet/las-mejores-apps-para-controlar-tus-gastos/ 
+\begin{itemize}
+    \item \textbf{Fintonic} https://www.fintonic.com/es-ES/inicio/ \\
+    El usuario agrega las cuentas bancarias que desee para que la aplicación 
+    acceda a los datos relacionados con los movimientos de la cuenta. 
+    Un aspecto que puede causar cierta reticencia es que para ello Fintonic necesita
+    las claves de acceso a la cuenta bancaria (aunque sean de solo lectura).
+    Tiene una interfaz intuitiva, y recoge, clasifica y analiza los gastos.
+    Introduce los datos de manera automática por medio de las claves proporcionadas. 
+    Gratuito, con publicidad.
 
-\textbf{Fintonic} https://www.fintonic.com/es-ES/inicio/ 
-Un aspecto que puede causar reticencia a usar la aplicación es que necesita 
-las claves de acceso a la cuenta bancaria (aunque sean de solo lectura) 
-para acceder a los datos relacionados con los movimientos de la cuenta.
-Tiene una interfaz intuitiva, y recoge, clasifica y analiza los gastos.
+    \item \textbf{Money Manager}  https://moneymanagerapp.com/ \\
+    Solo se encuentra disponible en inglés. Ofrece una gran cantidad de opciones
+    para analizar gastos e incluye la opción de añadir fotos a las transacciones. 
+    Se deben introducir los datos manualmente. 
+    Dispone de una versión gratuita con funciones básicas.
 
+    \item \textbf{Bluecoins} https://www.bluecoinsapp.com/ \\
+    Plantea una estructura interesante para mayor detalle de presupuestos. 
+    Se pueden configurar presupuestos por categorías y subcategorías relacionadas, por ejemplo 
+    los gastos del coche, se pueden separar en gasolina, seguro, mantenimiento, etc. 
+    Permite añadir gastos manualmente o importarlos desde un archivo csv. 
+    Ofrece versión gratuita con anuncios.
 
-\textbf{Money Manager}  https://moneymanagerapp.com/
-Se deben introducir los datos manualmente, aunque también se pueden importar
-Solo se encuentra disponible en inglés. Ofrece una gran cantidad de opciones
-para analizar gastos e incluye la opción de añadir fotos a las transacciones.
+    \item \textbf{Money Hero} https://moneyhero.site/es  \\
+    Dispone de objetivos de ahorro e indica el progreso y recomendaciones 
+    diarias hasta alcanzarlo. 
+    En base al ritmo de consumo estima hasta cuándo dispondremos 
+    de dinero suficiente, como guía para gastarlo de manera responsable. 
+    El usuario debe introducir todos los ingresos y gastos a mano. 
+    Dispone de versión gratuita con algunas limitaciones y anuncios.
+\end{itemize}
 
-\textbf{Moneyfy} 
+\section{Propuesta}
+Se plantea la creación de una aplicación móvil (con desarrollo multiplataforma) 
+para mejorar la salud financiera de los usuarios. 
 
-\textbf{Wallet} 
-
-\textbf{1Money} 
-Muy completa, pero solo disponible para android.
-
-
-\textbf{Money Hero} https://moneyhero.site/es  
-
-
-siguiente tarea:
-AHORA ANALIZAR PARA CADA OPCIÓN LAS APLICACIONES MÁS DESTACABLLES E INCONVENIENTES.
-
-
-\textbf{Solución planteada / LO QUE VA A BUSCAR MI APP:}
-Para guiarme en lo que quiero que tenga y por qué:
-https://www.bbva.es/finanzas-vistazo/ef/ahorro/como-hacer-para-ahorrar-dinero-y-no-gastarlo.html
-
-Ninguna de las opciones invetigadas previamente incluye todos las funcionalidades 
-que se proponen como requisitos en este proyecto, por lo que se plantea la creación
-de una aplicación que englobe todas ellas.
-
-opción de establecer un plan de consumo por categoría del gasto, con el que nos adelantemos y 
-seamos conscientes en cada pago del cumplimiento de nuestros objetivos.a
-
-Proponiendo las siguientes soluciones a cada uno de los problemas descritos:
-
-Siendo la meta mejorar la salud financiera de los usuarios, se plantea una aplicación que:
-
-Respondiendo a cada inconveniente antes descrito se plantea una aplicación que 
-agrupe las siguientes soluciones / características?:
+Resolviendo algunos de los problemas descritos en el apartado anterior, 
+se pretende que reúna funcionalidades específicas para la 
+gestión de gastos, las cuales reúnen:
+\begin{itemize}
+\item incorportación sencilla de gastos e ingresos
+\item creación de planes de ahorro y presupuestos personalizables
+\item generación de análisis y resúmenes automáticos sobre el consumo
+\end{itemize}
 
 
-1 --> ADAPTABILIDAD Y PERSONALIZACIÓN: 
-- Lo de establecer planes de ahorro por categoría decir que lo hace
-Adaptándose así a las necesidades de cada usuario.
+Características:
 
-2 -3 --> UNICIDAD / UNIFICACIÓN?
+INTEGRACIÓN DE DATOS:
 Con objetivo de solucionar la pérdida de la información al cambiar de banco, 
-se propone optar' por una \textbf{aplicación externa al banco}. Para la unificación de gastos 
-con tarjeta, pagos en efectivo, transferencias y demás operaciones, la 
-aplicación propuesta permitirá añadir gastos de forma manual, y mediante 
-escaneo de tickets. 
+se propone optar por una \textbf{aplicación externa al banco}. 
+Para integrar los datos que se deseen ya sea con tarjeta, pagos en efectivo, transferencias 
+y demás operaciones, la aplicación propuesta permitirá añadir gastos de forma manual 
+y mediante escaneo de tickets. 
 
+ACCESIBILIDAD Y FACILIDAD DE USO:
+Se diseñará para ser usada por parte de usuarios de todas las edades?.
 
+PERSONALIZACIÓN: 
+Permitirá crear planes de ahorro / consumo ? por categoría del gasto, con el que nos adelantemos y 
+seamos conscientes en cada pago del cumplimiento de nuestros objetivos.
 
-4 --> AUTOENGAÑO
-Monedero virtual que almacena parte de los ingresos.
-
-
-\textbf{ANÁLISIS DE LAS APLICACIONES ACTUALES}
-\textbf{Aplicaciones en el mercado que resuelven el problema}
-Entre las aplicaciones más conocidas para la gestión de gastos se encuentran:
-PLEO, REVOLUT, N26, Bnext, Fintonic, Money Pro, Spendee, Wallet, Money Manager, Money Lover, etc.
-
-\textbf{Pleo} De pago. Prueba gratuita.
-
-\textbf{Revolut} De pago. Prueba gratuita.
-
-\textbf{Fintonic} Gratuita. 
-
-\textbf{Problemas de las aplicaciones actuales}
+AUTOMATIZACIÓN:
+Generación de análisis y resúmenes automáticos sobre el consumo.
 
 
 
 
 
-
-
-\textbf{ELECCIÓN DE HERRAMIENTAS PARA EL DESARROLLO}
-\textbf{Tecnología para el desarrollo de la aplicación}
+\section{Elección de herramientas para el desarrollo de la aplicación}
 Para desarrollar una aplicación multiplataforma, se pueden usar tecnologías como Flutter, React Native, Xamarin, etc.
 https://flutter.dev/ :"Flutter es un marco de código abierto de Google para crear aplicaciones multiplataforma (móviles, 
 web, de escritorio) de forma nativa a partir de una única base de código".
@@ -180,6 +163,4 @@ Hay librerías en python para usar OCR:
 - keras-OCR
 - trOCR
 - docTR
-
-\section{Propuesta}
 
