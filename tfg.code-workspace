@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"sqltools.connections": [
+			{
+				"name": "DuckDB",
+				"accessMode": "Read Only",
+				"previewLimit": 50,
+				"driver": "DuckDB",
+				"databaseFilePath": "./metrics.db"
+			}
+		],
+		"sqltools.useNodeRuntime": true
+	}
+}
