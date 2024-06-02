@@ -4,6 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 SQLALCHEMY_DATABASE_URL = (
     f'postgresql://postgres:Bright#1270@postgres-db:5432/dockert')
+# f'postgresql://user:password@hostname:port/database')
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 
