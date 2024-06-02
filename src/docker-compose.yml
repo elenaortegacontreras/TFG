@@ -12,10 +12,10 @@ services:
   db:
     image: postgres:12
     container_name: postgres-db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Bright#1270
-      POSTGRES_DB: dockert
+    env_file:
+     - ./backend/app/db/.env
     restart: always
     ports:
       - "5432:5432"
+
+  

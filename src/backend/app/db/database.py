@@ -1,10 +1,18 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+import os
+from dotenv import load_dotenv
 
-SQLALCHEMY_DATABASE_URL = (
-    f'postgresql://postgres:Bright#1270@postgres-db:5432/dockert')
-# f'postgresql://user:password@hostname:port/database')
+load_dotenv()  # take environment variables from .env.
+
+user = os.getenv("POSTGRES_USER")
+password = os.getenv("POSTGRES_PASSWORD")
+hostname = os.getenv("POSTGRES_HOST")
+port = os.getenv("POSTGRES_PORT")
+database = os.getenv("POSTGRES_DB")
+
+SQLALCHEMY_DATABASE_URL = f"postgresql://{user}:{password}@{hostname}:{port}/{database}"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 
