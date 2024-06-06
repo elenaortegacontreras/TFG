@@ -1,11 +1,12 @@
 from pydantic import BaseModel
 
 class UserBase(BaseModel):
-    name: str
     email: str
-    phone: str = None
+    phone: str
     email: str
     password: str
+    first_name: str
+    last_name: str = None
 
     class Config:
         orm_mode = True
