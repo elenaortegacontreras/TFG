@@ -1,7 +1,9 @@
 version: '3s'
+name: app
 
 services:
-  fastapi:
+  api:
+    container_name: fastapi
     command: uvicorn app.main:app --host 0.0.0.0 --port 80 --reload
     build: ./backend
     depends_on:
@@ -17,5 +19,8 @@ services:
     restart: always
     ports:
       - "5432:5432"
+    volumes:
+      - postgres-db-data:/var/lib/postgresql/data
 
-  
+volumes:
+  postgres-db-data:
