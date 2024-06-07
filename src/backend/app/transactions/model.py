@@ -7,6 +7,7 @@ class Transaction(Base):
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     category_id = Column(Integer, ForeignKey('categories.id'))
+    name = Column(String, nullable=False)
     amount = Column(DECIMAL(15,2), nullable=False)
     transaction_type = Column(String, nullable=False) # expense or income
     description = Column(String)
