@@ -2,7 +2,7 @@ from app.db.database import Base
 from sqlalchemy import Column, Integer, String, ForeignKey, DECIMAL, Date, TIMESTAMP
 
 class Saving(Base):
-    __tablename__ = 'saving'
+    __tablename__ = 'savings'
 
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'))
