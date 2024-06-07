@@ -1,5 +1,6 @@
 from app.db.database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, DECIMAL, Date, TIMESTAMP
+from datetime import datetime
+from sqlalchemy import Column, Integer, String, ForeignKey, DECIMAL, TIMESTAMP
 
 class Transaction(Base):
     __tablename__ = 'transaction'
@@ -11,4 +12,4 @@ class Transaction(Base):
     amount = Column(DECIMAL(15,2), nullable=False)
     transaction_type = Column(String, nullable=False) # expense or income
     description = Column(String)
-    insert_date = Column(TIMESTAMP, default=datetime.datetime.utcnow)
+    insert_date = Column(TIMESTAMP, default=datetime.utcnow)
