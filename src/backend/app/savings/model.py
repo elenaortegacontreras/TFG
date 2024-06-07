@@ -1,5 +1,6 @@
 from app.db.database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, DECIMAL, Date, TIMESTAMP
+from datetime import datetime
+from sqlalchemy import Column, Integer, String, ForeignKey, DECIMAL, TIMESTAMP, Date
 
 class Saving(Base):
     __tablename__ = 'savings'
@@ -11,5 +12,5 @@ class Saving(Base):
     description = Column(String)
     target_amount = Column(DECIMAL(15,2), nullable=False)
     current_amount = Column(DECIMAL(15,2), default=0.00)
-    insert_date = Column(TIMESTAMP, default=datetime.datetime.utcnow)
+    insert_date = Column(TIMESTAMP, default=datetime.utcnow)
     target_date = Column(Date)
