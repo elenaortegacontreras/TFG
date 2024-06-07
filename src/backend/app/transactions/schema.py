@@ -3,6 +3,7 @@ from pydantic import BaseModel
 class TransactionBase(BaseModel):
     user_id: int
     category_id: int
+    subcategory_id: int
     name: str
     amount: float
     transaction_type: str
