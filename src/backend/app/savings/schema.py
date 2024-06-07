@@ -3,6 +3,7 @@ from pydantic import BaseModel
 class SavingBase(BaseModel):
     user_id: int
     category_id: int
+    subcategory_id: int
     name: str
     description: str = None
     target_amount: float
