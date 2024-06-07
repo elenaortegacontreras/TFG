@@ -3,6 +3,7 @@ from pydantic import BaseModel
 class BudgetBase(BaseModel):
     user_id: int
     category_id: int
+    subcategory_id: int
     amount: float
 
     class Config:

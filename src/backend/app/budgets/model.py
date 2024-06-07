@@ -7,4 +7,5 @@ class Budget(Base): # monthly budget
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     category_id = Column(Integer, ForeignKey('categories.id'))
+    subcategory_id = Column(Integer, ForeignKey('subcategories.id'))
     amount = Column(DECIMAL(15,2), nullable=False)
