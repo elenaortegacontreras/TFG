@@ -1,6 +1,6 @@
 from fastapi import FastAPI, status, Depends
 from sqlalchemy.orm import Session
-from app.db.database import engine, get_db
+from app.db.database import engine, get_db, Base
 from typing import List
 
 from app.users import model as user_model
@@ -31,22 +31,12 @@ from app.shops import model as shop_model
 from app.shops.model import Shop
 from app.shops.schema import ShopRequest, ShopResponse
 
-Shop.__table__.drop(bind=engine, checkfirst=True)
-Transaction.__table__.drop(bind=engine, checkfirst=True)
-Budget.__table__.drop(bind=engine, checkfirst=True)
-Goal.__table__.drop(bind=engine, checkfirst=True)
-User.__table__.drop(bind=engine, checkfirst=True)
-Subcategory.__table__.drop(bind=engine, checkfirst=True)
-Category.__table__.drop(bind=engine, checkfirst=True)
+# Shop.__table__.drop(bind=engine, checkfirst=True)
 
-user_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
-category_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
-subcategory_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
-goal_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
-budget_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
-transaction_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
-shop_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
+# Base.metadata.drop_all(bind=engine, checkfirst=True) # Borrar la tabla en la base de datos
+Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
 
+# user_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
 
 app = FastAPI()
 
