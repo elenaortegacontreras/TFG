@@ -1,0 +1,146 @@
+# Get all Users
+GET http://localhost:8000/users
+Content-Type: application/json
+
+### Crear usuarios de prueba
+POST http://localhost:8000/users
+Content-Type: application/json
+
+{
+    "phone": "123456789",
+    "email": "user1@example.com",
+    "password": "password1",
+    "first_name": "Laura",
+    "last_name": "García"
+}
+
+###
+POST http://localhost:8000/users
+Content-Type: application/json
+
+{
+    "phone": "987654321",
+    "email": "user2@example.com",
+    "password": "password2",
+    "first_name": "Pedro",
+    "last_name": "Pérez"
+}
+
+### Crear categorías de gastos de prueba
+POST http://localhost:8000/categories
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "name": "Transporte"
+}
+
+###
+POST http://localhost:8000/categories
+Content-Type: application/json
+
+{
+    "user_id": 2,
+    "name": "Alimentación"
+}
+
+### Crear categorías de ahorros de prueba
+POST http://localhost:8000/categories
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "name": "General"
+}
+
+###
+POST http://localhost:8000/categories
+Content-Type: application/json
+
+{
+    "user_id": 2,
+    "name": "Viaje"
+}
+
+### 
+GET http://localhost:8000/categories
+
+### Crear subcategorías de prueba
+POST http://localhost:8000/subcategories
+Content-Type: application/json
+
+{
+    "name": "Gasolina",
+    "category_id": 1
+}
+
+###
+POST http://localhost:8000/subcategories
+Content-Type: application/json
+
+{
+    "name": "Metro",
+    "category_id": 1
+}
+
+###
+POST http://localhost:8000/subcategories
+Content-Type: application/json
+
+{
+    "name": "Carne",
+    "category_id": 2
+}
+
+###
+GET http://localhost:8000/subcategories
+
+### Crear presupuestos de prueba
+POST http://localhost:8000/budgets
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "category_id": 1,
+    "amount": 100.0
+}
+
+###
+POST http://localhost:8000/budgets
+Content-Type: application/json
+
+{
+    "user_id": 2,
+    "category_id": 2,
+    "amount": 200.0
+}
+
+###
+GET http://localhost:8000/budgets
+
+### Crear objetivos de ahorro de prueba ME QUEDO POR AQUÍ
+POST http://localhost:8000/goals
+Content-Type: application/json
+
+{
+    "name": "Viaje",
+    "user_id": 2,
+    "category_id": 4,
+    "target_amount": 160.0,
+    "target_date": "2024-12-31"
+}
+
+###
+POST http://localhost:8000/goals
+Content-Type: application/json
+
+{
+    "name": "General",
+    "user_id": 1,
+    "category_id": 3,
+    "target_amount": 500.0,
+    "target_date": "2024-07-31"
+}
+
+###
+GET http://localhost:8000/goals
