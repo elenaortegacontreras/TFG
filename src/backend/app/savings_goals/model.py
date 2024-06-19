@@ -1,6 +1,5 @@
 from app.db.database import Base
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, ForeignKey, DECIMAL, TIMESTAMP, Date
+from sqlalchemy import Column, Integer, String, ForeignKey, DECIMAL, Date, func
 from sqlalchemy.orm import relationship
 
 class Goal(Base):
@@ -10,11 +9,11 @@ class Goal(Base):
     user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     category_id = Column(Integer, ForeignKey('categories.id', ondelete='CASCADE'), nullable=False)
     name = Column(String, nullable=False)
-    description = Column(String)
+    description = Column(String, default="")
     target_amount = Column(DECIMAL(15,2), nullable=False)
     current_amount = Column(DECIMAL(15,2), default=0.00)
-    insert_date = Column(TIMESTAMP, default=datetime.utcnow)
-    target_date = Column(Date)
+    insert_date = Column(Date, default=func.current_date(), nullable=False)
+    target_date = Column(Date, nullable=False)
 
     user = relationship('User', back_populates='savings_goals')
     category = relationship('Category', back_populates='savings_goals')
