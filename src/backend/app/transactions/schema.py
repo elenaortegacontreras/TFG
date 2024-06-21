@@ -2,12 +2,14 @@ from pydantic import BaseModel
 
 class TransactionBase(BaseModel):
     user_id: int
-    category_id: int
-    subcategory_id: int
+    category_id: int = 0
+    subcategory_id: int = 0
     name: str
     amount: float
-    transaction_type: str
-    description: str = None
+    transaction_type: str = "" # 'Expense', 'Income' or 'Saving'
+    description: str
+    shop_id: int = None
+    payment_method: str = ""
 
     class Config:
         orm_mode = True

@@ -3,7 +3,6 @@ from datetime import date, datetime
 
 class GoalBase(BaseModel):
     user_id: int
-    category_id: int
     name: str
     description: str = ""
     target_amount: float
