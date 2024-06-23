@@ -15,7 +15,7 @@ services:
     image: postgres:12
     container_name: postgres-db
     env_file:
-     - ./backend/app/db/.env
+     - ./backend/app/core/models/.env
     restart: always
     ports:
       - "5432:5432"
