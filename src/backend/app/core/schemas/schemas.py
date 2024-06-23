@@ -31,7 +31,7 @@ class GoalBase(BaseModel):
     description: Optional[str] = None
     target_amount: float
     current_amount_saved: float = 0.00
-    target_date: str
+    target_date: date
 
     class Config:
         orm_mode = True
@@ -42,23 +42,23 @@ class GoalRequest(GoalBase):
 
 class GoalResponse(GoalBase):
     id: int
-    insert_date: str
+    insert_date: date
 
     class Config:
         orm_mode = True
 
-    @root_validator(pre=True)
-    def convert_dates_to_str(cls, values):
-        target_date = values.target_date
-        insert_date = values.insert_date
+    # @root_validator(pre=True)
+    # def convert_dates_to_str(cls, values):
+    #     target_date = values.target_date
+    #     insert_date = values.insert_date
 
-        if isinstance(target_date, date):
-            values.target_date = target_date.isoformat()
+    #     if isinstance(target_date, date):
+    #         values.target_date = target_date.isoformat()
         
-        if isinstance(insert_date, (datetime, date)):
-            values.insert_date = insert_date.isoformat()
+    #     if isinstance(insert_date, (datetime, date)):
+    #         values.insert_date = insert_date.isoformat()
         
-        return values
+    #     return values
     
 # Category schema -----------------------------------------------------------------
 class CategoryBase(BaseModel):
@@ -116,6 +116,17 @@ class TransactionBase(BaseModel):
         orm_mode = True
         
 class TransactionRequest(TransactionBase):
+    @root_validator(pre=True)
+    def check_transaction_type(cls, values):
+        transaction_type = values.get('transaction_type')
+        if transaction_type == 'Expense':
+            assert 'category_id' in values, 'category_id is required for Expense transactions'
+            assert 'subcategory_id' in values, 'subcategory_id is required for Expense transactions'
+            # assert 'shop_id' in values, 'shop_id is required for Expense transactions'
+        elif transaction_type == 'Saving':
+            assert 'saving_goal_id' in values, 'saving_goal_id is required for Saving transactions'
+        return values
+    
     class Config:
         orm_mode = True
 
@@ -125,6 +136,15 @@ class TransactionResponse(TransactionBase):
 
     class Config:
         orm_mode = True
+
+class ExpenseTransaction(TransactionBase):
+    category_id: int
+    subcategory_id: int
+    shop_id: int
+
+    class Config:
+        orm_mode = True
+
 
 # Shop schema -----------------------------------------------------------------
 class ShopBase(BaseModel):
