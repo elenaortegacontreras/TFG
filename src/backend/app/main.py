@@ -53,6 +53,11 @@ def create_user(user: UserRequest, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+
+    # Por cada usuario nuevo creado se crea una categoría de gastos llamada "Otros" para gastos generales con budget_amount = 0
+    create_category(CategoryRequest(name="Otros", user_id=new_user.id), db)
+
+    # TODO: Crear varias categorías (de gastos) por defecto para cada usuario nuevo
     return new_user
 
 # CATEGORIES
@@ -92,54 +97,37 @@ def create_subcategory(subcategory: SubcategoryRequest, db: Session = Depends(ge
     return new_subcategory
 
 # TRANSACTIONS
-    # income
-@app.get("/incomes", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
-def get_all_incomes(db: Session = Depends(get_db)):
-    all_incomes = db.query(Transaction).filter(Transaction.transaction_type == "income").all()
-    return all_incomes
+@app.get("/transactions", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
+def get_all_transactions(db: Session = Depends(get_db)):
+    all_transactions = db.query(Transaction).all()
+    return all_transactions
 
-@app.post("/incomes", status_code=status.HTTP_201_CREATED, response_model=TransactionResponse)
+@app.post("/transactions", status_code=status.HTTP_201_CREATED, response_model=TransactionResponse)
 def create_income(transaction: TransactionRequest, db: Session = Depends(get_db)):
-    transaction.transaction_type = "Income"
-    # Si no se pone category_id, se incluye en la categoria de "Otros"
-    if transaction.category_id == 0:
-        transaction.category_id = db.query(Category).filter(Category.name == "Otros").first().id
-    # si no se indica subcategory_id, se incluye en la subcategoria de "Otros" dentro de la categoría seleccionada antes
-    if transaction.subcategory_id == 0:
-        transaction.subcategory_id = db.query(Subcategory).filter(Subcategory.category_id == transaction.category_id).filter(Subcategory.name == "Otros").first().id
     new_income = Transaction(**transaction.dict())
     db.add(new_income)
     db.commit()
     db.refresh(new_income)
     return new_income
 
+    # income
+@app.get("/incomes", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
+def get_all_incomes(db: Session = Depends(get_db)):
+    all_incomes = db.query(Transaction).filter(Transaction.transaction_type == "Income").all()
+    return all_incomes
+
     # expense
 @app.get("/expenses", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
 def get_all_expenses(db: Session = Depends(get_db)):
-    all_expenses = db.query(Transaction).filter(Transaction.transaction_type == "expense").all()
+    all_expenses = db.query(Transaction).filter(Transaction.transaction_type == "Expense").all()
     return all_expenses
-
-@app.post("/expenses", status_code=status.HTTP_201_CREATED, response_model=TransactionResponse)
-def create_expense(transaction: TransactionRequest, db: Session = Depends(get_db)):
-    new_expense = Transaction(**transaction.dict())
-    db.add(new_expense)
-    db.commit()
-    db.refresh(new_expense)
-    return new_expense
 
     # saving
 @app.get("/savings", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
 def get_all_savings(db: Session = Depends(get_db)):
-    all_savings = db.query(Transaction).filter(Transaction.transaction_type == "saving").all()
+    all_savings = db.query(Transaction).filter(Transaction.transaction_type == "Saving").all()
     return all_savings
 
-@app.post("/savings", status_code=status.HTTP_201_CREATED, response_model=TransactionResponse)
-def create_saving(transaction: TransactionRequest, db: Session = Depends(get_db)):
-    new_saving = Transaction(**transaction.dict())
-    db.add(new_saving)
-    db.commit()
-    db.refresh(new_saving)
-    return new_saving
 
 # SAVINGS GOALS
 
