@@ -1,12 +1,13 @@
 from pydantic import BaseModel, root_validator
 from datetime import date, datetime
+from typing import Optional
 
 class GoalBase(BaseModel):
     user_id: int
     name: str
-    description: str = ""
+    description: Optional[str] = None
     target_amount: float
-    current_amount: float = 0.00
+    current_amount_saved: float = 0.00
     target_date: str
 
     class Config:

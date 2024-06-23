@@ -7,10 +7,10 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     phone = Column(String, unique=True, nullable=False)
-    email = Column(String, unique=True, nullable=False)
+    email = Column(String, unique=True, nullable=False, index=True)
     password = Column(String, nullable=False)
     first_name = Column(String, nullable=False)
-    last_name = Column(String, nullable=True)
+    last_name = Column(String)
 
     savings_goals = relationship('Goal', back_populates='user', cascade='all, delete-orphan')
     transactions = relationship('Transaction', back_populates='user', cascade='all, delete-orphan')
