@@ -38,6 +38,13 @@ def create_user(user: UserRequest, db: Session = Depends(get_db)):
     # TODO: Crear varias categorías (de gastos) por defecto para cada usuario nuevo
     return new_user
 
+@app.delete("/users/{user_id}", status_code=status.HTTP_200_OK)
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == user_id).first()
+    db.delete(user)
+    db.commit()
+    return {"message": "User deleted successfully"}
+
 # CATEGORIES
 
 @app.get("/categories", status_code=status.HTTP_200_OK, response_model=List[CategoryResponse])
@@ -59,6 +66,14 @@ def create_category(category: CategoryRequest, db: Session = Depends(get_db)):
     db.refresh(new_subcategory)
     return new_category
 
+@app.delete("/categories/{category_id}", status_code=status.HTTP_200_OK)
+def delete_category(category_id: int, db: Session = Depends(get_db)):
+    # TODO if not in default categories: (list with default)
+    category = db.query(Category).filter(Category.id == category_id).first()
+    db.delete(category)
+    db.commit()
+    return {"message": "Category deleted successfully"}
+
 # SUBCATEGORIES
 
 @app.get("/subcategories", status_code=status.HTTP_200_OK, response_model=List[SubcategoryResponse])
@@ -74,6 +89,14 @@ def create_subcategory(subcategory: SubcategoryRequest, db: Session = Depends(ge
     db.refresh(new_subcategory)
     return new_subcategory
 
+@app.delete("/subcategories/{subcategory_id}", status_code=status.HTTP_200_OK)
+def delete_subcategory(subcategory_id: int, db: Session = Depends(get_db)):
+    # TODO if not in default subcategories: (list with default)
+    subcategory = db.query(Subcategory).filter(Subcategory.id == subcategory_id).first()
+    db.delete(subcategory)
+    db.commit()
+    return {"message": "Subcategory deleted successfully"}
+
 # TRANSACTIONS
 @app.get("/transactions", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
 def get_all_transactions(db: Session = Depends(get_db)):
@@ -87,6 +110,13 @@ def create_transaction(transaction: TransactionRequest, db: Session = Depends(ge
     db.commit()
     db.refresh(new_income)
     return new_income
+
+@app.delete("/transactions/{transaction_id}", status_code=status.HTTP_200_OK)
+def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
+    transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+    db.delete(transaction)
+    db.commit()
+    return {"message": "Transaction deleted successfully"}
 
     # income
 @app.get("/incomes", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
@@ -107,6 +137,7 @@ def get_all_savings(db: Session = Depends(get_db)):
     return all_savings
 
 
+
 # SAVINGS GOALS
 
 @app.get("/goals", status_code=status.HTTP_200_OK, response_model=List[GoalResponse])
@@ -122,6 +153,13 @@ def create_goal(goal: GoalRequest, db: Session = Depends(get_db)):
     db.refresh(new_goal)
     return new_goal
 
+@app.delete("/goals/{goal_id}", status_code=status.HTTP_200_OK)
+def delete_goal(goal_id: int, db: Session = Depends(get_db)):
+    goal = db.query(Goal).filter(Goal.id == goal_id).first()
+    db.delete(goal)
+    db.commit()
+    return {"message": "Goal deleted successfully"}
+
 # SHOPS
 
 @app.get("/shops", status_code=status.HTTP_200_OK, response_model=List[ShopResponse])
@@ -136,3 +174,10 @@ def create_shop(shop: ShopRequest, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_shop)
     return new_shop
+
+@app.delete("/shops/{shop_id}", status_code=status.HTTP_200_OK)
+def delete_shop(shop_id: int, db: Session = Depends(get_db)):
+    shop = db.query(Shop).filter(Shop.id == shop_id).first()
+    db.delete(shop)
+    db.commit()
+    return {"message": "Shop deleted successfully"}
