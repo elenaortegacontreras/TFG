@@ -5,6 +5,7 @@ from typing import List
 
 from app.core.models.models import User, Category, Subcategory, Goal, Transaction, Shop
 from app.core.schemas.schemas import UserRequest, UserResponse, CategoryRequest, CategoryResponse, SubcategoryRequest, SubcategoryResponse, GoalRequest, GoalResponse, TransactionRequest, TransactionResponse, ShopRequest, ShopResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 # Shop.__table__.drop(bind=engine, checkfirst=True)
 # Base.metadata.drop_all(bind=engine, checkfirst=True) # Borrar la tabla en la base de datos
@@ -13,6 +14,21 @@ from app.core.schemas.schemas import UserRequest, UserResponse, CategoryRequest,
 Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
 
 app = FastAPI()
+
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+    # URLs para el acceso CORS
+    "http://localhost:5173"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
@@ -136,7 +152,32 @@ def get_all_savings(db: Session = Depends(get_db)):
     all_savings = db.query(Transaction).filter(Transaction.transaction_type == "Saving").all()
     return all_savings
 
+# consultar la suma de los transactions de tipo expense
+@app.get("/total_expenses", status_code=status.HTTP_200_OK)
+def get_total_expenses(db: Session = Depends(get_db)):
+    total_expenses = db.query(Transaction).filter(Transaction.transaction_type == "Expense").all()
+    total_expenses_amount = sum([expense.amount for expense in total_expenses])
+    total_expenses_card = sum([expense.amount for expense in total_expenses if expense.payment_method == "Card"])
+    total_expenses_cash = sum([expense.amount for expense in total_expenses if expense.payment_method == "Cash"])
+    return {"amount": total_expenses_amount, "card": total_expenses_card, "cash": total_expenses_cash}
 
+# consultar la suma de los transactions de tipo income
+@app.get("/total_incomes", status_code=status.HTTP_200_OK)
+def get_total_incomes(db: Session = Depends(get_db)):
+    total_incomes = db.query(Transaction).filter(Transaction.transaction_type == "Income").all()
+    total_incomes_amount = sum([income.amount for income in total_incomes])
+    total_incomes_card = sum([income.amount for income in total_incomes if income.payment_method == "Card"])
+    total_incomes_cash = sum([income.amount for income in total_incomes if income.payment_method == "Cash"])
+    return {"amount": total_incomes_amount, "card": total_incomes_card, "cash": total_incomes_cash}
+
+# consultar la suma de los transactions de tipo saving
+@app.get("/total_savings", status_code=status.HTTP_200_OK)
+def get_total_savings(db: Session = Depends(get_db)):
+    total_savings = db.query(Transaction).filter(Transaction.transaction_type == "Saving").all()
+    total_savings_amount = sum([saving.amount for saving in total_savings])
+    total_savings_card = sum([saving.amount for saving in total_savings if saving.payment_method == "Card"])
+    total_savings_cash = sum([saving.amount for saving in total_savings if saving.payment_method == "Cash"])
+    return {"amount": total_savings_amount, "card": total_savings_card, "cash": total_savings_cash}
 
 # SAVINGS GOALS
 
@@ -181,3 +222,6 @@ def delete_shop(shop_id: int, db: Session = Depends(get_db)):
     db.delete(shop)
     db.commit()
     return {"message": "Shop deleted successfully"}
+
+
+
