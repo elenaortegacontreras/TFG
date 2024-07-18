@@ -1,12 +1,25 @@
 import { Title } from './Title.jsx'
 import { TransactionPanel } from './TransactionPanel.jsx'
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
-export function SavingView(){ // {name, description, current_amount_saved, target_amount, target_date, currency }) {
+export function SavingView(){
     const location = useLocation();
-    const state = location.state; // Aquí tienes acceso al estado pasado
-  
-    console.log(state); // { key: 'value' }
+    const state = location.state;
+    console.log(state); 
+
+    const [savingGoals, setSavingGoals] = useState([]);
+
+    useEffect(() => {
+        axios.get(`http://localhost:8000/savings/${state.id}`)
+            .then(response => {
+                setSavingGoals(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching the expenses:', error);
+            });
+    }, []);
 
     return (
         <div>
@@ -25,13 +38,7 @@ export function SavingView(){ // {name, description, current_amount_saved, targe
                 <div>
                     <p>Movimientos</p>
                     <div className="divider"></div>
-                    <TransactionPanel />
-                </div>
-
-                <div className="divider"></div>
-
-                <div className="panel flex w-full justify-evenly">
-                    <a href="/transactions">Ver más</a>
+                    <TransactionPanel transactions={savingGoals}/>
                 </div>
 
                 <div className="divider"></div>
