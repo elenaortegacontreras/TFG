@@ -2,6 +2,7 @@ from fastapi import FastAPI, status, Depends
 from sqlalchemy.orm import Session
 from app.core.models.database import engine, get_db, Base
 from typing import List
+from sqlalchemy import func
 
 from app.core.models.models import User, Category, Subcategory, Goal, Transaction, Shop
 from app.core.schemas.schemas import UserRequest, UserResponse, CategoryRequest, CategoryResponse, SubcategoryRequest, SubcategoryResponse, GoalRequest, GoalResponse, TransactionRequest, TransactionResponse, ShopRequest, ShopResponse
@@ -67,6 +68,19 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
 def get_all_categories(db: Session = Depends(get_db)):
     all_categories = db.query(Category).all()
     return all_categories
+
+@app.get("/categories_with_amounts", status_code=status.HTTP_200_OK)
+def get_categories_with_amounts(db: Session = Depends(get_db)):
+    categories_with_amounts_query = db.query(
+        Category.id,
+        Category.name,
+        Category.description,
+        Category.budget_amount,
+        func.coalesce(func.sum(Transaction.amount), 0).label('current_amount_spent')
+    ).join(Transaction, Transaction.category_id == Category.id, isouter=True).group_by(Category.id).all()
+
+    categories_with_amounts = [row._asdict() for row in categories_with_amounts_query]
+    return categories_with_amounts
 
 @app.post("/categories", status_code=status.HTTP_201_CREATED, response_model=CategoryResponse)
 def create_category(category: CategoryRequest, db: Session = Depends(get_db)):
@@ -146,11 +160,94 @@ def get_all_expenses(db: Session = Depends(get_db)):
     all_expenses = db.query(Transaction).filter(Transaction.transaction_type == "Expense").all()
     return all_expenses
 
+@app.get("/expenses_with_names", status_code=status.HTTP_200_OK)
+def get_all_expenses(db: Session = Depends(get_db)):
+    all_expenses = db.query(
+        Transaction, 
+        Category.name.label("category_name"), 
+        Subcategory.name.label("subcategory_name")
+        ).join(Category, Transaction.category_id == Category.id
+        ).join(Subcategory, Transaction.subcategory_id == Subcategory.id
+        ).filter(Transaction.transaction_type == "Expense").all()
+    
+    expenses = []
+    for expense in all_expenses:
+        # Copia todas las columnas de Transaction a un diccionario
+        expense_dict = expense.Transaction.__dict__.copy()
+        # Añade las columnas adicionales de los joins
+        expense_dict["category_name"] = expense.category_name
+        expense_dict["subcategory_name"] = expense.subcategory_name
+        # Elimina cualquier atributo interno de SQLAlchemy
+        expense_dict.pop("_sa_instance_state", None)
+        expenses.append(expense_dict)
+    return expenses
+
+@app.get("/expenses/{category_id}", status_code=status.HTTP_200_OK)
+def get_expenses_by_category(category_id: int, db: Session = Depends(get_db)):
+    expenses_query = db.query(
+        Transaction, 
+        Category.name.label("category_name"), 
+        Subcategory.name.label("subcategory_name")
+    ).join(Category, Transaction.category_id == Category.id
+    ).join(Subcategory, Transaction.subcategory_id == Subcategory.id
+    ).filter(Transaction.transaction_type == "Expense", Transaction.category_id == category_id).all()
+
+    expenses = []
+    for expense in expenses_query:
+        # Copia todas las columnas de Transaction a un diccionario
+        expense_dict = expense.Transaction.__dict__.copy()
+        # Añade las columnas adicionales de los joins
+        expense_dict["category_name"] = expense.category_name
+        expense_dict["subcategory_name"] = expense.subcategory_name
+        # Elimina cualquier atributo interno de SQLAlchemy
+        expense_dict.pop("_sa_instance_state", None)
+        expenses.append(expense_dict)
+
+    return expenses
+
     # saving
 @app.get("/savings", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
 def get_all_savings(db: Session = Depends(get_db)):
     all_savings = db.query(Transaction).filter(Transaction.transaction_type == "Saving").all()
     return all_savings
+
+@app.get("/savings_with_names", status_code=status.HTTP_200_OK)
+def get_all_savings(db: Session = Depends(get_db)):
+    all_savings = db.query(
+        Transaction, 
+        Goal.name.label("saving_goal_name")
+        ).join(Goal, Transaction.saving_goal_id == Goal.id
+        ).filter(Transaction.transaction_type == "Saving").all()
+    
+    savings = []
+    for saving in all_savings:
+        # Copia todas las columnas de Transaction a un diccionario
+        saving_dict = saving.Transaction.__dict__.copy()
+        # Añade las columnas adicionales de los joins
+        saving_dict["saving_goal_name"] = saving.saving_goal_name
+        # Elimina cualquier atributo interno de SQLAlchemy
+        saving_dict.pop("_sa_instance_state", None)
+        savings.append(saving_dict)
+    return savings
+
+@app.get("/savings/{saving_goal_id}", status_code=status.HTTP_200_OK)
+def get_savings_by_category(saving_goal_id: int, db: Session = Depends(get_db)):
+    savings_query = db.query(
+        Transaction,
+        Goal.name.label("saving_goal_name")
+    ).join(Goal, Transaction.saving_goal_id == Goal.id
+    ).filter(Transaction.transaction_type == "Saving", Transaction.saving_goal_id == saving_goal_id).all()
+
+    savings = []
+    for saving in savings_query:
+        # Copia todas las columnas de Transaction a un diccionario
+        saving_dict = saving.Transaction.__dict__.copy()
+        # Añade las columnas adicionales de los joins
+        saving_dict["saving_goal_name"] = saving.saving_goal_name
+        # Elimina cualquier atributo interno de SQLAlchemy
+        saving_dict.pop("_sa_instance_state", None)
+        savings.append(saving_dict)
+    return savings
 
 # consultar la suma de los transactions de tipo expense
 @app.get("/total_expenses", status_code=status.HTTP_200_OK)
@@ -200,6 +297,21 @@ def delete_goal(goal_id: int, db: Session = Depends(get_db)):
     db.delete(goal)
     db.commit()
     return {"message": "Goal deleted successfully"}
+
+@app.get("/goals_with_amounts", status_code=status.HTTP_200_OK)
+def get_goals_with_amounts(db: Session = Depends(get_db)):
+    goals_with_amounts_query = db.query(
+        Goal.id,
+        Goal.name,
+        Goal.description,
+        Goal.target_amount,
+        Goal.insert_date,
+        Goal.target_date,
+        func.coalesce(func.sum(Transaction.amount), 0).label('current_amount_saved')
+    ).join(Transaction, Transaction.saving_goal_id == Goal.id, isouter=True).group_by(Goal.id).all()
+
+    goals_with_amounts = [row._asdict() for row in goals_with_amounts_query]
+    return goals_with_amounts
 
 # SHOPS
 
