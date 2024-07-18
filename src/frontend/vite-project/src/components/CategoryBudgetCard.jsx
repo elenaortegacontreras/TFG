@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 
-export function CategoryBudgetCard({ name, description, amount_spent, budget_amount, currency }) {
+export function CategoryBudgetCard({ id, name, description, current_amount_spent, budget_amount, currency }) {
     const navigate = useNavigate();
-    const percentage = (amount_spent / budget_amount) * 100;
+    const percentage = current_amount_spent === 0 ? 0 : (current_amount_spent / budget_amount) * 100;
 
     const handleCategoryClick = () => {
-        navigate('/category', { state: { name, description, amount_spent, budget_amount, currency } });
+        navigate('/category', { state: { id, name, description, current_amount_spent, budget_amount, currency } });
     };
 
     let badgeType;
@@ -61,7 +61,7 @@ export function CategoryBudgetCard({ name, description, amount_spent, budget_amo
                     </div>
                 </h2>
                 <p className="text-center truncate">{description || "Sin descripción"}</p>
-                <p className="text-center">{amount_spent} / {budget_amount} {currency}</p>
+                <p className="text-center">{current_amount_spent} / {budget_amount} {currency}</p>
                 {badgeType}
             </div>
         </div>
