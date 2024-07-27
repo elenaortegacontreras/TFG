@@ -111,6 +111,23 @@ def get_all_subcategories(db: Session = Depends(get_db)):
     all_subcategories = db.query(Subcategory).all()
     return all_subcategories
 
+@app.get("/subcategories/{category_id}", status_code=status.HTTP_200_OK)
+def get_subcategories_by_category(category_id: int, db: Session = Depends(get_db)):
+    subcategories = db.query(Subcategory).filter(Subcategory.category_id == category_id).all()
+    return subcategories
+
+@app.get("/subcategories_with_amounts/{category_id}", status_code=status.HTTP_200_OK)
+def get_subcategories_with_amounts(category_id: int, db: Session = Depends(get_db)):
+    subcategories_with_amounts_query = db.query(
+        Subcategory.id,
+        Subcategory.name,
+        Subcategory.category_id,
+        func.coalesce(func.sum(Transaction.amount), 0).label('current_amount_spent')
+    ).join(Transaction, Transaction.subcategory_id == Subcategory.id, isouter=True).filter(Subcategory.category_id == category_id).group_by(Subcategory.id).all()
+
+    subcategories_with_amounts = [row._asdict() for row in subcategories_with_amounts_query]
+    return subcategories_with_amounts
+
 @app.post("/subcategories", status_code=status.HTTP_201_CREATED, response_model=SubcategoryResponse)
 def create_subcategory(subcategory: SubcategoryRequest, db: Session = Depends(get_db)):
     new_subcategory = Subcategory(**subcategory.dict())
@@ -135,11 +152,15 @@ def get_all_transactions(db: Session = Depends(get_db)):
 
 @app.post("/transactions", status_code=status.HTTP_201_CREATED, response_model=TransactionResponse)
 def create_transaction(transaction: TransactionRequest, db: Session = Depends(get_db)):
-    new_income = Transaction(**transaction.dict())
-    db.add(new_income)
+    transaction_dict = transaction.dict()
+    if transaction_dict.get("insert_date") is None:
+        # Si insert_date no se proporciona, se omitirá y se usará el valor predeterminado del modelo
+        del transaction_dict["insert_date"]
+    new_transaction = Transaction(**transaction_dict)
+    db.add(new_transaction)
     db.commit()
-    db.refresh(new_income)
-    return new_income
+    db.refresh(new_transaction)
+    return new_transaction
 
 @app.delete("/transactions/{transaction_id}", status_code=status.HTTP_200_OK)
 def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
