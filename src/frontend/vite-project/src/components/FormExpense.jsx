@@ -28,19 +28,18 @@ export function FormExpense() {
         console.error('Error fetching the categories:', error);
       });
   }, []);
-  
+
   useEffect(() => {
-    const fetchSubcategories = async () => {
-      if (selectedCategory) {
-        try {
-          const response = await axios.get(`http://localhost:8000/subcategories/${selectedCategory.id}`);
+    if (selectedCategory) {
+      axios.get(`http://localhost:8000/subcategories/${selectedCategory.id}`)
+        .then(response => {
           setSubcategories(response.data);
-        } catch (error) {
-          console.error('Error al obtener subcategorías:', error);
-        }
-      }
-    };
-    fetchSubcategories();
+          setSelectedSubcategory(response.data[0]);
+        })
+        .catch(error => {
+          console.error('Error fetching the subcategories:', error);
+        });
+    }
   }, [selectedCategory]);
 
   const handleCategoryChange = (category) => {

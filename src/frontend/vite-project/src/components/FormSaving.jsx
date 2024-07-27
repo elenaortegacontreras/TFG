@@ -3,6 +3,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Title } from './Title.jsx';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export function FormSaving() {
   const [amount, setAmount] = useState('');
@@ -15,22 +16,14 @@ export function FormSaving() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchSavingGoals = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/goals');
-        if (response.ok) {
-          const data = await response.json();
-          setSavingGoals(data);
-          setSelectedGoal(data[0]);
-        } else {
-          console.error('Error al obtener los objetivos de ahorro:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error al realizar la solicitud:', error);
-      }
-    };
-
-    fetchSavingGoals();
+    axios.get('http://localhost:8000/goals')
+        .then(response => {
+          setSavingGoals(response.data);
+          setSelectedGoal(response.data[0]);
+        })
+        .catch(error => {
+            console.error('Error fetching the goals:', error);
+        });
   }, []);
 
   const handleGoalChange = (saving_goal_id) => {
@@ -53,13 +46,13 @@ export function FormSaving() {
       user_id: 1,
       transaction_type: "Saving",
     };
-
+    
     try {
       await axios.post('http://localhost:8000/transactions', newSaving);
-      console.log('Ahorro creado con éxito');
+      console.log('Savings created successfully');
       navigate('/transactions', { state: { transaction_type: "savings" } });
     } catch (error) {
-      console.error('Error al crear ahorro:', error.response.statusText);
+      console.error('Error creating savings:', error.response.statusText);
     }
   };
 
