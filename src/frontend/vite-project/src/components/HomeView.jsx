@@ -1,10 +1,10 @@
 import { ResumeTitle } from './ResumeTitle.jsx'
-import { PieChart } from './PieChart.jsx';
-
 import { useNavigate } from 'react-router-dom';
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { BarChart } from './BarChart.jsx';
+import { ActionsMenuHome } from './ActionsMenuHome.jsx';
 
 
 export function HomeView() {
@@ -92,23 +92,42 @@ export function HomeView() {
             <div>
 
                 <div className="divider"></div>
+             
+                <div className="text-white flex justify-evenly py-12">
+                    <div>
+                        <button className="bg-gray-700 rounded-full" onClick={handleAllIncomesViewClick}>
+                            <p>Ingresos</p>
+                            <p>{incomes_amount} €</p>
+                        </button>
+                    </div>
+                    <div>
+                        <button className="bg-gray-600 rounded-full" onClick={handleSavingsOverviewClick}>
+                            <p>Ahorros</p>
+                            <p>{savings_amount} €</p>
+                        </button>
+                    </div>
+                    <div>
+                        <button className="bg-gray-500 rounded-full" onClick={handleExpensesOverviewClick}>
+                            <p>Gastos</p>
+                            <p>{expenses_amount} €</p>
+                        </button>
+                    </div>
+                </div>
 
-                <button style={{ backgroundColor: "gold" }} onClick={handleExpensesOverviewClick}>
-                    <p>Gastos</p>
-                    <p>{expenses_amount} €</p>
-                </button>
-                <button style={{ backgroundColor: "orange" }} onClick={handleSavingsOverviewClick}>
-                    <p>Ahorros</p>
-                    <p>{savings_amount} €</p>
-                </button>
-                <button style={{ backgroundColor: "tomato" }} onClick={handleAllIncomesViewClick}>
-                    <p>Ingresos</p>
-                    <p>{incomes_amount} €</p>
-                </button>
-                <PieChart expenses_amount={expenses_amount} savings_amount={savings_amount} incomes_amount={incomes_amount} />
-                    {/* <PieChart expenses_amount="500" savings_amount="200" incomes_amount="800" /> */}
-                
-           
+                <div className="max-w-sm mx-auto">
+                    <BarChart expenses_amount={expenses_amount} savings_amount={savings_amount} incomes_amount={incomes_amount} />
+                </div>
+
+                {/* <button className="btn" onClick={()=>document.getElementById(modalId).showModal()}> */}
+                <div className="flex justify-end px-20">
+                    {/* <button className="btn rounded-full bg-indigo-500 hover:bg-indigo-400" >                    
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="size-6 text-white">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </button> */}
+                    <ActionsMenuHome />
+                </div>
+            
                 <div className="divider"></div>
 
             

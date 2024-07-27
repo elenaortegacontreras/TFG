@@ -1,5 +1,7 @@
 import { ResumeTitle } from './ResumeTitle.jsx'
 import { SavingGoalPanel } from './SavingGoalPanel.jsx'
+import { SavingsLineChart } from './SavingsLineChart.jsx';
+import { LoadingDots } from './LoadingDots.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
@@ -12,6 +14,7 @@ export function SavingsOverviewView() {
     const navigate = useNavigate();
 
     const [savingGoals, setSavingGoals] = useState([]);
+    const [savings, setSavings] = useState([]);
 
     useEffect(() => {
         axios.get('http://localhost:8000/goals_with_amounts')
@@ -21,6 +24,16 @@ export function SavingsOverviewView() {
             .catch(error => {
                 console.error('Error fetching the saving goals:', error);
             });
+    }, []);
+
+    useEffect(() => {
+        axios.get('http://localhost:8000/savings')
+            .then(response => {
+                setSavings(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching the savings:', error);
+        });
     }, []);
 
     const handleAllSavingsViewClick = () => {
@@ -33,10 +46,12 @@ export function SavingsOverviewView() {
 
             <div className="divider"></div>
 
-            <div>
-                <div className="flex justify-center">
-                    <img src="https://tudashboard.com/wp-content/uploads/2021/06/Barras-y-linea.jpg" alt="placeholder" />
-                </div>
+            <div className="max-w-sm mx-auto">
+                {savings.length !== 0 ? (
+                    <SavingsLineChart savings={savings} className="max-w-sm mx-auto"/>
+                ) : (
+                    <LoadingDots />
+                )}
             </div>
 
             <div className="divider"></div>
