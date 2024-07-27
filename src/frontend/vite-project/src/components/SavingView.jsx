@@ -1,5 +1,7 @@
 import { Title } from './Title.jsx'
 import { TransactionPanel } from './TransactionPanel.jsx'
+import { SavingsLineChart } from './SavingsLineChart.jsx';
+import { LoadingDots } from './LoadingDots.jsx';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -9,15 +11,15 @@ export function SavingView(){
     const state = location.state;
     console.log(state); 
 
-    const [savingGoals, setSavingGoals] = useState([]);
+    const [savings, setSavings] = useState([]);
 
     useEffect(() => {
         axios.get(`http://localhost:8000/savings/${state.id}`)
             .then(response => {
-                setSavingGoals(response.data);
+                setSavings(response.data);
             })
             .catch(error => {
-                console.error('Error fetching the expenses:', error);
+                console.error('Error fetching the savings:', error);
             });
     }, []);
 
@@ -27,18 +29,21 @@ export function SavingView(){
             <div>
                 <p>{state.description}</p>
                 <progress className="progress w-56" value={state.current_amount_saved} max={state.target_amount}></progress>
-                <div className="flex justify-center">
-                    <img src="https://tudashboard.com/wp-content/uploads/2021/06/Barras-y-linea.jpg" alt="placeholder" />
+
+                <div className="max-w-sm mx-auto">
+                    {savings.length !== 0 ? (
+                        <SavingsLineChart savings={savings} className="max-w-sm mx-auto"/>
+                    ) : (
+                        <LoadingDots />
+                    )}
                 </div>
-           
 
                 <div className="divider"></div>
 
-                {/* solo una preview (limitar ej. a 3) de las últimas transacciones de esta categoría */}
                 <div>
                     <p>Movimientos</p>
                     <div className="divider"></div>
-                    <TransactionPanel transactions={savingGoals}/>
+                    <TransactionPanel transactions={savings}/>
                 </div>
 
                 <div className="divider"></div>

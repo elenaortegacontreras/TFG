@@ -14,6 +14,7 @@ export function CategoryBudgetPanel({ budgets }) {
                             description={budget.description}
                             current_amount_spent={budget.current_amount_spent} 
                             budget_amount={budget.budget_amount} 
+                            currency="€"
                             // currency={budget.currency}
                         />
                     </div>
