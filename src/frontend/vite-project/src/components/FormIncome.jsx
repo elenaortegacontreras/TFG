@@ -101,14 +101,14 @@ export function FormIncome() {
               <button
                 type="button"
                 onClick={() => handlePaymentMethodChange('Card')}
-                className={`w-1/3 py-2 rounded-md font-semibold ${payment_method === 'Tarjeta' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-900 border border-gray-300'}`}
+                className={`w-1/3 py-2 rounded-md font-semibold ${payment_method === 'Card' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-900 border border-gray-300'}`}
               >
                 Tarjeta
               </button>
               <button
                 type="button"
                 onClick={() => handlePaymentMethodChange('Cash')}
-                className={`w-1/3 py-2 rounded-md font-semibold ${payment_method === 'Efectivo' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-900 border border-gray-300'}`}
+                className={`w-1/3 py-2 rounded-md font-semibold ${payment_method === 'Cash' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-900 border border-gray-300'}`}
               >
                 Efectivo
               </button>
