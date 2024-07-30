@@ -2,6 +2,9 @@ import { Title } from './Title.jsx'
 import { TransactionPanel } from './TransactionPanel.jsx'
 import { SavingsLineChart } from './SavingsLineChart.jsx';
 import { LoadingDots } from './LoadingDots.jsx';
+import { ErrorAlert } from './ErrorAlert';
+import { SuccessAlert } from './SuccessAlert';
+
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -12,6 +15,8 @@ export function SavingView(){
     console.log(state); 
 
     const [savings, setSavings] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
         axios.get(`http://localhost:8000/savings/${state.id}`)
@@ -43,7 +48,9 @@ export function SavingView(){
                 <div>
                     <p>Movimientos</p>
                     <div className="divider"></div>
-                    <TransactionPanel transactions={savings}/>
+                    {successMessage && <SuccessAlert message={successMessage} />}
+                    {errorMessage && <ErrorAlert message={errorMessage} />}
+                    <TransactionPanel transactions={savings} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
                 </div>
 
                 <div className="divider"></div>

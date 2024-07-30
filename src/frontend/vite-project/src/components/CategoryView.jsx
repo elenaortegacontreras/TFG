@@ -2,17 +2,22 @@ import { Title } from './Title.jsx'
 import { TransactionPanel } from './TransactionPanel.jsx'
 import { CategoriesDoughnutChart } from './CategoriesDoughnutChart.jsx';
 import { LoadingDots } from './LoadingDots.jsx';
+import { ErrorAlert } from './ErrorAlert';
+import { SuccessAlert } from './SuccessAlert';
+
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 export function CategoryView() {
     const location = useLocation();
-    const state = location.state; 
-    console.log(state); 
+    const state = location.state;
+    console.log(state);
 
     const [expenses, setExpenses] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
         axios.get(`http://localhost:8000/expenses/${state.id}`)
@@ -53,7 +58,9 @@ export function CategoryView() {
                 <div>
                     <p>Movimientos</p>
                     <div className="divider"></div>
-                    <TransactionPanel transactions={expenses}/>
+                    {successMessage && <SuccessAlert message={successMessage} />}
+                    {errorMessage && <ErrorAlert message={errorMessage} />}
+                    <TransactionPanel transactions={expenses} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
                 </div>
 
                 <div className="divider"></div>

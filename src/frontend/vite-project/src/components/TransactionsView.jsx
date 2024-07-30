@@ -1,6 +1,9 @@
 import { Title } from './Title.jsx'
 import { TransactionPanel } from './TransactionPanel.jsx'
 import { LoadingDots } from "./LoadingDots.jsx";
+import { ErrorAlert } from './ErrorAlert';
+import { SuccessAlert } from './SuccessAlert';
+
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -18,7 +21,8 @@ export function TransactionsView() {
     const [expenses, setExpenses] = useState([]);
     const [incomes, setIncomes] = useState([]);
     const [allTransactions, setAllTransactions] = useState([]);
-    
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
         if (state.transaction_type === 'savings') {
@@ -61,17 +65,23 @@ export function TransactionsView() {
             {state.transaction_type === 'incomes' ? (
                 <>
                     <Title title="Ingresos" />
-                    <TransactionPanel transactions={incomes} />
+                    {successMessage && <SuccessAlert message={successMessage} />}
+                    {errorMessage && <ErrorAlert message={errorMessage} />}
+                    <TransactionPanel transactions={incomes} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
                 </>
             ) : state.transaction_type === 'savings' ? (
                 <>
                     <Title title="Ahorros" />
-                    <TransactionPanel transactions={savings} />
+                    {successMessage && <SuccessAlert message={successMessage} />}
+                    {errorMessage && <ErrorAlert message={errorMessage} />}
+                    <TransactionPanel transactions={savings} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
                 </>
             ) : state.transaction_type === 'expenses' ? (
                 <>
                     <Title title="Gastos" />
-                    <TransactionPanel transactions={expenses} />
+                    {successMessage && <SuccessAlert message={successMessage} />}
+                    {errorMessage && <ErrorAlert message={errorMessage} />}
+                    <TransactionPanel transactions={expenses} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
                 </>
             ) : (
                 <>

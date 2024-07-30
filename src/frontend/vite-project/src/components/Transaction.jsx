@@ -1,6 +1,6 @@
 import { ActionsMenuTransaction } from "./ActionsMenuTransaction";
 
-export function Transaction({transaction_id, transaction_type, name, category_name, subcategory_name, saving_goal_name, payment_method, amount, insert_date, currency, shop_id}) {
+export function Transaction({transaction_id, transaction_type, name, category_name, subcategory_name, saving_goal_name, payment_method, amount, insert_date, currency, shop_id, setSuccessMessage, setErrorMessage}) {
     const modalId = `transaction_info_${transaction_id}`;
 
     const formattedDate = new Date(insert_date).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -20,7 +20,7 @@ export function Transaction({transaction_id, transaction_type, name, category_na
                             <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
                         </svg>
                     </button>
-                    <ActionsMenuTransaction />
+                    <ActionsMenuTransaction transaction_id={transaction_id} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
                     <dialog id={modalId} className="modal">
                         <div className="modal-box">
                             <form method="dialog">

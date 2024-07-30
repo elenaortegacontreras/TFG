@@ -1,7 +1,7 @@
 import React from 'react';
 import { Transaction } from './Transaction.jsx'
 
-export function TransactionPanel({ transactions }) {
+export function TransactionPanel({ transactions , setSuccessMessage, setErrorMessage}) {
     return (
       <div className="container mx-auto p-4">
       <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -22,6 +22,9 @@ export function TransactionPanel({ transactions }) {
             // currency={transaction.currency}
             currency = "€"
             shop_id={transaction.shop_id}
+
+            setSuccessMessage={setSuccessMessage} 
+            setErrorMessage={setErrorMessage}
             />
             {index !== transactions.length - 1 && <div className="divider"></div>}
           </div>
