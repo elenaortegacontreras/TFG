@@ -12,6 +12,7 @@ export function FormSaving() {
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [savingGoals, setSavingGoals] = useState([]);
   const [payment_method, setPaymentMethod] = useState('');
+  const [insertDate, setInsertDate] = useState('');
 
   const navigate = useNavigate();
 
@@ -45,6 +46,7 @@ export function FormSaving() {
       payment_method,
       user_id: 1,
       transaction_type: "Saving",
+      insert_date: insertDate ? insertDate : null,
     };
     
     try {
@@ -98,17 +100,18 @@ export function FormSaving() {
           </div>
 
           <div>
-            <label htmlFor="date" className="block text-sm font-medium leading-6 text-gray-900">
+            <label htmlFor="insert_date" className="block text-sm font-medium leading-6 text-gray-900">
               Fecha
             </label>
             <div className="mt-2">
               <input
                 type="date"
-                id="date"
-                name="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                required
+                id="insert_date"
+                name="insert_date"
+                value={insertDate}
+                onChange={(e) => setInsertDate(e.target.value)}
+                // required
+                placeholder='dd/mm/aaaa'
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>

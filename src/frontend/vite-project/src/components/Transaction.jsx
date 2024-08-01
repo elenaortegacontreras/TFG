@@ -3,7 +3,7 @@ import { ActionsMenuTransaction } from "./ActionsMenuTransaction";
 export function Transaction({transaction_id, transaction_type, name, category_name, subcategory_name, saving_goal_name, payment_method, amount, insert_date, currency, shop_id, setSuccessMessage, setErrorMessage}) {
     const modalId = `transaction_info_${transaction_id}`;
 
-    const formattedDate = new Date(insert_date).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    const formattedDate = new Date(insert_date).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
     return (
         <div>
@@ -24,7 +24,6 @@ export function Transaction({transaction_id, transaction_type, name, category_na
                     <dialog id={modalId} className="modal">
                         <div className="modal-box">
                             <form method="dialog">
-                            {/* if there is a button in form, it will close the modal */}
                             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                             </form>
                             <h3 className="font-bold text-lg">{name}</h3>
