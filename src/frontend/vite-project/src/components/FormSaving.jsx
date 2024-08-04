@@ -8,7 +8,6 @@ import axios from 'axios';
 export function FormSaving() {
   const [amount, setAmount] = useState('');
   const [name, setConcept] = useState('');
-  const [date, setDate] = useState('');
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [savingGoals, setSavingGoals] = useState([]);
   const [payment_method, setPaymentMethod] = useState('');
@@ -41,7 +40,6 @@ export function FormSaving() {
     const newSaving = {
       amount: parseFloat(amount),
       name,
-      date,
       saving_goal_id: selectedGoal.id,
       payment_method,
       user_id: 1,
