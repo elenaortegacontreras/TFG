@@ -4,6 +4,8 @@ import { CategoriesDoughnutChart } from './CategoriesDoughnutChart.jsx';
 import { LoadingDots } from './LoadingDots.jsx';
 import { ErrorAlert } from './ErrorAlert';
 import { SuccessAlert } from './SuccessAlert';
+import { ActionsMenuAdd } from './ActionsMenuAdd.jsx';
+import { ActionsMenuEditDelete } from './ActionsMenuEditDelete.jsx';
 
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -51,6 +53,11 @@ export function CategoryView() {
                 ) : (
                     <LoadingDots />
                 )}
+            </div>
+
+            <div className="flex justify-end px-20">
+                <ActionsMenuAdd action="add_subcategory" category_id={state.id}/>
+                <ActionsMenuEditDelete element_type="category" element_id={state.id} setSuccessMessage="" setErrorMessage=""/>
             </div>
 
                 <div className="divider"></div>

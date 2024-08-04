@@ -2,6 +2,8 @@ import { ResumeTitle } from './ResumeTitle.jsx'
 import { SavingGoalPanel } from './SavingGoalPanel.jsx'
 import { SavingsLineChart } from './SavingsLineChart.jsx';
 import { LoadingDots } from './LoadingDots.jsx';
+import { ActionsMenuAdd } from './ActionsMenuAdd.jsx';
+
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
@@ -15,6 +17,21 @@ export function SavingsOverviewView() {
 
     const [savingGoals, setSavingGoals] = useState([]);
     const [savings, setSavings] = useState([]);
+    const [savings_amount, setSavingsAmount] = useState(null);
+    const [cashSavings, setCashSavings] = useState(0);
+    const [cardSavings, setCardSavings] = useState(0);
+
+    useEffect(() => {
+        axios.get('http://localhost:8000/total_savings')
+            .then(response => {
+                setSavingsAmount(response.data.amount);
+                setCashSavings(response.data.cash);
+                setCardSavings(response.data.card);
+            })
+            .catch(error => {
+                console.error('Error fetching the savings:', error);
+            });
+    }, []);
 
     useEffect(() => {
         axios.get('http://localhost:8000/goals_with_amounts')
@@ -42,7 +59,7 @@ export function SavingsOverviewView() {
     
     return (
         <div>
-            <ResumeTitle amount={state.savings_amount} title="Este mes llevas ahorrados" card={state.cardSavings} cash={state.cashSavings} currency="€"/>
+            <ResumeTitle amount={savings_amount} title="Este mes llevas ahorrados" card={cardSavings} cash={cashSavings} currency="€"/>
 
             <div className="divider"></div>
 
@@ -52,6 +69,10 @@ export function SavingsOverviewView() {
                 ) : (
                     <LoadingDots />
                 )}
+            </div>
+
+            <div className="flex justify-end px-20">
+                <ActionsMenuAdd action="savings_actions" category_id=""/>
             </div>
 
             <div className="divider"></div>

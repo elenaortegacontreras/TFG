@@ -2,20 +2,33 @@ import { ResumeTitle } from './ResumeTitle.jsx'
 import { CategoryBudgetPanel } from './CategoryBudgetPanel.jsx'
 import { CategoriesDoughnutChart } from './CategoriesDoughnutChart.jsx';
 import { LoadingDots } from './LoadingDots.jsx';
+import { ActionsMenuAdd } from './ActionsMenuAdd.jsx';
+
 import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 
 export function ExpensesOverviewView() {   
-    const location = useLocation();
-    const state = location.state;
-    console.log(state);
     
     const navigate = useNavigate();
 
     const [categories, setCategories] = useState([]);
+    const [expenses_amount, setExpensesAmount] = useState(null);
+    const [cashExpenses, setCashExpenses] = useState(0);
+    const [cardExpenses, setCardExpenses] = useState(0);
+
+    useEffect(() => {
+        axios.get('http://localhost:8000/total_expenses')
+            .then(response => {
+                setExpensesAmount(response.data.amount);
+                setCashExpenses(response.data.cash);
+                setCardExpenses(response.data.card);
+            })
+            .catch(error => {
+                console.error('Error fetching the expenses:', error);
+            });
+    }, []);
 
     useEffect(() => {
         axios.get('http://localhost:8000/categories_with_amounts')
@@ -33,7 +46,7 @@ export function ExpensesOverviewView() {
 
     return (
         <div>
-            <ResumeTitle amount={state.expenses_amount} title="Este mes llevas gastados" card={state.cardExpenses} cash={state.cashExpenses} currency="€"/>
+            <ResumeTitle amount={expenses_amount} title="Este mes llevas gastados" card={cardExpenses} cash={cashExpenses} currency="€"/>
 
             <div className="divider"></div>
 
@@ -45,12 +58,17 @@ export function ExpensesOverviewView() {
                 )}
             </div>
 
+            <div className="flex justify-end px-20">
+                <ActionsMenuAdd action="expenses_actions" category_id=""/>
+            </div>
+
             <div className="divider"></div>
 
             <div>
                 <p>Presupuestos de gastos del mes</p>
                 <div className="divider"></div>
                 <CategoryBudgetPanel budgets={categories}/>
+                <p></p>
             </div>
             
             <div className="divider"></div>

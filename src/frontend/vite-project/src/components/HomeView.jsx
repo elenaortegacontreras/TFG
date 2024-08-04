@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BarChart } from './BarChart.jsx';
-import { ActionsMenuHome } from './ActionsMenuHome.jsx';
+import { ActionsMenuAdd } from './ActionsMenuAdd.jsx';
 
 
 export function HomeView() {
@@ -69,11 +69,11 @@ export function HomeView() {
     }, [expenses_amount, savings_amount, incomes_amount, cashExpenses, cashSavings, cashIncomes, cardExpenses, cardSavings, cardIncomes]);
 
     const handleExpensesOverviewClick = () => {
-        navigate('/expenses-overview', { state: {cashExpenses, cardExpenses, expenses_amount} });
+        navigate('/expenses-overview');
     };
 
     const handleSavingsOverviewClick = () => {
-        navigate('/savings-overview', { state: {cashSavings, cardSavings, savings_amount} });
+        navigate('/savings-overview');
     };
 
     //TODO: valorar hacer las peticiones desde aquí y pasar los datos
@@ -118,14 +118,8 @@ export function HomeView() {
                     <BarChart expenses_amount={expenses_amount} savings_amount={savings_amount} incomes_amount={incomes_amount} />
                 </div>
 
-                {/* <button className="btn" onClick={()=>document.getElementById(modalId).showModal()}> */}
                 <div className="flex justify-end px-20">
-                    {/* <button className="btn rounded-full bg-indigo-500 hover:bg-indigo-400" >                    
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="size-6 text-white">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                    </button> */}
-                    <ActionsMenuHome />
+                    <ActionsMenuAdd action="home_actions" category_id=""/>
                 </div>
             
                 <div className="divider"></div>
