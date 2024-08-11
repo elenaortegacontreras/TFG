@@ -1,5 +1,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import React, {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const user = {
   name: 'Tom Cook',
@@ -9,7 +11,7 @@ const user = {
 }
 const navigation = [
   { name: 'Home', href: '/', current: true },
-  { name: 'Ingresos', href: '/transactions', current: false, state: { transaction_type: "incomes" } },
+  { name: 'Ingresos', href: '/transactions', current: false, state: { transaction_type:"incomes" } },
   { name: 'Ahorros', href: '/savings-overview', current: false },
   { name: 'Gastos', href: '/expenses-overview', current: false },
 ]
@@ -25,6 +27,16 @@ function classNames(...classes) {
 }
 
 export function DarkNav() {
+  const navigate = useNavigate();
+
+  const handleNavigation = (item) => {
+    if (item.name === 'Ingresos') {
+      navigate(item.href, { state: item.state });
+    } else {
+      navigate(item.href);
+    }
+  };
+
   return (
     <>
       {/*
@@ -52,13 +64,14 @@ export function DarkNav() {
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
                         {navigation.map((item) => (
-                          <a
+                          <a 
                             key={item.name}
-                            href={item.href}
+                            onClick={() => handleNavigation(item)}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                             className={classNames(
                               item.current
-                                ? 'bg-gray-900 text-white'
-                                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                ? 'btn bg-gray-900 text-white'
+                                : 'btn text-gray-300 hover:bg-gray-700 hover:text-white',
                               'rounded-md px-3 py-2 text-sm font-medium',
                             )}
                             aria-current={item.current ? 'page' : undefined}
@@ -132,8 +145,7 @@ export function DarkNav() {
                   {navigation.map((item) => (
                     <DisclosureButton
                       key={item.name}
-                      as="a"
-                      href={item.href}
+                      onClick={() => handleNavigation(item)}
                       className={classNames(
                         item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                         'block rounded-md px-3 py-2 text-base font-medium',
@@ -166,8 +178,6 @@ export function DarkNav() {
                     {userNavigation.map((item) => (
                       <DisclosureButton
                         key={item.name}
-                        as="a"
-                        href={item.href}
                         className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                       >
                         {item.name}

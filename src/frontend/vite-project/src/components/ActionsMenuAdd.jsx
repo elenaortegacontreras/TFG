@@ -4,23 +4,23 @@ export function ActionsMenuAdd( { action, category_id } ) {
     const navigate = useNavigate();
 
     const handleAddExpense = () => {
-        navigate('/form-expense');
+        navigate('/form-expense', { state: { transaction_id: "" } });
     };
 
     const handleAddIncome = () => {
-        navigate('/form-income');
+        navigate('/form-income', { state: { transaction_id: "" } });
     };
 
     const handleAddSaving = () => {
-        navigate('/form-saving');
+        navigate('/form-saving', { state: { transaction_id: "" } });
     };
 
     const handleAddCategory = () => {
-        navigate('/form-category');
+        navigate('/form-category', { state: { transaction_id: "" } });
     };
 
     const handleAddGoal = () => {
-        navigate('/form-goal');
+        navigate('/form-goal', { state: { transaction_id: "" } });
     };
 
     const handleAddSubCategory = () => {

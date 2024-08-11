@@ -4,6 +4,7 @@ import { SavingsLineChart } from './SavingsLineChart.jsx';
 import { LoadingDots } from './LoadingDots.jsx';
 import { ErrorAlert } from './ErrorAlert';
 import { SuccessAlert } from './SuccessAlert';
+import { ActionsMenuEditDelete } from './ActionsMenuEditDelete.jsx';
 
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -41,6 +42,10 @@ export function SavingView(){
                     ) : (
                         <LoadingDots />
                     )}
+                </div>
+
+                <div className="flex justify-end px-20">
+                    <ActionsMenuEditDelete element_type="goal" element_id={state.id} setSuccessMessage="" setErrorMessage=""/>
                 </div>
 
                 <div className="divider"></div>

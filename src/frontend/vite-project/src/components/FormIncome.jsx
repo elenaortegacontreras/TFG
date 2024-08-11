@@ -1,16 +1,40 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Title } from './Title.jsx';
 
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 export function FormIncome() {
+  const location = useLocation();
+  const state = location.state;
+  console.log(state);
+  
   const [amount, setAmount] = useState('');
   const [name, setDescription] = useState('');
-  const [date, setDate] = useState('');
   const [payment_method, setPaymentMethod] = useState('');
   const [insertDate, setInsertDate] = useState('');
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log('stateIncome:', state);
+    if (state.transaction_id) {
+      axios.get(`http://localhost:8000/transaction/${state.transaction_id}`)
+        .then(response => {
+          const income = response.data;
+          console.log('income:', income);
+          setAmount(income.amount);
+          setDescription(income.name);
+          setInsertDate(new Date(income.insert_date).toISOString().split('T')[0]);
+          setPaymentMethod(income.payment_method);
+        })
+        .catch(error => {
+          console.error('Error fetching income data:', error);
+        });
+    }
+  }, []);
+
 
   const handlePaymentMethodChange = (type) => {
     setPaymentMethod(type);
@@ -22,26 +46,45 @@ export function FormIncome() {
     const newIncome = {
       amount: parseFloat(amount),
       name,
-      date,
       payment_method,
       user_id: 1,
       transaction_type: "Income",
       insert_date: insertDate ? insertDate : null,
     };
 
-    try {
-      await axios.post('http://localhost:8000/transactions', newIncome);
-      console.log('Ingreso creado con éxito');
-      navigate('/transactions', { state: { transaction_type: "incomes" } });
-    } catch (error) {
-      console.error('Error al crear ingreso:', error.response.statusText);
-    }
+    console.log('newIncome:', newIncome);
+
+    if (state.transaction_id) {
+      try {
+        await axios.put(`http://localhost:8000/transaction/${state.transaction_id}`, newIncome);
+        console.log('Ingreso actualizado con éxito');
+        navigate('/transactions', { state: { transaction_type: "incomes" } });
+      } catch (error) {
+        console.error('Error al actualizar ingreso:', error.response.statusText);
+      };
+
+    }else{
+      try {
+        await axios.post('http://localhost:8000/transactions', newIncome);
+        console.log('Ingreso creado con éxito');
+        navigate('/transactions', { state: { transaction_type: "incomes" } });
+      } catch (error) {
+        console.error('Error al crear ingreso:', error.response.statusText);
+      };
+    };
   };
+
+  const handleCancel = () => {
+    navigate('/transactions', { state: { transaction_type: "incomes" } });
+  }
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+    { state.transaction_id ? (
+      <Title title="Editar Ingreso" />
+    ) : (
       <Title title="Añadir Ingreso" />
-
+    )}
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-lg">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -57,6 +100,7 @@ export function FormIncome() {
                 onChange={(e) => setAmount(e.target.value)}
                 step="0.01"
                 required
+                placeholder='0.00'
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -73,7 +117,7 @@ export function FormIncome() {
                 name="name"
                 value={name}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder='Descripción del ingreso'
+                placeholder='Ej. Nómina'
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -122,7 +166,18 @@ export function FormIncome() {
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Añadir
+              { state.transaction_id ? (
+                <p>Editar</p>
+              ) : (
+                <p>Añadir</p>
+              )}
+            </button>
+
+            <button onClick={handleCancel}
+              type="submit"
+              className="flex w-full justify-center rounded-md px-3 py-1.5 my-2 text-sm font-semibold leading-6 bg-white text-gray-900 border border-gray-300"
+            >
+              Cancelar
             </button>
           </div>
         </form>

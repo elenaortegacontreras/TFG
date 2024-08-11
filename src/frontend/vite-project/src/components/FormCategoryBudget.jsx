@@ -3,14 +3,36 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Title } from './Title.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 export function FormCategoryBudget() {
+  const location = useLocation();
+  const state = location.state;
+  console.log(state);
+
   const [amount, setAmount] = useState('');
   const [name, setConcept] = useState('');
   const [description, setDescription] = useState('');
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log('stateCategory:', state);
+    if (state.category_id) {
+      axios.get(`http://localhost:8000/category/${state.category_id}`)
+        .then(response => {
+          const category = response.data;
+          console.log('category:', category);
+          setAmount(category.budget_amount);
+          setConcept(category.name);
+          setDescription(category.description);
+        })
+        .catch(error => {
+          console.error('Error fetching category data:', error);
+        });
+    }
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,18 +46,33 @@ export function FormCategoryBudget() {
 
     console.log('newCategory:', newCategory);
     
-    try {
-      await axios.post('http://localhost:8000/categories', newCategory);
-      console.log('Category created successfully');
-      navigate('/expenses-overview');
-    } catch (error) {
-      console.error('Error creating category:', error.response.statusText);
-    }
+    if (state.category_id) {
+      try {
+        await axios.put(`http://localhost:8000/category/${state.category_id}`, newCategory);
+        console.log('Categoría actualizada con éxito');
+        navigate('/expenses-overview');
+      } catch (error) {
+        console.error('Error al actualizar categoría:', error.response.statusText);
+      };
+
+    }else{
+      try {
+        await axios.post('http://localhost:8000/categories', newCategory);
+        console.log('Categoría creada con éxito');
+        navigate('/expenses-overview');
+      } catch (error) {
+        console.error('Error al crear categoría:', error.response.statusText);
+      };
+    };
   };
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <Title title="Crear categoría" />
+      { state.category_id ? (
+        <Title title="Editar categoría" />
+      ) : (
+        <Title title="Crear categoría" />
+      )}
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-lg">
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -71,7 +108,7 @@ export function FormCategoryBudget() {
                 onChange={(e) => setConcept(e.target.value)}
                 required
                 placeholder="Ej. Casa"
-                maxLength={14}
+                maxLength={20}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -99,7 +136,11 @@ export function FormCategoryBudget() {
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Añadir
+              { state.category_id ? (
+                <p>Editar</p>
+              ) : (
+                <p>Crear</p>
+              )}
             </button>
           </div>
         </form>
