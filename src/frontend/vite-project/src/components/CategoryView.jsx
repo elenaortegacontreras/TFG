@@ -17,6 +17,9 @@ export function CategoryView() {
     const state = location.state;
     console.log(state);
 
+    const currentMonth = new Date().getMonth() + 1;
+    console.log('currentMonth:', currentMonth);
+
     const [expenses, setExpenses] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
@@ -42,31 +45,39 @@ export function CategoryView() {
             });
     }, []);
 
-    return (        
+    const current_month_expenses = expenses.filter(expense => {
+        const expenseDate = new Date(expense.insert_date);
+        return expenseDate.getMonth() + 1 === currentMonth;
+    });
+
+    const other_months_expenses = expenses.filter(expense => {
+        const expenseDate = new Date(expense.insert_date);
+        return expenseDate.getMonth() + 1 !== currentMonth;
+    });
+
+    return (
         <div>
-            <Title title={state.name}/>
+            <Title title={state.name} />
             <div>
                 <p>{state.description}</p>
                 <progress className="progress w-56" value={state.current_amount_spent} max={state.budget_amount}></progress>
                 <p className="text-center">{state.current_amount_spent} / {state.budget_amount} {state.currency}</p>
 
                 <div className="max-w-sm mx-auto">
-                {expenses.length !== 0 ? (
-                    <CategoriesDoughnutChart categories={subcategories} className="max-w-sm mx-auto"/>
-                ) : (
-                    <LoadingDots />
-                )}
-            </div>
+                    {expenses.length !== 0 ? (
+                        <CategoriesDoughnutChart categories={subcategories} className="max-w-sm mx-auto" />
+                    ) : (
+                        <LoadingDots />
+                    )}
+                </div>
 
-            
-
-            <div className="flex justify-end px-20">
-                <SubcategoriesList subcategories={subcategories}/>
-                <ActionsMenuAdd action="add_subcategory" category_id={state.id}/>
-                { state.name !== "Otros" && (
-                    <ActionsMenuEditDelete element_type="category" element_id={state.id} setSuccessMessage="" setErrorMessage=""/>
-                )}
-            </div>
+                <div className="flex justify-end px-20">
+                    <SubcategoriesList subcategories={subcategories} />
+                    <ActionsMenuAdd action="add_subcategory" category_id={state.id} />
+                    {state.name !== "Otros" && (
+                        <ActionsMenuEditDelete element_type="category" element_id={state.id} setSuccessMessage="" setErrorMessage="" />
+                    )}
+                </div>
 
                 <div className="divider"></div>
 
@@ -75,7 +86,12 @@ export function CategoryView() {
                     <div className="divider"></div>
                     {successMessage && <SuccessAlert message={successMessage} />}
                     {errorMessage && <ErrorAlert message={errorMessage} />}
-                    <TransactionPanel transactions={expenses} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
+
+                    <p>Gastos de este mes:</p>
+                    <TransactionPanel transactions={current_month_expenses} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />
+                    <div className="divider"></div>
+                    <p>Otros gastos:</p>
+                    <TransactionPanel transactions={other_months_expenses} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />
                 </div>
 
                 <div className="divider"></div>
