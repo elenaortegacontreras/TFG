@@ -10,6 +10,7 @@ import { ActionsMenuEditDelete } from './ActionsMenuEditDelete.jsx';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { SubcategoriesList } from './SubcategoriesList.jsx';
 
 export function CategoryView() {
     const location = useLocation();
@@ -47,15 +48,20 @@ export function CategoryView() {
             <div>
                 <p>{state.description}</p>
                 <progress className="progress w-56" value={state.current_amount_spent} max={state.budget_amount}></progress>
+                <p className="text-center">{state.current_amount_spent} / {state.budget_amount} {state.currency}</p>
+
                 <div className="max-w-sm mx-auto">
-                {subcategories.length !== 0 ? (
+                {expenses.length !== 0 ? (
                     <CategoriesDoughnutChart categories={subcategories} className="max-w-sm mx-auto"/>
                 ) : (
                     <LoadingDots />
                 )}
             </div>
 
+            
+
             <div className="flex justify-end px-20">
+                <SubcategoriesList subcategories={subcategories}/>
                 <ActionsMenuAdd action="add_subcategory" category_id={state.id}/>
                 <ActionsMenuEditDelete element_type="category" element_id={state.id} setSuccessMessage="" setErrorMessage=""/>
             </div>

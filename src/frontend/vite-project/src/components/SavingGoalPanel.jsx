@@ -17,6 +17,7 @@ export function SavingGoalPanel( { saving_goals }) {
                             insert_date={saving_goal.insert_date}
                             target_date={saving_goal.target_date}
                             // currency={saving_goal.currency}
+                            currency = "€"
                         />
                     </div>
                 ))}

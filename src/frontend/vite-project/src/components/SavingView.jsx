@@ -35,6 +35,7 @@ export function SavingView(){
             <div>
                 <p>{state.description}</p>
                 <progress className="progress w-56" value={state.current_amount_saved} max={state.target_amount}></progress>
+                <p className="text-center">{state.current_amount_saved} / {state.target_amount} {state.currency}</p>
 
                 <div className="max-w-sm mx-auto">
                     {savings.length !== 0 ? (
@@ -62,13 +63,13 @@ export function SavingView(){
 
                 <div className="panel flex w-full justify-evenly">
                     <div className="card grid h-20 place-items-center">
-                        <p>Fecha comienzo</p>
-                        <p>{state.insert_date}</p>
+                        <p className="font-semibold" >Fecha comienzo</p>
+                        <p>{new Date(state.insert_date).toLocaleDateString('es-ES')}</p>
                     </div>
                     <div className="divider divider-horizontal"></div>
                     <div className="card grid h-20 place-items-center">
-                        <p>Fecha límite</p>
-                        <p>{state.target_date}</p>
+                        <p className="font-semibold" >Fecha límite</p>
+                        <p>{new Date(state.target_date).toLocaleDateString('es-ES')}</p>
                     </div>
                 </div>
 
