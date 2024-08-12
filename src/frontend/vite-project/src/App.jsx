@@ -11,14 +11,16 @@ import { TransactionsView } from './components/TransactionsView.jsx'
 import { SavingView } from './components/SavingView.jsx'
 import { ExpensesOverviewView } from './components/ExpensesOverviewView.jsx'
 import { SavingsOverviewView } from './components/SavingsOverviewView.jsx'
-import { FormExpense } from './inprogress/FormExpense.jsx'
+import { FormExpense } from './components/FormExpense.jsx'
 import { SignInOrRegistration } from './inprogress/SignInOrRegistration.jsx'
-import { FormSaving } from './inprogress/FormSaving.jsx'
-import { FormIncome } from './inprogress/FormIncome.jsx'
+import { FormSaving } from './components/FormSaving.jsx'
+import { FormIncome } from './components/FormIncome.jsx'
+import { FormCategoryBudget } from './components/FormCategoryBudget.jsx'
+import { FormSubcategoryBudget } from './components/FormSubcategoryBudget.jsx'
+import { FormSavingGoal } from './components/FormSavingGoal.jsx'
 import { HomeView } from './components/HomeView.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
@@ -26,10 +28,7 @@ function App() {
 
       <DarkNav />
 
-      <main className="bg-white shadow">
-            {/* <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">{title}</h1>
-            </div> */}
+      <main className="fullHeight bg-white shadow">
 
             {/* <SignInOrRegistration /> */}
 
@@ -54,8 +53,10 @@ function App() {
           <Route path="/form-expense" element={<FormExpense />} />
           <Route path="/form-saving" element={<FormSaving />} />
           <Route path="/form-income" element={<FormIncome />} />
+          <Route path="/form-category" element={<FormCategoryBudget />} />
+          <Route path='/form-subcategory' element={<FormSubcategoryBudget />} />
+          <Route path="/form-goal" element={<FormSavingGoal />} />
           <Route path="/sign-in" element={<SignInOrRegistration />} />
-
         </Routes>
       </main>
     </div>
