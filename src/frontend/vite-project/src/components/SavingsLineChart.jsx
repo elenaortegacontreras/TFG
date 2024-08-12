@@ -13,7 +13,6 @@ const processData = (savings) => {
         return acc;
     }, {});
 
-    // Ordenar por fecha y formatear datos
     const labels = Object.keys(dataByMonth).sort();
     const data = labels.map(month => dataByMonth[month]);
 
@@ -26,7 +25,11 @@ export function SavingsLineChart({ savings }) {
     const chartData = {
         labels: labels.map(date => {
             const [year, month] = date.split('-');
-            return `${month}/${year}`;
+            const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            const monthName = monthNames[parseInt(month) - 1];
+            const currentYear = new Date().getFullYear();
+            const displayYear = year < currentYear ? `, ${year}` : '';
+            return `${monthName}${displayYear}`;
         }),
         datasets: [
             {
@@ -42,27 +45,8 @@ export function SavingsLineChart({ savings }) {
         ]
     };
 
-    // const options = {
-    //     scales: {
-    //         x: {
-    //             title: {
-    //                 display: true,
-    //                 text: 'Fecha'
-    //             }
-    //         },
-    //         y: {
-    //             title: {
-    //                 display: true,
-    //                 text: 'Cantidad ahorrada'
-    //             },
-    //             beginAtZero: true
-    //         }
-    //     }
-    // };
-
     return (
         <div>
-            {/* <Line data={chartData} options={options} /> */}
             <Line data={chartData} />
         </div>
     );
