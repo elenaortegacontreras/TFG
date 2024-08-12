@@ -63,7 +63,9 @@ export function CategoryView() {
             <div className="flex justify-end px-20">
                 <SubcategoriesList subcategories={subcategories}/>
                 <ActionsMenuAdd action="add_subcategory" category_id={state.id}/>
-                <ActionsMenuEditDelete element_type="category" element_id={state.id} setSuccessMessage="" setErrorMessage=""/>
+                { state.name !== "Otros" && (
+                    <ActionsMenuEditDelete element_type="category" element_id={state.id} setSuccessMessage="" setErrorMessage=""/>
+                )}
             </div>
 
                 <div className="divider"></div>

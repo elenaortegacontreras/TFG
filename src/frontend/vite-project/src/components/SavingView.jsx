@@ -44,10 +44,12 @@ export function SavingView(){
                         <LoadingDots />
                     )}
                 </div>
-
-                <div className="flex justify-end px-20">
-                    <ActionsMenuEditDelete element_type="goal" element_id={state.id} setSuccessMessage="" setErrorMessage=""/>
-                </div>
+                
+                { state.name !== "Otros" && (
+                    <div className="flex justify-end px-20">
+                        <ActionsMenuEditDelete element_type="goal" element_id={state.id} setSuccessMessage="" setErrorMessage=""/>
+                    </div>
+                )}
 
                 <div className="divider"></div>
 
