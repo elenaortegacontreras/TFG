@@ -93,18 +93,30 @@ def verify_date(date_str, case):
         
     return True
     
-def purge_dates_match(match, case):
+def purge_dates_match(text, match, case):
     valid_dates = []
     for date_str in match:
         if verify_date(date_str, case):
-            valid_dates.append(date_str)
+            if(case == 1):
+                match_return_date = re.search(r'dev.*\d{2}[./-]\d{2}[./-]\d{4}', text) # fecha devolución
+            elif(case == 2):
+                match_return_date = re.search(r'dev.*\D?\d{2}[./-]\d{2}[./-]\d{2}\D?', text) # fecha devolución
+            elif(case == 3):
+                match_return_date = re.search(r'dev.*\d{4}[./-]\d{2}[./-]\d{2}\D?', text) # fecha devolución
+                     
+            if match_return_date:
+                if date_str not in match_return_date.group(0):
+                    valid_dates.append(date_str)
+            else:
+                valid_dates.append(date_str)
+
     return valid_dates
 
 def get_date(text):
     date = 'desconocido'
 
     match = re.findall(r'\d{2}[./-]\d{2}[./-]\d{4}', text) # dd/mm/aaaa, dd-mm-aaaa, dd.mm.aaaa
-    match = purge_dates_match(match, 1)
+    match = purge_dates_match(text, match, 1)
     if match:
         if verify_unique_date(match):
             date_str = match[0]
@@ -126,7 +138,7 @@ def get_date(text):
                 match = [date[1:9] for date in match] 
             elif ends_w_char and not starts_w_char:    
                 match = [date[0:8] for date in match]
-            match = purge_dates_match(match, 2)
+            match = purge_dates_match(text, match, 2)
             if verify_unique_date(match):
                 date_str = match[0]
                 date = date_str[0:2] + '/' + date_str[3:5] + '/20' + date_str[6:8]
@@ -135,7 +147,7 @@ def get_date(text):
             match = re.findall(r'\d{4}[./-]\d{2}[./-]\d{2}\D?', text) # aaaa-mm-dd, aaaa/mm/dd, aaaa.mm.dd
             if match:
                 match = [date[:10] for date in match]
-                match = purge_dates_match(match, 3)
+                match = purge_dates_match(text, match, 3)
                 if verify_unique_date(match):
                     date_str = match[0]
                     date = date_str[8:10] + '/' + date_str[5:7] + '/' + date_str[0:4]  
@@ -199,12 +211,19 @@ def get_total_amount_old(text):
 def get_iva_prices(text):
     percentage_prices = []
 
-    match_x_iva = re.findall(r'[\n\s]iva.*\d+[.,]\s*\d?\d', text)
-    match_iva_x = re.findall(r'iva[\n\s].*\d+[.,]\s*\d?\d', text)
-    match_iva_perc = re.findall(r'%.*\d+[.,]\s*\d?\d', text)
+    match_x_iva = re.findall(r'[\n\s]iva[\s\S]*?\d+[.,]\s*\d?\d', text)
+    match_iva_x = re.findall(r'iva[\n\s][\s\S]*?\d+[.,]\s*\d?\d', text)
+    match_iva_perc = re.findall(r'%[\s\S]*?\d+[.,]\s*\d?\d', text)
     
     match_iva_prices = match_x_iva + match_iva_x + match_iva_perc
 
+    print('       IVA candidates:', match_iva_prices)
+
+    #eliminar de match_iva_prices los que incluyan la palabra total
+    match_iva_prices = [price for price in match_iva_prices if not re.search(r'total[^\n]', price)]
+
+    print('       IVA candidates:', match_iva_prices)
+                        
     for i in range(len(match_iva_prices)):
         match = re.search(r'\d+[.,]\s*\d?\d', match_iva_prices[i])
         match_iva_prices[i] = match.group(0) if match else None
@@ -213,13 +232,29 @@ def get_iva_prices(text):
 
     if match_iva_prices:
         percentage_prices = [float(price.replace('\n', '').replace(',', '.').replace('€', '').replace(' ', '').replace('e', '').replace('%', '')) for price in match_iva_prices]
-
+    
     match_percentage_prices = re.findall(r'\d+[.,]\s*\d?\d\s*%', text)
     if match_percentage_prices:
         all_perc = [float(price.replace('\n', '').replace(',', '.').replace('€', '').replace(' ', '').replace('e', '').replace('%', '')) for price in match_percentage_prices]
         percentage_prices += all_perc
 
     return percentage_prices
+
+def get_discount_prices(text):
+    discount_prices = []
+
+    match_discount_prices = re.findall(r'desc[\s\S]*?\d+[.,]\s*\d?\d', text)
+
+    for i in range(len(match_discount_prices)):
+        match = re.search(r'\d+[.,]\s*\d?\d', match_discount_prices[i])
+        match_discount_prices[i] = match.group(0) if match else None
+
+    match_discount_prices = [price for price in match_discount_prices if price is not None]
+    
+    if match_discount_prices:
+        discount_prices = [float(price.replace('\n', '').replace(',', '.').replace('€', '').replace(' ', '').replace('e', '').replace('%', '')) for price in match_discount_prices]
+
+    return discount_prices
 
 def get_eol_prices(text, percentage_prices):
     all_prices = []
@@ -238,19 +273,21 @@ def get_total_prices(text, percentage_prices):
     all_prices = []
 
     match_total_prices = re.findall(r'(?:tot|total)[\s\S]*?\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
+    # match_total_prices = re.findall(r'(?:tot|total).*\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
 
     if not match_total_prices:
         match_total_prices = re.findall(r'(?:porte|venta)[\s\S]*?\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
+        # match_total_prices = re.findall(r'(?:porte|venta).*\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
 
     if match_total_prices: 
         for i in range(len(match_total_prices)):
-            match = re.search(r'\d+[.,]\s*\d+[e\s€]', match_total_prices[i])
+            match = re.search(r'\d+[.,]\s*\d+[e\s€\n]', match_total_prices[i])
             match_total_prices[i] = match.group(0) if match else None
 
         match_total_prices = [price for price in match_total_prices if price is not None]
 
         if match_total_prices:
-            all_prices = [float(price.replace(',', '.').replace('€', '').replace(' ', '').replace('e', '')) for price in match_total_prices]
+            all_prices = [float(price.replace(',', '.').replace('€', '').replace(' ', '').replace('e', '').replace('\n','')) for price in match_total_prices]
             if percentage_prices:
                 all_prices = [price for price in all_prices if price not in percentage_prices]
     
@@ -262,17 +299,23 @@ def get_total_amount(text):
     total_from_eol_prices = 0
     total_from_candidates = 0
     percentage_prices = get_iva_prices(text)
+    discount_prices = get_discount_prices(text)
 
-    eol_prices = get_eol_prices(text, percentage_prices)
-    total_prices = get_total_prices(text, percentage_prices)
+    invalid_prices = percentage_prices + discount_prices
+
+    if not discount_prices:
+        eol_prices = get_eol_prices(text, invalid_prices)
            
-    if eol_prices:
-        total_from_eol_prices = max(eol_prices)
-        print('       Total (1st try):', total_from_eol_prices)
-        print('              From prices at the end of line:', eol_prices)
-    else:
-        print('       Total (1st try): desconocido')
-         
+        if eol_prices:
+            total_from_eol_prices = max(eol_prices)
+            print('       Total (1st try):', total_from_eol_prices)
+            print('              From prices at the end of line:', eol_prices)
+        else:
+            print('       Total (1st try): desconocido')
+
+    
+    total_prices = get_total_prices(text, invalid_prices)
+
     if total_prices:
         total_found = True
         total_from_candidates = max(total_prices)
@@ -287,7 +330,6 @@ def get_total_amount(text):
             total_amount = str(total_from_candidates)
 
     return total_amount
-
 
 def get_data(text):
     text = text.lower()

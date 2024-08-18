@@ -3,10 +3,13 @@ from ocr_clean import get_shop_name, get_payment_method, get_date, get_total_amo
 
 
 text = ["", "01_ikea.txt", "02_nogales.txt", "03_casa_del_libro.txt", "04_lidl.txt", "05_lefties.txt",
-                "06_primor.txt", "07_costa_cabria.txt", "08_mercadona_efectivo.txt", "09_mc_donalds.txt", 
-                "10_carrefour.txt", "", "12_mercadona_tarjeta.txt", "13_casa_del_libro_2.txt", 
-                "14_margaritas.txt", "", "16_ticket_girado_horizontal.txt", "17_corte_ingles.txt", 
-                "18_mundys.txt", "19_kfc.txt", "", ""]
+        "06_primor.txt", "07_costa_cabria.txt", "08_mercadona_efectivo.txt", "09_mc_donalds.txt", 
+        "10_carrefour.txt", "", "12_mercadona_tarjeta.txt", "13_casa_del_libro_2.txt", 
+        "14_margaritas.txt", "", "16_ticket_girado_horizontal.txt", "17_corte_ingles.txt", 
+        "18_mundys.txt", "19_kfc.txt", "20_mercadona_digital.txt", "21_hym_digital.txt", "22_hym_descuento_mayoratotal.txt"
+        ]
+
+# generar txt: python3 ocrtest_v2.py x > ./tickets_text/x_nombre.txt
 
 # OCR Space tickets
 # text = ["","/ocr_space_text/01_ikea.txt","/ocr_space_text/02_nogales.txt","/ocr_space_text/03_casa_del_libro.txt","/ocr_space_text/04_lidl.txt","/ocr_space_text/05_lefties.txt",
@@ -26,7 +29,7 @@ text = ["", "01_ikea.txt", "02_nogales.txt", "03_casa_del_libro.txt", "04_lidl.t
 # Método de pago
 def test_get_payment_method_tarjeta():
     expected = "tarjeta"
-    tickets_tarjeta = [text[1], text[3], text[5], text[6], text[12], text[13] ]
+    tickets_tarjeta = [text[1], text[3], text[5], text[6], text[12], text[13], text[20], text[21], text[22] ]
     for ticket in tickets_tarjeta:
         with open(f'./tickets_text/{ticket}', 'r') as file:
             ticket_str = file.read().lower()
@@ -56,8 +59,10 @@ def test_get_date_not_verified():
 # Fecha
 def test_get_date_dd_mm_yyyy():
     # on ticket: 16(05-06-2024)
-    expected = ["desconocido", "09/08/2024", "01/02/2024", "desconocido", "15/07/2024", "17/06/2024", "27/04/2024", "05/06/2024", "desconocido"]
-    tickets_dd_mm_yyyy = [text[1], text[2], text[5], text[8], text[9], text[12], text[14], text[16], text[17]]
+    expected = ["desconocido", "09/08/2024", "01/02/2024", "desconocido", "15/07/2024", "17/06/2024", 
+                "27/04/2024", "05/06/2024", "16/08/2024", "05/03/2024"]
+    tickets_dd_mm_yyyy = [text[1], text[2], text[5], text[8], text[9], text[12], 
+                          text[14], text[16], text[19], text[20]]
     i = 0
     for ticket in tickets_dd_mm_yyyy:
         with open(f'./tickets_text/{ticket}', 'r') as file:
@@ -66,8 +71,10 @@ def test_get_date_dd_mm_yyyy():
             i += 1
 
 def test_get_date_dd_mm_yy():
-    expected = ["desconocido", "12/06/2024", "desconocido", "desconocido", "desconocido", "16/08/2024"]
-    tickets_dd_mm_yy = [text[4], text[6], text[7], text[10], text[18], text[19]]
+    expected = ["desconocido", "12/06/2024", "desconocido", "desconocido", "desconocido", "16/08/2024",
+                "15/06/2024", "24/06/2024"]
+    tickets_dd_mm_yy = [text[4], text[6], text[7], text[10], text[18], text[19],
+                        text[21], text[22]]
     i = 0
     for ticket in tickets_dd_mm_yy:
         with open(f'./tickets_text/{ticket}', 'r') as file:
@@ -103,7 +110,6 @@ def test_get_date_mix():
 ###########################################################################################
 # Total
 # ###### 
-
 def test_get_total_amount_desconocido():
     expected = "desconocido"
     tickets_desconocido = [text[1], text[4], text[7], text[8], text[9], text[10], text[13], text[16]]
@@ -111,11 +117,20 @@ def test_get_total_amount_desconocido():
         assert get_total_amount(f'./tickets_text/{ticket}') == expected
 
 def test_get_total_amount():
-    expected = ["2.99", "9.85", "17.99", "4.3", "11.0", "6.5", "17.5", "6.2", "4.02"]    
-    tickets_total = [text[1], text[3], text[5], text[6], text[12], text[14], text[17], text[18], text[19]]
+    expected = ["2.99", "9.85", "17.99", "4.3", "11.0", "6.5", 
+                "17.5", "6.2", "4.02", "6.52", "29.96", "2.99"]    
+    tickets_total = [text[1], text[3], text[5], text[6], text[12], text[14], 
+                     text[17], text[18], text[19], text[20], text[21], text[22]]
     i = 0
     for ticket in tickets_total:
         with open(f'./tickets_text/{ticket}', 'r') as file:
             ticket_str = file.read().lower()
             assert get_total_amount(f'./tickets_text/{ticket_str}') == expected[i]
             i += 1
+
+
+###########################################################################################
+# CIF/NIF
+######
+
+
