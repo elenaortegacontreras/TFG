@@ -2,22 +2,8 @@ import sys
 import re
 from PIL import Image
 import pytesseract
+import spacy
 
-###########################################################################################
-# Nombre de la tienda
-###### returns shop name or 'desconocido' if not found
-def get_shop_name(text):
-    shop_name = 'desconocido'
-
-    match = re.search(r'\S.+\n.*\n', text)
-
-    if match:
-        shop_name_str = match.group(0).replace('\n', ' ').replace('\r', ' ')
-
-        if shop_name_str != ' ':
-            shop_name = shop_name_str
-
-    return shop_name
 
 ###########################################################################################
 # Método de pago
@@ -154,7 +140,6 @@ def get_date(text):
 ###########################################################################################
 # Total
 ######
-# para averiguar el total tenemos que buscar la palabra 'total' y luego buscar el número que le sigue
 def get_iva_prices(text):
     percentage_prices = []
 
@@ -190,7 +175,10 @@ def get_iva_prices(text):
 def get_discount_prices(text):
     discount_prices = []
 
-    match_discount_prices = re.findall(r'desc[\s\S]*?\d+[.,]\s*\d?\d', text)
+    match_desc_prices = re.findall(r'desc[\s\S]*?\d+[.,]\s*\d?\d', text)
+    match_cupon_prices = re.findall(r'cupon[\s\S]*?-[\s\S]*?\d+[.,]\s*\d?\d', text)
+
+    match_discount_prices = match_desc_prices + match_cupon_prices
 
     for i in range(len(match_discount_prices)):
         match = re.search(r'\d+[.,]\s*\d?\d', match_discount_prices[i])
@@ -216,27 +204,43 @@ def get_eol_prices(text, percentage_prices):
 
     return all_prices
 
+def get_total_prices_in_match(match_total_prices, percentage_prices):
+    all_prices = []
+
+    for i in range(len(match_total_prices)):
+        match = re.search(r'\d+[.,]\s*\d+[e\s€\n]', match_total_prices[i])
+        match_total_prices[i] = match.group(0) if match else None
+
+    match_total_prices = [price for price in match_total_prices if price is not None]
+
+    if match_total_prices:
+        all_prices = [float(price.replace(',', '.').replace('€', '').replace(' ', '').replace('e', '').replace('\n','')) for price in match_total_prices]
+        if percentage_prices:
+            all_prices = [price for price in all_prices if price not in percentage_prices]
+
+    return all_prices
+
 def get_total_prices(text, percentage_prices):
     all_prices = []
 
     match_total_prices = re.findall(r'(?:tot|total)[\s\S]*?\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
-    # match_total_prices = re.findall(r'(?:tot|total).*\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
-
-    if not match_total_prices:
-        match_total_prices = re.findall(r'(?:porte|venta)[\s\S]*?\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
-        # match_total_prices = re.findall(r'(?:porte|venta).*\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
-
     if match_total_prices: 
-        for i in range(len(match_total_prices)):
-            match = re.search(r'\d+[.,]\s*\d+[e\s€\n]', match_total_prices[i])
-            match_total_prices[i] = match.group(0) if match else None
+        all_prices = get_total_prices_in_match(match_total_prices, percentage_prices)
 
-        match_total_prices = [price for price in match_total_prices if price is not None]
+    if not all_prices:
+        match_total_prices = re.findall(r'(?:porte|venta)[\s\S]*?\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
+        if match_total_prices: 
+            all_prices = get_total_prices_in_match(match_total_prices, percentage_prices)
 
-        if match_total_prices:
-            all_prices = [float(price.replace(',', '.').replace('€', '').replace(' ', '').replace('e', '').replace('\n','')) for price in match_total_prices]
-            if percentage_prices:
-                all_prices = [price for price in all_prices if price not in percentage_prices]
+    if not all_prices:
+        match_total_prices = re.findall(r'(?:tot|total).*\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
+        if match_total_prices: 
+            all_prices = get_total_prices_in_match(match_total_prices, percentage_prices)
+
+    if not all_prices:
+        match_total_prices = re.findall(r'(?:porte|venta).*\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
+        if match_total_prices: 
+            all_prices = get_total_prices_in_match(match_total_prices, percentage_prices)
     
     return all_prices
 
@@ -268,7 +272,6 @@ def get_total_amount(text):
         total_from_candidates = max(total_prices)
         print('       Total (2nd try):', total_from_candidates)
         print('              From total candidates:', total_prices)
-        
     else:
         print('       Total (2nd try): desconocido')           
     
@@ -282,41 +285,35 @@ def get_total_amount(text):
 ###########################################################################################
 # CIF/NIF
 ######
+def get_cif_nif_match(text):
+    match_cif = re.findall(r'\n[a-zA-Z]*(?:cif|nif|C\.I\.F|N\.I\.F)?\s*:?\s*[a-zA-Z][-\s\.,]?\d{8}\D', text)
+    if not match_cif:
+        match_cif = re.findall(r'(?:cif|nif|C\.I\.F|N\.I\.F)?\s*:?\s*[a-zA-Z][-\s\.,]?(?:\d[-\s\.,]*?){8}\D', text)
+    if not match_cif:
+        match_cif = re.findall(r'\n[a-zA-Z]?[-\s\.]?(?:\d[-\s\.,]*?){8}\D', text) # ej: \n\npbb\n\n: 6785501\ns
+
+    return match_cif
+
 def get_cif_nif(text):
     cif_nif = 'desconocido'
-
-    print(repr(text))
-
-    #entre cada número puede haber cualquier caracter excepto letras
-    # match_cif = re.search(r'[a-zA-Z].*\D(?:[^a-zA-Z]\d){8}\D', text)
-    # match_cif = re.search(r'[a-zA-Z].*(?:[^a-zA-Z]\d){8}\D', text)
-
-    match_cif = re.search(r'[\n\s][a-zA-Z]\d{8}\D', text)
-
-    print('       (1st try) Match candidates:', match_cif)
-
-    if not match_cif:
-        match_cif = re.search(r'[a-zA-Z].*\D\d{8}\D', text)
-        # print('       (2nd try)Match candidates:', match_cif)
-
+    
+    match_cif = get_cif_nif_match(text)
+   
     if match_cif:
-        # extraer solo el cif/nif
-        letra = re.findall(r'[a-zA-Z]', match_cif.group(0))
-        if letra: # me quedo con la última obtenida (más cercana al número)
-            letra = letra[-1]
-            # print('       Letra:', letra)
-        numero = re.search(r'\d{8}', match_cif.group(0))
-        # print('       Número:', numero)
+        for match in match_cif:
+            match = match.replace('\n', '').replace('\r', '').replace(' ', '').replace(':', '').replace('.', '').replace(',', '').replace('-', '')
+            letra = re.findall(r'[a-zA-Z]', match)
+            if letra: # me quedo con la última obtenida (más cercana al número)
+                letra = letra[-1]
+                # print('       Letra:', letra)
+    
+    # SI NO HAY LETRA COMPROBAR SI EXISTE SIN LETRA EN LA PAG WEB (validar??)
+            
+            numero = re.search(r'\d{8}', match)
+            # print('       Número:', numero)
 
-        if letra and numero:
-            cif_nif = letra.upper() + numero.group(0)
-
-            # validar el cif/nif
-            # if cif_nif:
-            #     print("NIF/CIF válido: ", cif_nif)
-            # else:
-            #     print("NIF/CIF no válido: ", cif_nif)
-
+            if letra and numero:
+                cif_nif = letra.upper() + numero.group(0)
 
     return cif_nif
 
@@ -335,8 +332,7 @@ def get_cif_nif(text):
 def get_postal_code(text):
     postal_code = 'desconocido'
 
-    match = re.search(r'[\s\n]\d{5}[\s\n]', text)
-
+    match = re.search(r'\n[\s\n]*\d{5}[\s\n.-]', text)
     if match:
         match_postal_code = re.search(r'\d{5}', match.group(0))
         postal_code = match_postal_code.group(0)
@@ -345,17 +341,135 @@ def get_postal_code(text):
 
 
 # # Ciudad (primera palabra después del código postal)
-def get_city(text):
+def get_city(text, postal_code):
     city = 'desconocido'
 
-    postal_code = get_postal_code(text)
-
-    match = re.search(rf'\s{postal_code}\s\w+', text)
-
-    if match:
-        city = (match.group(0)[6:]).replace(' ', '')
+    if postal_code != 'desconocido':
+        match = re.search(rf'{postal_code}.*', text)
+        if match:
+            city = (match.group(0)[6:]).replace('.', '')
 
     return city    
+
+
+def get_street(text, postal_code):
+    street = 'desconocido'
+
+    print(repr(text))
+
+    match = re.search(r'(?:c/|calle|avd|vda|/cc|aven).*(?:s/n|\d+)', text) # c/ o calle o avd + s/n o número
+    print('       1 - Street Match:', match)
+    
+    if not match:
+        match = re.search(r'(?:c/|calle|avd|vda|/cc|aven).*', text) # c/ o calle o avd 
+        print('       2 - Street Match:', match)
+
+    if not match:
+        match = re.search(r'[a-zA-Z].*s/n', text) # s/n (sin número)
+        print('       3 - Street Match:', match)
+
+    if not match:
+        match = re.search(r'[a-zA-Z].*\s[,]?\d+', text) # calle + número   
+        print('       4 - Street Match:', match)
+
+    if not match:
+        if postal_code != 'desconocido':
+            match_pc_ref = re.search(rf'(.*\n){postal_code}', text)
+            print('       5 - Street Match PC Reference:', match_pc_ref)
+            if match_pc_ref:
+                street = (match_pc_ref.group(0)[:-6])
+
+    if match:
+        match = re.search(r'.*\n?', match.group(0))
+        print('       6 - Street Match:', match)
+        if match:
+            street = match.group(0).replace('\n', ' ').replace('\r', ' ')
+
+    return street
+
+###########################################################################################
+# Nombre de la tienda
+###### returns shop name or 'desconocido' if not found
+# (primera línea antes de la dirección o segunda línea si la primera es un CIF/NIF)
+# o las dos primeras líneas
+def get_shop_name(text, street):
+    shop_name = 'desconocido'
+
+    match = re.search(r'[a-zA-Z]+.*S\.A.*', text) # S.A. (Sociedad Anónima)
+    print('       1 - Shop Name:', match)
+
+    if not match:
+        match = re.search(r'\S.+\n.*\n', text) # las dos primeras líneas
+        print('       2 - Shop Name:', match)
+    
+    # if not match:
+    #     match = re.findall(r'\S.+\n.*\D\n', text) # las dos primeras líneas
+    #     print('       3 - Shop Name:', match)
+
+    if match:
+        shop_name = match.group(0).replace('\n', ' ').replace('\r', ' ')
+        if street in shop_name: # nos aseguramos de no haber pillado la calle
+            shop_name = shop_name.replace(f'{street}', '')
+
+    # if match:
+    #     shop_name = match.group(0).replace(',', '').replace('\n', ' ').replace('\r', ' ')
+        
+        # if street != 'desconocido':
+        #     street = re.escape(street)
+        #     match_street_reference = re.search(rf'(.*\n){street}', text) # referencia con la calle (línea anterior)
+        #     if match_street_reference:
+        #         match_cif = get_cif_nif_match(match_street_reference.group(0))
+        #         if match_cif:
+        #             match_street_reference = re.search(rf'(.*\n){match_street_reference.group(0)}', text)
+        #     if match_street_reference:
+        #         shop_name_ref =  match_street_reference.group(0).replace(',', '').replace('\n', ' ').replace('\r', ' ')       
+        #         if match:
+        #             num_letters = len(re.findall(r'[a-zA-Z]', shop_name))           
+        #             num_letters_ref = len(re.findall(r'[a-zA-Z]', shop_name_ref))
+        #             if num_letters_ref >= num_letters:
+        #                 shop_name = shop_name_ref
+        #                 print('       2 - Shop Name:', shop_name)
+        #         else:
+        #             shop_name = shop_name_ref
+
+    return shop_name
+
+# def get_shop_name(text):
+#     #import spacy
+#     shop_name = 'desconocido'
+
+#     nlp = spacy.load("es_core_news_md")  # Modelo para español
+#     doc = nlp(text)
+
+#     for ent in doc.ents:
+#         if ent.label_ == "ORG":  # ORG es la etiqueta para organizaciones
+#             print(ent.text)
+
+
+def get_shop_data(text):
+
+    cif_nif = get_cif_nif(text)
+    postal_code = get_postal_code(text)
+    
+    # if postal_code != 'desconocido':
+    city = get_city(text, postal_code) # por ahora solo lo sé sacar con el CP
+    
+    street = get_street(text, postal_code)
+
+    # si hay postal, buscarlo e ir hacia arriba en las líneas
+    # sin que pueda coincidir con street, city o cif_nif
+    shop_name = get_shop_name(text, street)
+
+    print('+ CIF/NIF:', cif_nif)    
+    print('+ Código postal:', postal_code)
+    print('+ Ciudad:', city)
+    print('+ Calle:', street)
+    print('+ Nombre de la tienda:', shop_name)
+
+
+
+
+
 
 
 if len(sys.argv) < 2:
@@ -367,7 +481,8 @@ tickets_list = ["", "01_ikea.jpg", "02_nogales.jpg", "03_casa_del_libro.jpg", "0
                 "06_primor.jpg", "07_costa_cabria.jpg", "08_mercadona_efectivo.jpg", "09_mc_donalds.jpg", "10_carrefour.jpg", 
                 "11_hym_devolucion.jpg", "12_mercadona_tarjeta.jpg", "13_casa_del_libro_2.jpg", "14_margaritas.jpg", "15_bus.jpg",
                 "16_ticket_girado_horizontal.jpg", "17_corte_ingles.jpg", "18_mundys.jpg", "19_kfc.jpg", "20_mercadona_digital.jpg",
-                 "21_hym_digital.jpg", "22_hym_descuento_mayoratotal.jpg"
+                 "21_hym_digital.jpg", "22_hym_descuento_mayoratotal.jpg", "23_ikea_digital.jpg", "24_enjoy_it.jpg",
+                 "25_ecu.jpg", 
                 ] 
 
 # Asumiendo que el argumento es un nombre de archivo de imagen para procesar
@@ -388,19 +503,25 @@ text = pytesseract.image_to_string(image_jpg)
 
 # Imprime el texto extraído
 # print(text)
-# print(repr(text))
-print('---------------------------------------------')
 
-print('+ Nombre de la tienda:', get_shop_name(text))
+# for i in range(1, len(tickets_list)):
+    # print(f'Ticket {i}: {tickets_list[i]}')
+    # image_jpg = Image.open(f'./tickets/{tickets_list[i]}')
+    # text = pytesseract.image_to_string(image_jpg)
 
-text = text.lower()
+    # print('---------------------------------------------')
 
-print('+ Método de pago:',get_payment_method(text))
-print('+ Total:', get_total_amount(text))
-print('+ Fecha:', get_date(text))
-print('+ CIF/NIF:', get_cif_nif(text))
-print('+ Código postal:', get_postal_code(text))
-print('+ Ciudad:', get_city(text))
+    # print('+ Nombre de la tienda:', get_shop_name(text))
+
+    # # text = text.lower()
+
+    # print('+ Método de pago:',get_payment_method(text.lower()))
+    # print('+ Total:', get_total_amount(text.lower()))
+    # print('+ Fecha:', get_date(text))
+    # print('+ CIF/NIF:', get_cif_nif(text.lower()))
+    # print('+ Código postal:', get_postal_code(text))
+    # print('+ Ciudad:', get_city(text))
+    # print('+ Calle:', get_street(text))
 
 
 
@@ -412,4 +533,17 @@ print('+ Ciudad:', get_city(text))
 # método de pago  --> hecho
 
 
+# print(repr(text))
+# print(text)
 
+print('---------------------------------------------')
+
+
+
+# text = text.lower()
+
+print('+ Método de pago:',get_payment_method(text.lower()))
+print('+ Total:', get_total_amount(text.lower()))
+print('+ Fecha:', get_date(text))
+
+get_shop_data(text.lower())
