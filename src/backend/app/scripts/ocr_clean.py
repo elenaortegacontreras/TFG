@@ -2,28 +2,14 @@ import sys
 import re
 from PIL import Image
 import pytesseract
+import pdfplumber
+import pgeocode
+import math
 
 
-###########################################################################################
-# Nombre de la tienda
-###### returns shop name or 'desconocido' if not found
-def get_shop_name(text):
-    shop_name = 'desconocido'
-
-    match = re.search(r'\S.+\n.*\n', text)
-
-    if match:
-        shop_name_str = match.group(0).replace('\n', ' ').replace('\r', ' ')
-
-        if shop_name_str != ' ':
-            shop_name = shop_name_str
-
-    return shop_name
-
-
-###########################################################################################
+#------------------------------------------------------------------------------------------
 # Método de pago
-###### returns 'tarjeta', 'efectivo' or 'desconocido' if not found
+# ---->  returns 'tarjeta', 'efectivo' or 'desconocido' if not found
 def get_payment_method(text):
     payment_method = 'desconocido'
 
@@ -36,7 +22,7 @@ def get_payment_method(text):
         count_efectivo = 0
 
     # Dicts of keywords
-        keywords_tarjeta = ['visa', 'mastercard', 'debito', 'debit', 'crédito', 'crédito', 'credit', 'contactless', 'nfc', 'cuenta','trj', 'jeta', 'tarj', 'tanjeta', 'credito']
+        keywords_tarjeta = ['visa', 'mastercard', 'debito', 'debit', 'crédito', 'crédito', 'credit', 'contactless', 'nfc', 'cuenta','caixabank', 'bbva', 'trj', 'jeta', 'tarj', 'tanjeta', 'credito']
         keywords_efectivo = ['cambio', 'entrega', 'entregado', 'efect', 'ent'  ]
 
     # Counters
@@ -53,9 +39,9 @@ def get_payment_method(text):
     return payment_method
 
 
-###########################################################################################
+#------------------------------------------------------------------------------------------
 # Fecha
-###### returns date with dd/mm/aaaa format o 'desconocido' if not found
+# ----> returns date with dd/mm/aaaa format o 'desconocido' if not found
 def verify_unique_date(dates_str):    
     # print('       Analizing Dates:', dates_str, '. Length:',len(dates_str))
     if len(dates_str) == 0:
@@ -71,7 +57,7 @@ def verify_date(date_str, case):
             return False
         if not re.match(r'(0[1-9]|1[0-2])', date_str[3:5]):
             return False
-        # solo fechas de 2024 en adelante
+        #  only dates from 2024 onwards
         if not re.match(r'20[2-9][0-9]', date_str[6:10]) or (int(date_str[6:10]) < 2024):
             return False 
     elif case == 2: # dd/mm/aa, dd-mm-aa, dd.mm.aa
@@ -79,11 +65,11 @@ def verify_date(date_str, case):
             return False
         if not re.match(r'(0[1-9]|1[0-2])', date_str[3:5]):
             return False
-        # solo fechas de 20 ->24<- en adelante
+        # only dates from 2024 onwards
         if not re.match(r'[2-9][0-9]', date_str[6:8]) or (int(date_str[6:8]) < 24):
             return False
     elif case == 3:  # aaaa-mm-dd, aaaa/mm/dd, aaaa.mm.dd
-        # solo fechas de 2024 en adelante
+        # only dates from 2024 onwards
         if not re.match(r'20[2-9][0-9]', date_str[0:4]) or (int(date_str[0:4]) < 2024):
             return False
         if not re.match(r'(0[1-9]|1[0-2])', date_str[5:7]):
@@ -112,7 +98,7 @@ def purge_dates_match(text, match, case):
 
     return valid_dates
 
-def get_date(text):
+def get_date_dd_mm_yyyy(text):
     date = 'desconocido'
 
     match = re.findall(r'\d{2}[./-]\d{2}[./-]\d{4}', text) # dd/mm/aaaa, dd-mm-aaaa, dd.mm.aaaa
@@ -122,92 +108,62 @@ def get_date(text):
             date_str = match[0]
             date = date_str[0:2] + '/' + date_str[3:5] + '/' + date_str[6:10]
 
-    if date == 'desconocido':
-        starts_w_char = True
-        ends_w_char = True
-        match_start = re.findall(r'\D?\d{2}[./-]\d{2}[./-]\d{2}', text)
-        if match_start:
-            if len(match_start[0]) == 8: starts_w_char = False
-        match_end = re.findall(r'\d{2}[./-]\d{2}[./-]\d{2}\D?', text)
-        if match_end:
-            if len(match_end[0]) == 8: ends_w_char = False
+    return date
 
-        match = re.findall(r'\D?\d{2}[./-]\d{2}[./-]\d{2}\D?', text) # dd/mm/aa, dd-mm-aa, dd.mm.aa
-        if match and match_start and match_end:
-            if (starts_w_char and ends_w_char) or (starts_w_char and not ends_w_char):
-                match = [date[1:9] for date in match] 
-            elif ends_w_char and not starts_w_char:    
-                match = [date[0:8] for date in match]
-            match = purge_dates_match(text, match, 2)
-            if verify_unique_date(match):
-                date_str = match[0]
-                date = date_str[0:2] + '/' + date_str[3:5] + '/20' + date_str[6:8]
-        
-        if date == 'desconocido':
-            match = re.findall(r'\d{4}[./-]\d{2}[./-]\d{2}\D?', text) # aaaa-mm-dd, aaaa/mm/dd, aaaa.mm.dd
-            if match:
-                match = [date[:10] for date in match]
-                match = purge_dates_match(text, match, 3)
-                if verify_unique_date(match):
-                    date_str = match[0]
-                    date = date_str[8:10] + '/' + date_str[5:7] + '/' + date_str[0:4]  
+def get_date_dd_mm_yy(text):
+    date = 'desconocido'
+    starts_w_char = True
+    ends_w_char = True
+
+    match_start = re.findall(r'\D?\d{2}[./-]\d{2}[./-]\d{2}', text)
+    if match_start:
+        if len(match_start[0]) == 8: starts_w_char = False
+    match_end = re.findall(r'\d{2}[./-]\d{2}[./-]\d{2}\D?', text)
+    if match_end:
+        if len(match_end[0]) == 8: ends_w_char = False
+
+    match = re.findall(r'\D?\d{2}[./-]\d{2}[./-]\d{2}\D?', text) # dd/mm/aa, dd-mm-aa, dd.mm.aa
+    if match and match_start and match_end:
+        if (starts_w_char and ends_w_char) or (starts_w_char and not ends_w_char):
+            match = [date[1:9] for date in match] 
+        elif ends_w_char and not starts_w_char:    
+            match = [date[0:8] for date in match]
+        match = purge_dates_match(text, match, 2)
+        if verify_unique_date(match):
+            date_str = match[0]
+            date = date_str[0:2] + '/' + date_str[3:5] + '/20' + date_str[6:8]
 
     return date
 
-# para averiguar el total tenemos que buscar la palabra 'total' y luego buscar el número que le sigue
-def get_total_amount_old(text):
-    total_found = False
-    total_amount = 0
+def get_date_yyyy_mm_dd(text):
+    date = 'desconocido'
 
-    match = re.search(r'total.*\d+[.,]\s*\d+[e\s€]', text)
-
-    if not match:
-        text = text.replace('\n', ' ').replace('\r', ' ')
-        match = re.search(r'tot.*\d+[.,]\s*\d+[e\s€]', text)
-        if not match:
-            match = re.search(r'importe.*\d+[.,]\s*\d+[e\s€]', text)
-            if not match:
-                match = re.search(r'venta.*\d+[.,]\s*\d+[e\s€]', text)
-
+    match = re.findall(r'\d{4}[./-]\d{2}[./-]\d{2}\D?', text) # aaaa-mm-dd, aaaa/mm/dd, aaaa.mm.dd
     if match:
-        total_str = match.group(0)
-        total_match = re.search(r'\d+[.,]\s*\d+[e\s€]', total_str)
-        if total_match:
-            total_str = total_match.group(0).replace(',', '.').replace('€', '').replace(' ', '').replace('e', '')
-            total = float(total_str)
-            print('       Total (1st try):', total)
-            total_found = True
+        match = [date[:10] for date in match]
+        match = purge_dates_match(text, match, 3)
+        if verify_unique_date(match):
+            date_str = match[0]
+            date = date_str[8:10] + '/' + date_str[5:7] + '/' + date_str[0:4] 
 
-            # Comprobación validez resultado (obtener otro precio y verificar que es menor que el total)
-            if total > 0:
-                other_prices_match = re.search(r'\d+[.,]\s*\d+[e\s€]+.*\d+[.,]\s*\d+[e\s€]', text)
-                other_str = other_prices_match.group(0).replace('\n', ' ').replace('\r', ' ')
-                print('       Other prices:', other_str)
-                if other_prices_match:
-                    other_str = other_str.replace(total_str, ' ')
-                    other_match = re.search(r'\s\d+[.,]\d{2}', other_str)
-                    if other_match:
-                        other_price = float(other_match.group(0).replace(',', '.').replace('€', '').replace(' ', '').replace('e', ''))
-                        print('       Other price:', other_price)
-                        if other_price > total:
-                            total_found = False
-                    else:
-                        print('       Other price: desconocido')
-            else:
-                total_found = False
+    return date
 
-    if total_found:
-        print('+ Total:', total)
-        total_amount = total
-    else:
-        print('+ Total: desconocido')
+def get_date(text):
+    date = 'desconocido'
 
-    return total_amount
+    text = text.replace(' ', '')
 
-###########################################################################################
+    date = get_date_dd_mm_yyyy(text) # case 1
+    if date == 'desconocido':
+        date = get_date_dd_mm_yy(text) # case 2   
+        if date == 'desconocido':
+            date = get_date_yyyy_mm_dd(text) # case 3
+
+    return date
+
+#------------------------------------------------------------------------------------------
 # Total
-######
-# para averiguar el total tenemos que buscar la palabra 'total' y luego buscar el número que le sigue
+# ----> returns total amount or 'desconocido' if not found
 def get_iva_prices(text):
     percentage_prices = []
 
@@ -217,13 +173,9 @@ def get_iva_prices(text):
     
     match_iva_prices = match_x_iva + match_iva_x + match_iva_perc
 
-    print('       IVA candidates:', match_iva_prices)
-
     #eliminar de match_iva_prices los que incluyan la palabra total
     match_iva_prices = [price for price in match_iva_prices if not re.search(r'total[^\n]', price)]
 
-    print('       IVA candidates:', match_iva_prices)
-                        
     for i in range(len(match_iva_prices)):
         match = re.search(r'\d+[.,]\s*\d?\d', match_iva_prices[i])
         match_iva_prices[i] = match.group(0) if match else None
@@ -243,7 +195,10 @@ def get_iva_prices(text):
 def get_discount_prices(text):
     discount_prices = []
 
-    match_discount_prices = re.findall(r'desc[\s\S]*?\d+[.,]\s*\d?\d', text)
+    match_desc_prices = re.findall(r'desc[\s\S]*?\d+[.,]\s*\d?\d', text)
+    match_cupon_prices = re.findall(r'cupon[\s\S]*?-[\s\S]*?\d+[.,]\s*\d?\d', text)
+
+    match_discount_prices = match_desc_prices + match_cupon_prices
 
     for i in range(len(match_discount_prices)):
         match = re.search(r'\d+[.,]\s*\d?\d', match_discount_prices[i])
@@ -269,27 +224,43 @@ def get_eol_prices(text, percentage_prices):
 
     return all_prices
 
+def get_total_prices_in_match(match_total_prices, percentage_prices):
+    all_prices = []
+
+    for i in range(len(match_total_prices)):
+        match = re.search(r'\d+[.,]\s*\d+[e\s€\n]', match_total_prices[i])
+        match_total_prices[i] = match.group(0) if match else None
+
+    match_total_prices = [price for price in match_total_prices if price is not None]
+
+    if match_total_prices:
+        all_prices = [float(price.replace(',', '.').replace('€', '').replace(' ', '').replace('e', '').replace('\n','')) for price in match_total_prices]
+        if percentage_prices:
+            all_prices = [price for price in all_prices if price not in percentage_prices]
+
+    return all_prices
+
 def get_total_prices(text, percentage_prices):
     all_prices = []
 
     match_total_prices = re.findall(r'(?:tot|total)[\s\S]*?\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
-    # match_total_prices = re.findall(r'(?:tot|total).*\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
-
-    if not match_total_prices:
-        match_total_prices = re.findall(r'(?:porte|venta)[\s\S]*?\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
-        # match_total_prices = re.findall(r'(?:porte|venta).*\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
-
     if match_total_prices: 
-        for i in range(len(match_total_prices)):
-            match = re.search(r'\d+[.,]\s*\d+[e\s€\n]', match_total_prices[i])
-            match_total_prices[i] = match.group(0) if match else None
+        all_prices = get_total_prices_in_match(match_total_prices, percentage_prices)
 
-        match_total_prices = [price for price in match_total_prices if price is not None]
+    if not all_prices:
+        match_total_prices = re.findall(r'(?:porte|venta)[\s\S]*?\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
+        if match_total_prices: 
+            all_prices = get_total_prices_in_match(match_total_prices, percentage_prices)
 
-        if match_total_prices:
-            all_prices = [float(price.replace(',', '.').replace('€', '').replace(' ', '').replace('e', '').replace('\n','')) for price in match_total_prices]
-            if percentage_prices:
-                all_prices = [price for price in all_prices if price not in percentage_prices]
+    if not all_prices:
+        match_total_prices = re.findall(r'(?:tot|total).*\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
+        if match_total_prices: 
+            all_prices = get_total_prices_in_match(match_total_prices, percentage_prices)
+
+    if not all_prices:
+        match_total_prices = re.findall(r'(?:porte|venta).*\d+[.,]\s*\d?\d(?:e|\s*|€|eur?|\n)+\n', text)
+        if match_total_prices: 
+            all_prices = get_total_prices_in_match(match_total_prices, percentage_prices)
     
     return all_prices
 
@@ -308,22 +279,12 @@ def get_total_amount(text):
            
         if eol_prices:
             total_from_eol_prices = max(eol_prices)
-            print('       Total (1st try):', total_from_eol_prices)
-            print('              From prices at the end of line:', eol_prices)
-        else:
-            print('       Total (1st try): desconocido')
-
     
     total_prices = get_total_prices(text, invalid_prices)
 
     if total_prices:
         total_found = True
-        total_from_candidates = max(total_prices)
-        print('       Total (2nd try):', total_from_candidates)
-        print('              From total candidates:', total_prices)
-        
-    else:
-        print('       Total (2nd try): desconocido')           
+        total_from_candidates = max(total_prices)      
     
     if total_found:
         if total_from_candidates >= total_from_eol_prices:
@@ -331,35 +292,274 @@ def get_total_amount(text):
 
     return total_amount
 
+
+#------------------------------------------------------------------------------------------
+# CIF/NIF
+# ----> returns cif/nif or 'desconocido' if not found
+def get_cif_nif_match(text):
+    match_cif = re.findall(r'\n[a-z]*(?:cif|nif|C\.I\.F|N\.I\.F)?\s*:?\s*[a-z][-\s\.,]?\d{8}[^0-9]', text)
+    if not match_cif:
+        match_cif = re.findall(r'(?:cif|nif|C\.I\.F|N\.I\.F)?\s*:?\s*[a-z][-\s\.,]?(?:\d[\s\.]*?){8}[^0-9]', text)
+    if not match_cif:
+        match_cif = re.findall(r'\n[a-z]?[-\s\.]?(?:\d[-\s\.,]*?){8}\D', text) # example: \n\npbb\n\n: 6785501\ns
+
+    return match_cif
+
+def get_cif_nif(text):
+    # si llega a hacer falta, como último paso comprobar con API si es válido
+    cif_nif = 'desconocido'
+    
+    match_cif = get_cif_nif_match(text)
+   
+    if match_cif:
+        for match in match_cif:
+            match = match.replace('\n', '').replace('\r', '').replace(' ', '').replace(':', '').replace('.', '').replace(',', '').replace('-', '')
+            letter = re.findall(r'[a-z]', match)
+            if letter: # last letter found (closest to number)
+                letter = letter[-1] 
+            number = re.search(r'\d{8}', match)
+
+            if letter and number:
+                cif_nif = letter.upper() + number.group(0)
+
+    return cif_nif
+
+
+#------------------------------------------------------------------------------------------
+# Código postal
+# ----> returns postal code or 'desconocido' if not found
+def get_postal_code(text):
+    postal_code = 'desconocido'
+
+    match = re.search(r'\n[\s\n]*\d{5}[\s\n.-]', text)
+    if match:
+        match_postal_code = re.search(r'\d{5}', match.group(0))
+        postal_code = match_postal_code.group(0)
+
+    return postal_code
+
+
+#------------------------------------------------------------------------------------------
+# Ciudad
+# ----> returns city or 'desconocido' if not found
+def get_city(text, postal_code):
+    city = 'desconocido'
+
+    if postal_code != 'desconocido':
+        match = re.search(rf'{postal_code}.*', text)
+        if match:
+            city = (match.group(0)[6:]).replace('.', '')
+
+    return city    
+
+
+#------------------------------------------------------------------------------------------
+# Calle
+# ----> returns street or 'desconocido' if not found
+def get_street(text, postal_code):
+    street = 'desconocido'
+
+    text = text.replace('\r', ' ').replace(';', ' ').replace('(', ' ').replace(')', ' ').replace('-', '-')
+
+    match = re.search(r'(?:c\/|calle|avd|vda)(?:[a-zá-ú]|\s|,|\.)+(?:s\/n|\d+)', text) # calle, avenida + número o s/n
+    if not match:
+        match = re.search(r'(?:\/cc|c.c|aven|parque|centro)(?:[a-zá-ú]|\s|,|\.)+(?:s\/n|\d+)', text) # c.comercial, parque, centro + número o s/n
+
+    if not match:
+        match = re.search(r'[a-zá-ú].*\s[,]?\d+', text) # nombre dirección + número   
+
+    if not match:
+        if postal_code != 'desconocido':
+            match_pc_ref = re.search(rf'(.*\n){postal_code}', text)
+            if match_pc_ref:
+                street = (match_pc_ref.group(0)[:-6])
+
+    if match:
+        match = re.search(r'.*\n?', match.group(0))
+        if match:
+            street = match.group(0).replace('\n', ' ').replace('\r', ' ')
+
+    return street
+
+
+#------------------------------------------------------------------------------------------
+# Nombre de la tienda
+# ----> returns shop name or 'desconocido' if not found
+def get_shop_name(text, street):
+    shop_name = 'desconocido'
+
+    text = text.replace('\r', ' ').replace(';', ' ').replace('(', ' ').replace(')', ' ').replace('-', '-')
+
+    match = re.search(r'[a-zá-ú]+.*[sS]\.[aAlL]\.+', text) # S.A. (Sociedad Anónima) // S.L. (Sociedad Limitada)
+
+    if not match:
+        match = re.search(r'[a-zá-ú].+\n.*\n', text) # first two lines
+
+    if match:
+        shop_name = match.group(0).replace('\n', ' ').replace('\r', ' ')
+        if street in shop_name:
+            shop_name = shop_name.replace(f'{street}', '')
+
+    return shop_name
+
+
+#------------------------------------------------------------------------------------------
+# Información del comercio
+# ----> returns a dictionary with shop data
+def get_shop_data(text):
+
+    cif_nif = get_cif_nif(text)
+    postal_code = get_postal_code(text)
+    
+    # if postal_code != 'desconocido':
+    city = get_city(text, postal_code) # por ahora solo lo sé sacar con el CP
+    
+    street = get_street(text, postal_code)
+    
+    # se obtiene cogiendo las primeras líneas
+    shop_name = get_shop_name(text, street)
+
+    shop_data = {
+        'shop_name': shop_name,
+        'cif_nif': cif_nif,
+        'postal_code': postal_code,
+        'city': city,
+        'street': street
+    }
+
+    return shop_data
+
+
+
+# ------------------------------------------------------------------------------------------
+# Coordenadas
+# ----> returns latitude and longitude or 'desconocido' if not found
+def get_coords_from_postal_code(postal_code):
+
+    if postal_code == 'desconocido':
+        return 'desconocido', 'desconocido'
+    
+    # Crear un objeto Nominatim para España
+    nomi = pgeocode.Nominatim('es')
+    location = nomi.query_postal_code(postal_code)
+    if math.isnan(location.latitude) or math.isnan(location.longitude):
+        return 'desconocido', 'desconocido'
+
+    return location.latitude, location.longitude
+
+#------------------------------------------------------------------------------------------
+# Datos del ticket
+# ----> returns a dictionary with ticket data
+
 def get_data(text):
     text = text.lower()
-    print('+ Nombre de la tienda:', get_shop_name(text))
-    print('+ Método de pago:',get_payment_method(text))
-    print('+ Total:', get_total_amount(text))
-    print('+ Fecha:', get_date(text))
 
-def get_data_from_path():
-    # if len(sys.argv) < 2:
-    #     print("Uso: python ocr.py <número_de_ticket>")
-    #     sys.exit(1)
+    print(repr(text))
+    
+    payment_method = get_payment_method(text)
+    total_amount = get_total_amount(text)
+    date = get_date(text)
+    shop_data = get_shop_data(text)
 
-    # tickets_list = ["", "01_ikea.jpg", "02_nogales.jpg", "03_casa_del_libro.jpg", "04_lidl.jpg", "05_lefties.jpg",
-    #                 "06_primor.jpg", "07_costa_cabria.jpg", "08_mercadona_efectivo.jpg", "09_mc_donalds.jpg", "10_carrefour.jpg", 
-    #                 "11_hym_devolucion.jpg", "12_mercadona_tarjeta.jpg", "13_casa_del_libro_2.jpg", "14_margaritas.jpg", "15_bus.jpg",
-    #                 "16_ticket_girado_horizontal.jpg", "17_corte_ingles.jpg", "18_mundys.jpg", "19_mucha_miga.jpg", "20_lidl_mejor_q.jpg", 
-    #                 "21_mc_donalds_mejor_q.jpg"# , "ticket21.jpg", "ticket22.jpg", "ticket23.jpg", "ticket24.jpg", 
-    #                 ] 
+    latitude, longitude = get_coords_from_postal_code(shop_data['postal_code'])
 
-    # # # Asumiendo que el argumento es un nombre de archivo de imagen para procesar
-    # image_jpg = Image.open(f'./tickets/{tickets_list[int(sys.argv[1])]}')
-    # text = pytesseract.image_to_string(image_jpg)
+    ticket_data = {
+        'shop_name': shop_data['shop_name'],
+        'shop_cif_nif': shop_data['cif_nif'],
+        'shop_postal_code': shop_data['postal_code'],
+        'shop_city': shop_data['city'],
+        'shop_street': shop_data['street'],
+        'latitude': latitude,
+        'longitude': longitude,
+        'date': date,
+        'payment_method': payment_method,
+        'total_amount': total_amount,
+    }
 
-    text = text.lower()
-    print('+ Nombre de la tienda:', get_shop_name(text))
-    print('+ Método de pago:',get_payment_method(text))
-    print('+ Total:', get_total_amount(text))
-    print('+ Fecha:', get_date(text))
+    return ticket_data
 
 
+# ----># leer de texto analizado por OCR Space (OCR API externa)
+# tickets_list = ["", "01_ikea.txt", "02_nogales.txt", "03_casa_del_libro.txt", "04_lidl.txt", "05_lefties.txt",
+#                 "06_primor.txt", "07_costa_cabria.txt", "08_mercadona_efectivo.txt", "09_mc_donalds.txt", "10_carrefour.txt", 
+#                 "11_hym_devolucion.txt", "12_mercadona_tarjeta.txt", "13_casa_del_libro_2.txt", "14_margaritas.txt", "15_bus.txt",
+#                 "16_ticket_girado_horizontal.txt", "17_corte_ingles.txt", "18_mundys.txt", #"19_kfc.txt", "20_primor_recogidas.txt", ""
+#                 ] 
+
+# text = open(f'./ocr_space/tickets/{tickets_list[int(sys.argv[1])]}').read()
+# # # ---->#
 
 
+tickets_list = ["", "01_ikea.jpg", "02_nogales.jpg", "03_casa_del_libro.jpg", "04_lidl.jpg", "05_lefties.jpg",
+                "06_primor.jpg", "07_costa_cabria.jpg", "08_mercadona_efectivo.jpg", "09_mc_donalds.jpg", "10_carrefour.jpg", 
+                "11_hym_devolucion.jpg", "12_mercadona_tarjeta.jpg", "13_casa_del_libro_2.jpg", "14_margaritas.jpg", "15_bus.jpg",
+                "16_ticket_girado_horizontal.jpg", "17_corte_ingles.jpg", "18_mundys.jpg", "19_kfc.jpg", "20_mercadona_digital.jpg",
+                 "21_hym_digital.jpg", "22_hym_descuento_mayoratotal.jpg", "23_ikea_digital.jpg", "24_enjoy_it.jpg",
+                 "25_ecu.jpg", "26_carre_pamplona.jpg"
+                ] 
+
+#------------------------------------------------------------------------------------------
+# Extracción de datos
+# ----> returns a dictionary with ticket data
+
+def get_data_from_image_ticket(file_path):
+    if file_path.isdigit():
+        image_jpg = Image.open(f'./tickets/{tickets_list[int(file_path)]}')
+    else:
+        image_jpg = Image.open(file_path)
+
+    text = pytesseract.image_to_string(image_jpg)
+
+    return get_data(text)
+
+
+
+def get_data_from_pdf_ticket(file_path):
+    text = ""
+
+    with pdfplumber.open(file_path) as pdf:
+        for page in pdf.pages:
+            page_text = page.extract_text()
+            if page_text:
+                text += page_text + '\n'
+    
+    return get_data(text)
+
+
+
+def get_data_from_path(file_path):
+    if file_path.endswith('.pdf'):
+        return get_data_from_pdf_ticket(file_path)
+    else:
+        return get_data_from_image_ticket(file_path)
+
+
+#------------------------------------------------------------------------------------------
+# Main
+# ----> prints the data of the given ticket
+if __name__ == '__main__':
+
+    if len(sys.argv) < 2:
+        print("Uso: python ocr.py <número_de_ticket> o python ocr.py <ruta_imagen>")
+        sys.exit(1)
+
+    ticket_extraction = get_data_from_path(sys.argv[1])
+
+    print('+ Nombre del comercio:', ticket_extraction['shop_name'])
+    print('     + CIF/NIF:', ticket_extraction['shop_cif_nif'])
+    print('     + Código postal:', ticket_extraction['shop_postal_code'])
+    print('          + Coordenadas:', ticket_extraction['latitude'],',',ticket_extraction['longitude'])
+    print('     + Ciudad:', ticket_extraction['shop_city'])
+    print('     + Calle:', ticket_extraction['shop_street']) 
+    print('+ Fecha:', ticket_extraction['date'])
+    print('+ Método de pago:', ticket_extraction['payment_method'])
+    print('+ Total:', ticket_extraction['total_amount'])
+
+
+
+# print(text)
+
+# Rutas PDFs
+# PDFs/20240409 Mercadona 3,50 €.pdf
+# PDFs/carrefour_pamplona.pdf
+# PDFs/carrefour_pamplona_2.pdf
