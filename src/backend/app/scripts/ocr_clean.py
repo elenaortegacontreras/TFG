@@ -5,7 +5,21 @@ import pytesseract
 import pdfplumber
 import pgeocode
 import math
+# import pandas as pd
+import spacy #búsqueda de ciudades en texto con su load
+from flashtext import KeywordProcessor # búsqueda sobre el fichero de ciudades que tenemos metido
+from geopy.geocoders import Nominatim
 
+
+CITIES_FILE_PATH = "./geographical_points/ES_city_names.txt"
+
+tickets_list = ["", "01_ikea.jpg", "02_nogales.jpg", "03_casa_del_libro.jpg", "04_lidl.jpg", "05_lefties.jpg",
+                "06_primor.jpg", "07_costa_cabria.jpg", "08_mercadona_efectivo.jpg", "09_mc_donalds.jpg", "10_carrefour.jpg", 
+                "11_hym_devolucion.jpg", "12_mercadona_tarjeta.jpg", "13_casa_del_libro_2.jpg", "14_margaritas.jpg", "15_bus.jpg",
+                "16_ticket_girado_horizontal.jpg", "17_corte_ingles.jpg", "18_mundys.jpg", "19_kfc.jpg", "20_mercadona_digital.jpg",
+                 "21_hym_digital.jpg", "22_hym_descuento_mayoratotal.jpg", "23_ikea_digital.jpg", "24_enjoy_it.jpg",
+                 "25_ecu.jpg", "26_carre_pamplona.jpg"
+                ] 
 
 #------------------------------------------------------------------------------------------
 # Método de pago
@@ -341,16 +355,88 @@ def get_postal_code(text):
 
 #------------------------------------------------------------------------------------------
 # Ciudad
-# ----> returns city or 'desconocido' if not found
-def get_city(text, postal_code):
-    city = 'desconocido'
+# ----> returns array of city candidates
+def get_city_candidates_from_file(text):
 
-    if postal_code != 'desconocido':
+    text = text.lower()
+
+    # Cargar la lista de ciudades desde un archivo de texto
+    with open(f'{CITIES_FILE_PATH}', 'r', encoding='utf-8') as file:
+        ciudades = file.read().splitlines()
+
+    # # Convertir la lista en un conjunto para búsquedas rápidas
+    # ciudades_set = set(ciudades)
+    # # Normalizar texto a minúsculas para una búsqueda insensible a mayúsculas
+    # text = text.lower()
+
+    # # Buscar ciudades en el texto
+    # ciudades_encontradas = [ciudad for ciudad in ciudades_set if ciudad.lower() in text and ciudad != '']
+    # print('ciudades_file_encontradas:', ciudades_encontradas)
+
+    # return ciudades_encontradas
+
+
+    # Configurar FlashText
+    keyword_processor = KeywordProcessor()
+
+    # Añadir todas las ciudades al KeywordProcessor
+    keyword_processor.add_keywords_from_list(ciudades)
+
+   # Normalizar las ciudades a minúsculas
+    ciudades_min = [ciudad.lower() for ciudad in ciudades]
+
+    # Crear un nuevo KeywordProcessor con las ciudades en minúsculas
+    keyword_processor = KeywordProcessor()
+    keyword_processor.add_keywords_from_list(ciudades_min)
+
+    # Buscar coincidencias en el texto normalizado
+    ciudades_encontradas = keyword_processor.extract_keywords(text)
+
+    print("Ciudades encontradas:", ciudades_encontradas)
+
+    return ciudades_encontradas
+
+#------------------------------------------------------------------------------------------
+# Ciudad
+# ----> returns array of city candidates
+def get_city_candidates(text, postal_code):
+    city_candidates = []
+    text = text[:int(len(text)/2)]
+    text = re.sub(r'[\r;(){}|-]+', ' ', text)
+
+    # candidates close to postal code
+    if postal_code != 'desconocido': 
         match = re.search(rf'{postal_code}.*', text)
         if match:
             city = (match.group(0)[6:]).replace('.', '')
+            city_candidates.append(city)
+            if re.search(r'\s', city):
+                city_candidates = city_candidates + city.split()
+            
+            print('city_candidates:', city_candidates)
+    
+    
+    # candidates from text using spacy library
+    text = text[:int(len(text)/2)]
+    text = text.replace('\n', ' ').replace('\r', ' ').replace('-', ' ')
+    
+    nlp = spacy.load('es_core_news_md')
 
-    return city    
+    doc = nlp(text)
+    # for token in doc:
+    #     print(token.text, token.pos_)
+
+    other_city_candidates = [ent.text for ent in doc.ents if ent.label_ in ["GPE", "LOC"]]
+    print('othqer_city_candidates:', other_city_candidates)
+    city_candidates = city_candidates + other_city_candidates
+
+    other_city_candidates = [word for candidate in other_city_candidates for word in candidate.split()]
+    city_candidates = city_candidates + other_city_candidates
+
+    print('othqer_city_candidates:', other_city_candidates)
+    
+    return city_candidates    
+
 
 
 #------------------------------------------------------------------------------------------
@@ -363,7 +449,7 @@ def get_street(text, postal_code):
 
     match = re.search(r'(?:c\/|calle|avd|vda)(?:[a-zá-ú]|\s|,|\.)+(?:s\/n|\d+)', text) # calle, avenida + número o s/n
     if not match:
-        match = re.search(r'(?:\/cc|c.c|aven|parque|centro)(?:[a-zá-ú]|\s|,|\.)+(?:s\/n|\d+)', text) # c.comercial, parque, centro + número o s/n
+        match = re.search(r'(?:\/cc|c.c|aven|parque|centro|paseo)(?:[a-zá-ú]|\s|,|\.)+(?:s\/n|\d+)', text) # c.comercial, parque, centro + número o s/n
 
     if not match:
         match = re.search(r'[a-zá-ú].*\s[,]?\d+', text) # nombre dirección + número   
@@ -412,7 +498,7 @@ def get_shop_data(text):
     postal_code = get_postal_code(text)
     
     # if postal_code != 'desconocido':
-    city = get_city(text, postal_code) # por ahora solo lo sé sacar con el CP
+    city = get_city_candidates(text, postal_code) # por ahora solo lo sé sacar con el CP
     
     street = get_street(text, postal_code)
     
@@ -434,40 +520,85 @@ def get_shop_data(text):
 # ------------------------------------------------------------------------------------------
 # Coordenadas
 # ----> returns latitude and longitude or 'desconocido' if not found
-def get_coords_from_postal_code(postal_code):
+def get_location_from_postal_code(postal_code):
+
+    print('>>>>>>>> trying to get location from postal_code:', postal_code)
 
     if postal_code == 'desconocido':
-        return 'desconocido', 'desconocido'
+        return 'desconocido', 'desconocido', 'desconocido', 'desconocido'
     
-    # Crear un objeto Nominatim para España
     nomi = pgeocode.Nominatim('es')
     location = nomi.query_postal_code(postal_code)
     if math.isnan(location.latitude) or math.isnan(location.longitude):
-        return 'desconocido', 'desconocido'
+        return 'desconocido', 'desconocido', 'desconocido', 'desconocido'
+    
+    return location.latitude, location.longitude, postal_code, location.place_name
 
-    return location.latitude, location.longitude
+
+def get_location_from_city(text, city_candidates):
+    location = {}
+    geolocator = Nominatim(user_agent="geoapi")
+
+    print('>>>>>>>> trying to get location from city:', city_candidates)
+
+    if city_candidates:
+        for city in city_candidates:
+            city_str = city + ', Spain'
+            location = geolocator.geocode(city_str)  
+            if location:
+                if 'address' in location.raw:
+                    address = location.raw['address']
+                    postal_code = address.get('postcode', 'desconocido')
+                    return location.latitude, location.longitude, postal_code, city
+    
+    # if not location:
+    #     # esta op se realiza aquí y no antes en get_city_candidates para evitar procesamiento
+    #     city_candidates = get_city_candidates_from_file(text)
+    #     if city_candidates:
+    #         for city in city_candidates:
+    #             city_str = city + ', Spain'
+    #             location = geolocator.geocode(city_str)  
+    #             if location:
+    #                 if 'address' in location.raw:
+    #                     address = location.raw['address']
+    #                     postal_code = address.get('postcode', 'desconocido')
+    #                     return location.latitude, location.longitude, postal_code, city
+    #                 return location.latitude, location.longitude, 'desconocido', city
+        
+    return 'desconocido', 'desconocido', 'desconocido', 'desconocido'
+
+
+def get_location(text, postal_code, city_candidates):
+
+    latitude, longitude, code, city = get_location_from_postal_code(postal_code)
+    
+    if latitude == 'desconocido': # or longitude == 'desconocido':
+        latitude, longitude, code, city = get_location_from_city(text, city_candidates)
+
+    return latitude, longitude, code, city
 
 #------------------------------------------------------------------------------------------
 # Datos del ticket
 # ----> returns a dictionary with ticket data
-
 def get_data(text):
     text = text.lower()
 
-    print(repr(text))
-    
+    # print(repr(text))
+
+    print('---------------------------------------------')
+
     payment_method = get_payment_method(text)
     total_amount = get_total_amount(text)
     date = get_date(text)
     shop_data = get_shop_data(text)
 
-    latitude, longitude = get_coords_from_postal_code(shop_data['postal_code'])
+    latitude, longitude, selected_postal_code, selected_city = get_location(text, shop_data['postal_code'], shop_data['city'])
 
     ticket_data = {
         'shop_name': shop_data['shop_name'],
         'shop_cif_nif': shop_data['cif_nif'],
-        'shop_postal_code': shop_data['postal_code'],
-        'shop_city': shop_data['city'],
+        'shop_postal_code': selected_postal_code,
+        'shop_city': selected_city,
         'shop_street': shop_data['street'],
         'latitude': latitude,
         'longitude': longitude,
@@ -479,24 +610,7 @@ def get_data(text):
     return ticket_data
 
 
-# ----># leer de texto analizado por OCR Space (OCR API externa)
-# tickets_list = ["", "01_ikea.txt", "02_nogales.txt", "03_casa_del_libro.txt", "04_lidl.txt", "05_lefties.txt",
-#                 "06_primor.txt", "07_costa_cabria.txt", "08_mercadona_efectivo.txt", "09_mc_donalds.txt", "10_carrefour.txt", 
-#                 "11_hym_devolucion.txt", "12_mercadona_tarjeta.txt", "13_casa_del_libro_2.txt", "14_margaritas.txt", "15_bus.txt",
-#                 "16_ticket_girado_horizontal.txt", "17_corte_ingles.txt", "18_mundys.txt", #"19_kfc.txt", "20_primor_recogidas.txt", ""
-#                 ] 
 
-# text = open(f'./ocr_space/tickets/{tickets_list[int(sys.argv[1])]}').read()
-# # # ---->#
-
-
-tickets_list = ["", "01_ikea.jpg", "02_nogales.jpg", "03_casa_del_libro.jpg", "04_lidl.jpg", "05_lefties.jpg",
-                "06_primor.jpg", "07_costa_cabria.jpg", "08_mercadona_efectivo.jpg", "09_mc_donalds.jpg", "10_carrefour.jpg", 
-                "11_hym_devolucion.jpg", "12_mercadona_tarjeta.jpg", "13_casa_del_libro_2.jpg", "14_margaritas.jpg", "15_bus.jpg",
-                "16_ticket_girado_horizontal.jpg", "17_corte_ingles.jpg", "18_mundys.jpg", "19_kfc.jpg", "20_mercadona_digital.jpg",
-                 "21_hym_digital.jpg", "22_hym_descuento_mayoratotal.jpg", "23_ikea_digital.jpg", "24_enjoy_it.jpg",
-                 "25_ecu.jpg", "26_carre_pamplona.jpg"
-                ] 
 
 #------------------------------------------------------------------------------------------
 # Extracción de datos
@@ -556,10 +670,23 @@ if __name__ == '__main__':
     print('+ Total:', ticket_extraction['total_amount'])
 
 
+    # ## lectura de todos los tickets
+    # for i in range(1, len(tickets_list)):
+    #     ticket_extraction = get_data_from_path(f'./tickets/{tickets_list[i]}')
+    #     print('+ Nombre del comercio:', ticket_extraction['shop_name'])
+    #     print('     + CIF/NIF:', ticket_extraction['shop_cif_nif'])
+    #     print('     + Código postal:', ticket_extraction['shop_postal_code'])
+    #     print('          + Coordenadas:', ticket_extraction['latitude'],',',ticket_extraction['longitude'])
+    #     print('     + Ciudad:', ticket_extraction['shop_city'])
+    #     print('     + Calle:', ticket_extraction['shop_street']) 
+    #     print('+ Fecha:', ticket_extraction['date'])
+    #     print('+ Método de pago:', ticket_extraction['payment_method'])
+    #     print('+ Total:', ticket_extraction['total_amount'])
+
 
 # print(text)
 
 # Rutas PDFs
-# PDFs/20240409 Mercadona 3,50 €.pdf
+# PDFs/PDFs/20240409\ Mercadona\ 3\,50\ €.pdf
 # PDFs/carrefour_pamplona.pdf
 # PDFs/carrefour_pamplona_2.pdf
