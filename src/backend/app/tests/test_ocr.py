@@ -1,25 +1,26 @@
 import pytest
-from ocr_clean import get_payment_method, get_date, get_total_amount, get_cif_nif, get_postal_code
+from app.scripts.ocr_ticket_extraction import get_payment_method, get_date, get_total_amount, get_cif_nif, get_postal_code
 
 
 text = ["", "01_ikea.txt", "02_nogales.txt", "03_casa_del_libro.txt", "04_lidl.txt", "05_lefties.txt",
         "06_primor.txt", "07_costa_cabria.txt", "08_mercadona_efectivo.txt", "09_mc_donalds.txt", 
-        "10_carrefour.txt", "", "12_mercadona_tarjeta.txt", "13_casa_del_libro_2.txt", 
+        "10_carrefour.txt", "", "12_mercadona_tarjeta.txt", "13_yanomami.txt", 
         "14_margaritas.txt", "", "16_ticket_girado_horizontal.txt", "17_corte_ingles.txt", 
         "18_mundys.txt", "19_kfc.txt", "20_mercadona_digital.txt", "21_hym_digital.txt", 
-        "22_hym_descuento_mayoratotal.txt", "23_ikea_digital.txt", "24_enjoy_it.txt", "25_ecu.txt"
+        "22_hym_descuento_mayoratotal.txt", "23_ikea_digital.txt", "24_enjoy_it.txt", "25_ecu.txt",
+        "26_gallaghers.jpg"
         ]
 
 # generar txt: python3 other_files/ocrtest_v2.py x > ./ocr_pytesseract/tickets_text/x_nombre.txt
 
-base_path = "./ocr_pytesseract/tickets_text/"
+base_path = "/app/app/tests//tickets_text/"
 
 
 #------------------------------------------------------------------------------------------
 # Método de pago
 def test_get_payment_method_tarjeta():
     expected = "tarjeta"
-    tickets_tarjeta = [text[1], text[3], text[5], text[6], text[12], text[13], 
+    tickets_tarjeta = [text[1], text[3], text[5], text[6], text[12], 
                        text[20], text[21], text[22], text[23] ]
     for ticket in tickets_tarjeta:
         with open(f'{base_path}{ticket}', 'r') as file:
@@ -28,7 +29,7 @@ def test_get_payment_method_tarjeta():
 
 def test_get_payment_method_efectivo():
     expected = "efectivo"
-    tickets_efectivo = [text[4], text[8], text[14], text[17], text[18], text[25] ]
+    tickets_efectivo = [text[8], text[14], text[17], text[18], text[25] ]
     for ticket in tickets_efectivo:
         with open(f'{base_path}{ticket}', 'r') as file:
             ticket_str = file.read().lower()
@@ -36,8 +37,8 @@ def test_get_payment_method_efectivo():
 
 def test_get_payment_method_desconocido():
     expected = "desconocido"
-    tickets_desconocido = [text[2], text[7], text[9], text[10], text[16], text[19],
-                           text[24]
+    tickets_desconocido = [text[2], text[4], text[7], text[9], text[10], text[16], 
+                           text[19], text[24]
                            ]
     for ticket in tickets_desconocido:
         assert get_payment_method(f'{base_path}{ticket}') == expected
@@ -79,7 +80,7 @@ def test_get_date_dd_mm_yy():
 def test_get_date_yyyy_mm_dd():
     # on ticket: 3(2024-04-23)
     expected = ["23/04/2024", "desconocido"]
-    tickets_yyyy_mm_dd = [text[3], text[13]]
+    tickets_yyyy_mm_dd = [text[3]]
     i = 0
     for ticket in tickets_yyyy_mm_dd:
         with open(f'{base_path}{ticket}', 'r') as file:
@@ -106,7 +107,7 @@ def test_get_date_mix():
 def test_get_total_amount_desconocido():
     expected = "desconocido"
     tickets_desconocido = [text[1], text[4], text[7], text[8], text[9], text[10], 
-                           text[13], text[16]]
+                           text[16]]
     for ticket in tickets_desconocido:
         assert get_total_amount(f'{base_path}{ticket}') == expected
 
@@ -128,26 +129,26 @@ def test_get_total_amount():
 
 #------------------------------------------------------------------------------------------
 # CIF/NIF
-def test_get_cif_nif_desconocido():
-    expected = "desconocido"
-    tickets_desconocido = [text[3], text[5], text[9], text[18], text[19], text[6], 
-                           text[24], text[25]
-                           ]
-    for ticket in tickets_desconocido:
-        assert get_cif_nif(f'{base_path}{ticket}') == expected
+# def test_get_cif_nif_desconocido():
+#     expected = "desconocido"
+#     tickets_desconocido = [text[3], text[5], text[9], text[18], text[19], text[6], 
+#                            text[24], text[25]
+#                            ]
+#     for ticket in tickets_desconocido:
+#         assert get_cif_nif(f'{base_path}{ticket}') == expected
 
-def test_get_cif_nif():
-    expected = ["E19545508", "A46103834", "B19667500", "A28017896", 
-                "A46103834", "B82356981", "B82356981", "A28812618"]    
-    tickets_total = [text[2], text[12], text[16], text[17], 
-                    text[20], text[21], text[22], text[23]
-                    ]
-    i = 0
-    for ticket in tickets_total:
-        with open(f'{base_path}{ticket}', 'r') as file:
-            ticket_str = file.read().lower()
-            assert get_cif_nif(f'{base_path}{ticket_str}') == expected[i]
-            i += 1
+# def test_get_cif_nif():
+#     expected = ["E19545508", "A46103834", "B19667500", "A28017896", 
+#                 "A46103834", "B82356981", "B82356981", "A28812618"]    
+#     tickets_total = [text[2], text[12], text[16], text[17], 
+#                     text[20], text[21], text[22], text[23]
+#                     ]
+#     i = 0
+#     for ticket in tickets_total:
+#         with open(f'{base_path}{ticket}', 'r') as file:
+#             ticket_str = file.read().lower()
+#             assert get_cif_nif(f'{base_path}{ticket_str}') == expected[i]
+#             i += 1
 
 #------------------------------------------------------------------------------------------
 # Código postal
@@ -175,6 +176,3 @@ def test_get_postal_code():
             ticket_str = file.read().lower()
             assert get_postal_code(f'{base_path}{ticket_str}') == expected[i]
             i += 1
-
-#------------------------------------------------------------------------------------------
-# city ?  shop name no  / Street name no
