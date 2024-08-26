@@ -9,6 +9,7 @@ from app.core.schemas.schemas import UserRequest, UserResponse, CategoryRequest,
 from fastapi.middleware.cors import CORSMiddleware
 
 # Shop.__table__.drop(bind=engine, checkfirst=True)
+# CUIDADO - NO BORRAR TABLA MUNICIPIOS
 # Base.metadata.drop_all(bind=engine, checkfirst=True) # Borrar la tabla en la base de datos
 # user_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
 
@@ -51,6 +52,9 @@ def create_user(user: UserRequest, db: Session = Depends(get_db)):
 
     # Por cada usuario nuevo creado se crea una categoría de gastos llamada "Otros" para gastos generales con budget_amount = 0
     create_category(CategoryRequest(name="Otros", user_id=new_user.id), db)
+
+    # y una subcategoría "Otros" para la categoría "Otros" con budget_amount = 0
+    create_subcategory(SubcategoryRequest(name="Otros", category_id=new_user.id), db)
 
     # TODO: Crear varias categorías (de gastos) por defecto para cada usuario nuevo
     return new_user
@@ -104,6 +108,45 @@ def delete_category(category_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Category deleted successfully"}
 
+@app.get("/category/{category_id}", status_code=status.HTTP_200_OK, response_model=CategoryResponse)
+def get_category_by_id(category_id: int, db: Session = Depends(get_db)):
+    category = db.query(Category).filter(Category.id == category_id).first()
+    return category
+
+@app.put("/category/{category_id}", status_code=status.HTTP_200_OK, response_model=CategoryResponse)
+def update_category(category_id: int, category: CategoryRequest, db: Session = Depends(get_db)):
+    existing_category = db.query(Category).filter(Category.id == category_id).first()
+    if existing_category:
+        category_dict = category.dict()
+        for key, value in category_dict.items():
+            setattr(existing_category, key, value)
+        db.commit()
+        db.refresh(existing_category)
+        return existing_category
+    else:
+        return {"message": "Category not found"}
+
+# Endpoint para borrar una categoría y también antes eliminar todas las transacciones asociadas a esa categoría
+@app.delete("/categories/{category_id}/delete_transactions", status_code=status.HTTP_200_OK)
+def delete_category_and_transactions(category_id: int, db: Session = Depends(get_db)):
+    category = db.query(Category).filter(Category.id == category_id).first()
+    db.query(Transaction).filter(Transaction.category_id == category_id).delete()
+    db.delete(category)
+    db.commit()
+    return {"message": "Category and transactions deleted successfully"}
+
+# Endpoint para borrar una categoría pero antes pasar todas las transacciones asociadas a otra categoría
+# para cambiar a otra categoría se hace así:
+# la nueva categoría será siempre la categoría con name == "Otros" y subcategoría con name == "Otros"
+@app.delete("/categories/{category_id}/move_transactions", status_code=status.HTTP_200_OK)
+def move_transactions_to_another_category(category_id: int, db: Session = Depends(get_db)):
+    category = db.query(Category).filter(Category.name == "Otros").first()
+    subcategory = db.query(Subcategory).filter(Subcategory.name == "Otros", Subcategory.category_id == category.id).first()
+    db.query(Transaction).filter(Transaction.category_id == category_id).update({Transaction.category_id: category.id, Transaction.subcategory_id: subcategory.id})
+    db.query(Category).filter(Category.id == category_id).delete()
+    db.commit()
+    return {"message": "Category deleted and transactions moved successfully"}
+
 # SUBCATEGORIES
 
 @app.get("/subcategories", status_code=status.HTTP_200_OK, response_model=List[SubcategoryResponse])
@@ -144,11 +187,26 @@ def delete_subcategory(subcategory_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Subcategory deleted successfully"}
 
+@app.delete("/subcategories/{subcategory_id}/move_transactions", status_code=status.HTTP_200_OK)
+def move_transactions_to_another_subcategory(subcategory_id: int, db: Session = Depends(get_db)):
+    new_subcategory_id = db.query(Subcategory).filter(Subcategory.name == "Otros").first().id
+    subcategory = db.query(Subcategory).filter(Subcategory.id == subcategory_id).first()
+    category_id = subcategory.category_id
+    db.query(Transaction).filter(Transaction.subcategory_id == subcategory_id, Transaction.category_id == category_id).update({Transaction.subcategory_id: new_subcategory_id})
+    db.query(Subcategory).filter(Subcategory.id == subcategory_id).delete()
+    db.commit()
+    return {"message": "Subcategory deleted and transactions moved successfully"}
+
 # TRANSACTIONS
 @app.get("/transactions", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
 def get_all_transactions(db: Session = Depends(get_db)):
-    all_transactions = db.query(Transaction).all()
+    all_transactions = db.query(Transaction).order_by(Transaction.insert_date.desc()).all()
     return all_transactions
+
+@app.get("/transaction/{transaction_id}", status_code=status.HTTP_200_OK, response_model=TransactionResponse)
+def get_transaction_by_id(transaction_id: int, db: Session = Depends(get_db)):
+    transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+    return transaction
 
 @app.post("/transactions", status_code=status.HTTP_201_CREATED, response_model=TransactionResponse)
 def create_transaction(transaction: TransactionRequest, db: Session = Depends(get_db)):
@@ -162,6 +220,22 @@ def create_transaction(transaction: TransactionRequest, db: Session = Depends(ge
     db.refresh(new_transaction)
     return new_transaction
 
+@app.put("/transaction/{transaction_id}", status_code=status.HTTP_200_OK, response_model=TransactionResponse)
+def update_transaction(transaction_id: int, transaction: TransactionRequest, db: Session = Depends(get_db)):
+    existing_transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+    if existing_transaction:
+        transaction_dict = transaction.dict()
+        if transaction_dict.get("insert_date") is None:
+            # Si insert_date no se proporciona, se omitirá y se usará el valor existente en la base de datos
+            del transaction_dict["insert_date"]
+        for key, value in transaction_dict.items():
+            setattr(existing_transaction, key, value)
+        db.commit()
+        db.refresh(existing_transaction)
+        return existing_transaction
+    else:
+        return {"message": "Transaction not found"}
+
 @app.delete("/transactions/{transaction_id}", status_code=status.HTTP_200_OK)
 def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
     transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
@@ -172,13 +246,13 @@ def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
     # income
 @app.get("/incomes", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
 def get_all_incomes(db: Session = Depends(get_db)):
-    all_incomes = db.query(Transaction).filter(Transaction.transaction_type == "Income").all()
+    all_incomes = db.query(Transaction).filter(Transaction.transaction_type == "Income").order_by(Transaction.insert_date.desc()).all()
     return all_incomes
 
     # expense
 @app.get("/expenses", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
 def get_all_expenses(db: Session = Depends(get_db)):
-    all_expenses = db.query(Transaction).filter(Transaction.transaction_type == "Expense").all()
+    all_expenses = db.query(Transaction).filter(Transaction.transaction_type == "Expense").order_by(Transaction.insert_date.desc()).all()
     return all_expenses
 
 @app.get("/expenses_with_names", status_code=status.HTTP_200_OK)
@@ -189,7 +263,8 @@ def get_all_expenses(db: Session = Depends(get_db)):
         Subcategory.name.label("subcategory_name")
         ).join(Category, Transaction.category_id == Category.id
         ).join(Subcategory, Transaction.subcategory_id == Subcategory.id
-        ).filter(Transaction.transaction_type == "Expense").all()
+        ).filter(Transaction.transaction_type == "Expense"
+        ).order_by(Transaction.insert_date.desc()).all()
     
     expenses = []
     for expense in all_expenses:
@@ -211,7 +286,9 @@ def get_expenses_by_category(category_id: int, db: Session = Depends(get_db)):
         Subcategory.name.label("subcategory_name")
     ).join(Category, Transaction.category_id == Category.id
     ).join(Subcategory, Transaction.subcategory_id == Subcategory.id
-    ).filter(Transaction.transaction_type == "Expense", Transaction.category_id == category_id).all()
+    ).filter(Transaction.transaction_type == "Expense", Transaction.category_id == category_id
+    ).order_by(Transaction.insert_date.desc()
+    ).all()
 
     expenses = []
     for expense in expenses_query:
@@ -229,16 +306,18 @@ def get_expenses_by_category(category_id: int, db: Session = Depends(get_db)):
     # saving
 @app.get("/savings", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
 def get_all_savings(db: Session = Depends(get_db)):
-    all_savings = db.query(Transaction).filter(Transaction.transaction_type == "Saving").all()
+    all_savings = db.query(Transaction).filter(Transaction.transaction_type == "Saving").order_by(Transaction.insert_date.desc()).all()
     return all_savings
 
 @app.get("/savings_with_names", status_code=status.HTTP_200_OK)
-def get_all_savings(db: Session = Depends(get_db)):
+def get_all_savings_with_names(db: Session = Depends(get_db)):
     all_savings = db.query(
         Transaction, 
         Goal.name.label("saving_goal_name")
         ).join(Goal, Transaction.saving_goal_id == Goal.id
-        ).filter(Transaction.transaction_type == "Saving").all()
+        ).filter(Transaction.transaction_type == "Saving"
+        ).order_by(Transaction.insert_date.desc()
+        ).all()
     
     savings = []
     for saving in all_savings:
@@ -257,7 +336,9 @@ def get_savings_by_category(saving_goal_id: int, db: Session = Depends(get_db)):
         Transaction,
         Goal.name.label("saving_goal_name")
     ).join(Goal, Transaction.saving_goal_id == Goal.id
-    ).filter(Transaction.transaction_type == "Saving", Transaction.saving_goal_id == saving_goal_id).all()
+    ).filter(Transaction.transaction_type == "Saving", Transaction.saving_goal_id == saving_goal_id
+    ).order_by(Transaction.insert_date.desc()
+    ).all()
 
     savings = []
     for saving in savings_query:
@@ -319,6 +400,24 @@ def delete_goal(goal_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Goal deleted successfully"}
 
+@app.get("/goal/{goal_id}", status_code=status.HTTP_200_OK, response_model=GoalResponse)
+def get_goal_by_id(goal_id: int, db: Session = Depends(get_db)):
+    goal = db.query(Goal).filter(Goal.id == goal_id).first()
+    return goal
+
+@app.put("/goal/{goal_id}", status_code=status.HTTP_200_OK, response_model=GoalResponse)
+def update_goal(goal_id: int, goal: GoalRequest, db: Session = Depends(get_db)):
+    existing_goal = db.query(Goal).filter(Goal.id == goal_id).first()
+    if existing_goal:
+        goal_dict = goal.dict()
+        for key, value in goal_dict.items():
+            setattr(existing_goal, key, value)
+        db.commit()
+        db.refresh(existing_goal)
+        return existing_goal
+    else:
+        return {"message": "Goal not found"}
+
 @app.get("/goals_with_amounts", status_code=status.HTTP_200_OK)
 def get_goals_with_amounts(db: Session = Depends(get_db)):
     goals_with_amounts_query = db.query(
@@ -333,6 +432,26 @@ def get_goals_with_amounts(db: Session = Depends(get_db)):
 
     goals_with_amounts = [row._asdict() for row in goals_with_amounts_query]
     return goals_with_amounts
+
+# Endpoint para borrar un ojetivo de ahorro y también antes eliminar todas las transacciones asociadas a ese objetivo
+@app.delete("/goals/{goal_id}/delete_transactions", status_code=status.HTTP_200_OK)
+def delete_goal_and_transactions(goal_id: int, db: Session = Depends(get_db)):
+    goal = db.query(Goal).filter(Goal.id == goal_id).first()
+    db.query(Transaction).filter(Transaction.saving_goal_id == goal_id).delete()
+    db.delete(goal)
+    db.commit()
+    return {"message": "Goal and transactions deleted successfully"}
+
+# Endpoint para borrar un ojetivo de ahorro pero antes pasar todos los transactions asociados a otro objetivo
+# para cambiar a otro objetivo se hace así:
+# el nuevo objetivo de ahorro será siempre el objetivo con name == "Otros"
+@app.delete("/goals/{goal_id}/move_transactions", status_code=status.HTTP_200_OK)
+def move_transactions_to_another_goal(goal_id: int, db: Session = Depends(get_db)):
+    goal = db.query(Goal).filter(Goal.name == "Otros").first()
+    db.query(Transaction).filter(Transaction.saving_goal_id == goal_id).update({Transaction.saving_goal_id: goal.id})
+    db.query(Goal).filter(Goal.id == goal_id).delete()
+    db.commit()
+    return {"message": "Goal deleted and transactions moved successfully"}
 
 # SHOPS
 
