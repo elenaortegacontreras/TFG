@@ -6,11 +6,11 @@ import re
 from PIL import Image
 import pytesseract
 import pdfplumber
-import pgeocode
-import math
+# import pgeocode
+# import math
 # import pandas as pd
-import spacy #búsqueda de ciudades en texto con su load
-from geopy.geocoders import Nominatim
+# import spacy
+# from geopy.geocoders import Nominatim
 
 tickets_list = ["", "01_ikea.jpg", "02_nogales.jpg", "03_casa_del_libro.jpg", "04_lidl.jpg", "05_lefties.jpg",
                 "06_primor.jpg", "07_costa_cabria.jpg", "08_mercadona_efectivo.jpg", "09_mc_donalds.jpg", "10_carrefour.jpg", 
@@ -356,42 +356,42 @@ def get_postal_code(text):
 #------------------------------------------------------------------------------------------
 # Ciudad
 # ----> returns array of place candidates
-def get_place_candidates(text, postal_code):
-    place_candidates = []
-    text = text[:int(len(text)/2)]
-    text = re.sub(r'[\r;(){}|-]+', ' ', text)
+# def get_place_candidates(text, postal_code):
+#     place_candidates = []
+#     text = text[:int(len(text)/2)]
+#     text = re.sub(r'[\r;(){}|-]+', ' ', text)
 
-    # candidates close to postal code
-    if postal_code != 'desconocido': 
-        match = re.search(rf'{postal_code}.*', text)
-        if match:
-            place = (match.group(0)[6:]).replace('.', '')
-            place_candidates.append(place)
-            if re.search(r'\s', place):
-                place_candidates = place_candidates + place.split()
+#     # candidates close to postal code
+#     if postal_code != 'desconocido': 
+#         match = re.search(rf'{postal_code}.*', text)
+#         if match:
+#             place = (match.group(0)[6:]).replace('.', '')
+#             place_candidates.append(place)
+#             if re.search(r'\s', place):
+#                 place_candidates = place_candidates + place.split()
             
-            # print('place_candidates:', place_candidates)
+#             # print('place_candidates:', place_candidates)
     
     
-    # candidates from text using spacy library
-    text = text[:int(len(text)/2)]
-    text = text.replace('\n', ' ').replace('\r', ' ').replace('-', ' ')
+#     # candidates from text using spacy library
+#     text = text[:int(len(text)/2)]
+#     text = text.replace('\n', ' ').replace('\r', ' ').replace('-', ' ')
     
-    nlp = spacy.load('es_core_news_md')
+#     nlp = spacy.load('es_core_news_md')
 
-    doc = nlp(text)
-    # for token in doc:
-    #     print(token.text, token.pos_)
+#     doc = nlp(text)
+#     # for token in doc:
+#     #     print(token.text, token.pos_)
 
-    other_place_candidates = [ent.text for ent in doc.ents if ent.label_ in ["GPE", "LOC"]]
-    place_candidates = place_candidates + other_place_candidates
+#     other_place_candidates = [ent.text for ent in doc.ents if ent.label_ in ["GPE", "LOC"]]
+#     place_candidates = place_candidates + other_place_candidates
 
-    other_place_candidates = [word for candidate in other_place_candidates for word in candidate.split()]
-    place_candidates = place_candidates + other_place_candidates
+#     other_place_candidates = [word for candidate in other_place_candidates for word in candidate.split()]
+#     place_candidates = place_candidates + other_place_candidates
 
-    # print('othqer_place_candidates:', other_place_candidates)
+#     # print('othqer_place_candidates:', other_place_candidates)
     
-    return place_candidates    
+#     return place_candidates    
 
 
 #------------------------------------------------------------------------------------------
@@ -447,48 +447,48 @@ def get_shop_name(text, street):
 # ------------------------------------------------------------------------------------------
 # Coordenadas
 # ----> returns latitude and longitude or 'desconocido' if not found
-def get_location_from_postal_code(postal_code):
+# def get_location_from_postal_code(postal_code):
 
-    print('>>>>>>>> trying to get location from postal_code:', postal_code)
+#     print('>>>>>>>> trying to get location from postal_code:', postal_code)
 
-    if postal_code == 'desconocido':
-        return 'desconocido', 'desconocido', 'desconocido', 'desconocido'
+#     if postal_code == 'desconocido':
+#         return 'desconocido', 'desconocido', 'desconocido', 'desconocido'
     
-    nomi = pgeocode.Nominatim('es')
-    location = nomi.query_postal_code(postal_code)
-    if math.isnan(location.latitude) or math.isnan(location.longitude):
-        return 'desconocido', 'desconocido', 'desconocido', 'desconocido'
+#     nomi = pgeocode.Nominatim('es')
+#     location = nomi.query_postal_code(postal_code)
+#     if math.isnan(location.latitude) or math.isnan(location.longitude):
+#         return 'desconocido', 'desconocido', 'desconocido', 'desconocido'
     
-    return location.latitude, location.longitude, postal_code, location.place_name
+#     return location.latitude, location.longitude, postal_code, location.place_name
 
-def get_location_from_place(text, place_candidates):
-    location = {}
-    geolocator = Nominatim(user_agent="geoapi")
+# def get_location_from_place(text, place_candidates):
+#     location = {}
+#     geolocator = Nominatim(user_agent="geoapi")
 
-    print('>>>>>>>> trying to get location from place:', place_candidates)
+#     print('>>>>>>>> trying to get location from place:', place_candidates)
 
-    if place_candidates:
-        for place in place_candidates:
-            location = geolocator.geocode(f'{place}, Spain')  
-            if location:
-                print("Datos completos de la dirección:", location.raw)
-                if 'address' in location.raw:
-                    # address = location.raw['address']
-                    address = location.raw.get('address', {})
-                    postal_code = address.get('postcode', 'desconocido')
-                    return location.latitude, location.longitude, postal_code, place
-                return location.latitude, location.longitude, 'desconocido', place
+#     if place_candidates:
+#         for place in place_candidates:
+#             location = geolocator.geocode(f'{place}, Spain')  
+#             if location:
+#                 print("Datos completos de la dirección:", location.raw)
+#                 if 'address' in location.raw:
+#                     # address = location.raw['address']
+#                     address = location.raw.get('address', {})
+#                     postal_code = address.get('postcode', 'desconocido')
+#                     return location.latitude, location.longitude, postal_code, place
+#                 return location.latitude, location.longitude, 'desconocido', place
         
-    return 'desconocido', 'desconocido', 'desconocido', 'desconocido'
+#     return 'desconocido', 'desconocido', 'desconocido', 'desconocido'
 
-def get_location(text, postal_code, place_candidates):
+# def get_location(text, postal_code, place_candidates):
 
-    latitude, longitude, code, place = get_location_from_postal_code(postal_code)
+#     latitude, longitude, code, place = get_location_from_postal_code(postal_code)
     
-    if latitude == 'desconocido': # or longitude == 'desconocido':
-        latitude, longitude, code, place = get_location_from_place(text, place_candidates)
+#     if latitude == 'desconocido': # or longitude == 'desconocido':
+#         latitude, longitude, code, place = get_location_from_place(text, place_candidates)
 
-    return latitude, longitude, code, place
+#     return latitude, longitude, code, place
 
 
 #------------------------------------------------------------------------------------------
