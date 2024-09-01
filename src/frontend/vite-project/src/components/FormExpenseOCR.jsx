@@ -13,7 +13,6 @@ export function FormExpenseOCR() {
 
   const [amount, setAmount] = useState('');
   const [name, setConcept] = useState('');
-  const [shopId, setShopId] = useState('');
   const [shopLocation, setShopLocation] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
@@ -64,8 +63,7 @@ export function FormExpenseOCR() {
       if (ticket_data.shop_name !== "desconocido")
         setConcept(ticket_data.shop_name);     
       if (ticket_data.shop_postal_code !== "desconocido")
-        setShopLocation(ticket_data.shop_postal_code);      
-      // setShopId(ticket_data.shop_id);
+        setShopLocation(ticket_data.shop_postal_code);
       // setSelectedCategory(categories_list.find(category => category.id === expense.category_id));
       // setSelectedSubcategory(subcategories_list.find(subcategory => subcategory.id === expense.subcategory_id));
       if (ticket_data.date !== "desconocido")
@@ -98,7 +96,6 @@ export function FormExpenseOCR() {
     const newExpense = {
       amount: parseFloat(amount),
       name,
-      shop_id: shopId ? shopId : null,
       shop_location_pc: shopLocation ? shopLocation : null,
       category_id: selectedCategory.id,
       subcategory_id: selectedSubcategory.id,
@@ -183,23 +180,6 @@ export function FormExpenseOCR() {
               />
             </div>
           </div>
-
-          {/* <div>
-            <label htmlFor="shop_id" className="block text-sm font-medium leading-6 text-gray-900">
-              Shop ID
-            </label>
-            <div className="mt-2">
-              <input
-                type="text"
-                id="shop_id"
-                name="shop_id"
-                value={shopId}
-                onChange={(e) => setShopId(e.target.value)}
-                // required
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div> */}
 
           <div>
             <label htmlFor="shop_location_pc" className="block text-sm font-medium leading-6 text-gray-900">

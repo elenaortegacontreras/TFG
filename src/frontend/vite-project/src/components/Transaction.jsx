@@ -1,6 +1,6 @@
 import { ActionsMenuEditDelete } from "./ActionsMenuEditDelete";
 
-export function Transaction({transaction_id, transaction_type, name, category_name, subcategory_name, saving_goal_name, payment_method, amount, insert_date, currency, shop_id, shop_location_pc, setSuccessMessage, setErrorMessage}) {
+export function Transaction({transaction_id, transaction_type, name, category_name, subcategory_name, saving_goal_name, payment_method, amount, insert_date, currency, shop_location_pc, setSuccessMessage, setErrorMessage}) {
     const modalId = `transaction_info_${transaction_id}`;
 
     const formattedDate = new Date(insert_date).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -61,10 +61,6 @@ export function Transaction({transaction_id, transaction_type, name, category_na
                             </div>
                             {transaction_type === "Expense" && (
                             <>
-                                {/* <div className="py-4">
-                                    <p>Comercio</p>
-                                    <p>{shop_id}</p>
-                                </div> */}
                                 <div className="py-4">
                                     <p>Código postal</p>
                                     <p>{shop_location_pc}</p>

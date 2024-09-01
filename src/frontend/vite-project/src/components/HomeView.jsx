@@ -81,6 +81,10 @@ export function HomeView() {
         navigate('/transactions', { state: { transaction_type:"incomes" } });
     };
 
+    const handleMapViewClick = () => {
+        navigate('/map');
+    };
+
     return (
         <div>
             {amount !== null ? (
@@ -125,10 +129,19 @@ export function HomeView() {
                 <div className="divider"></div>
 
             
-                <div className="panel flex w-full justify-evenly">
+                {/* <div className="panel flex w-full justify-evenly">
                     <a>Ver más</a>
                     <div className="divider divider-horizontal"></div>
                     <a>Ver mapa</a>
+                </div> */}
+                <div className="panel flex w-full justify-evenly">
+                    <div className="panel flex w-full justify-evenly">
+                    <button style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Ver más?</button>
+                    </div>
+                    <div className="divider divider-horizontal"></div>
+                    <div className="panel flex w-full justify-evenly">
+                    <button onClick={handleMapViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Ver mapa</button>
+                    </div>
                 </div>
 
             </div>
