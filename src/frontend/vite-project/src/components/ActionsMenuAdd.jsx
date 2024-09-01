@@ -1,10 +1,15 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AddExpenseModal } from './AddExpenseModal.jsx';
 
 export function ActionsMenuAdd( { action, category_id } ) {
+
     const navigate = useNavigate();
 
+    const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
+
     const handleAddExpense = () => {
-        navigate('/form-expense', { state: { transaction_id: "" } });
+        setShowAddExpenseModal(true);
     };
 
     const handleAddIncome = () => {
@@ -63,6 +68,9 @@ export function ActionsMenuAdd( { action, category_id } ) {
                 NO BUTTON
         </div>
         )}
+        { showAddExpenseModal && (
+                <AddExpenseModal />
+            )}
         </div>
     );
 };

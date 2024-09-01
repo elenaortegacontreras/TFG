@@ -8,10 +8,16 @@ from app.core.models.models import User, Category, Subcategory, Goal, Transactio
 from app.core.schemas.schemas import UserRequest, UserResponse, CategoryRequest, CategoryResponse, SubcategoryRequest, SubcategoryResponse, GoalRequest, GoalResponse, TransactionRequest, TransactionResponse, ShopRequest, ShopResponse
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.scripts.ocr_ticket_extraction import extract_data
+from fastapi import UploadFile, File
+from sqlalchemy import text
+
 # Shop.__table__.drop(bind=engine, checkfirst=True)
 # CUIDADO - NO BORRAR TABLA MUNICIPIOS
-# Base.metadata.drop_all(bind=engine, checkfirst=True) # Borrar la tabla en la base de datos
+# Base.metadata.drop_all(bind=engine, checkfirst=True) # Borrar las tablas en la base de datos
 # user_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
+
+# Transaction.__table__.drop(bind=engine, checkfirst=True)
 
 Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
 
@@ -477,3 +483,66 @@ def delete_shop(shop_id: int, db: Session = Depends(get_db)):
 
 
 
+# OCR Ticket Data Extraction
+@app.post("/extract_text")
+def extract_text(file: UploadFile = File(...)):
+
+    if file.filename.endswith('.pdf'):
+        with open(f'app/tests/tickets_PDFs/{file.filename}', "wb") as f:
+            f.write(file.file.read())
+
+    else:
+        with open(f'app/tests/tickets_images/{file.filename}', "wb") as f:
+            f.write(file.file.read())
+
+    result = extract_data(file.filename)
+
+    return {"result": result}    
+
+
+# Map (expenses by location)
+@app.get("/location/{postal_code}", status_code=status.HTTP_200_OK)
+def get_location_by_postal_code(postal_code: str, db: Session = Depends(get_db)):
+    return get_location_by_postal_code(postal_code, db)
+    
+
+@app.get("/expenses_by_location", status_code=status.HTTP_200_OK)
+def get_expenses_by_location(db: Session = Depends(get_db)):
+    expenses_by_location_query = db.query(
+        Transaction.shop_location_pc,
+        func.coalesce(func.sum(Transaction.amount), 0).label('current_amount_spent')
+    ).filter(Transaction.shop_location_pc != None).group_by(Transaction.shop_location_pc).all()
+
+    expenses_by_location = [row._asdict() for row in expenses_by_location_query]
+
+    expenses_with_coordinates = []
+    for expense in expenses_by_location:
+        postal_code = expense['shop_location_pc']
+        coordinates = get_location_by_postal_code(postal_code, db)
+        if coordinates != {"desconocido"}:
+            expense['latitude'] = coordinates['latitude']
+            expense['longitude'] = coordinates['longitude']
+            expense['entidad_nombre'] = coordinates['entidad_nombre']
+            expenses_with_coordinates.append(expense)        
+
+    return expenses_with_coordinates
+
+
+def get_location_by_postal_code(postal_code: str, db: Session = Depends(get_db)):
+    query = text("SELECT latitud, longitud, coords_elegidas, provincia_nombre, entidad_nombre FROM es_municipios_cp WHERE codigo_postal = :postal_code")
+    result = db.execute(query, {"postal_code": postal_code}).fetchone()
+    if result:
+        if result[2] == True:
+            latitude = result[0]
+            longitude = result[1]
+            entidad_nombre = result[4]
+            return {"latitude": latitude, "longitude": longitude, "entidad_nombre": entidad_nombre}
+        else:
+            query = text("SELECT latitud, longitud, entidad_nombre FROM es_municipios_cp WHERE provincia_nombre = :provincia_nombre AND entidad_nombre = :entidad_nombre AND coords_elegidas = true")
+            result = db.execute(query, {"provincia_nombre": result[3], "entidad_nombre": result[4]}).fetchone()
+            if result:
+                latitude = result[0]
+                longitude = result[1]
+                entidad_nombre = result[2]
+                return {"latitude": latitude, "longitude": longitude, "entidad_nombre": entidad_nombre}   
+    return {"desconocido"}

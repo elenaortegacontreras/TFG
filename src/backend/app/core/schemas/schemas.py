@@ -97,6 +97,7 @@ class TransactionBase(BaseModel):
     amount: float
     transaction_type: str # 'Expense', 'Income' or 'Saving'
     shop_id: Optional[int] = None
+    shop_location_pc: Optional[str]
     payment_method: str # 'Cash' or 'Card'.
     insert_date: Optional[datetime] = None
 

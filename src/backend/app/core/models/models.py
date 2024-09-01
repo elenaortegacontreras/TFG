@@ -89,6 +89,7 @@ class Transaction(Base):
     subcategory_id = Column(Integer, ForeignKey('expenditure_subcategories.id', ondelete='CASCADE'), index=True)
     saving_goal_id = Column(Integer, ForeignKey('savings_goals.id', ondelete='CASCADE'), index=True)
     shop_id = Column(Integer, ForeignKey('shops.id', ondelete='CASCADE'))
+    shop_location_pc = Column(String(5))
     name = Column(String, nullable=False)
     amount = Column(DECIMAL(15,2), nullable=False)
     transaction_type = Column(String, nullable=False, index=True) # 'Expense', 'Income' or 'Saving'

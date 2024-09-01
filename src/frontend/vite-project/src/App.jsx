@@ -12,6 +12,7 @@ import { SavingView } from './components/SavingView.jsx'
 import { ExpensesOverviewView } from './components/ExpensesOverviewView.jsx'
 import { SavingsOverviewView } from './components/SavingsOverviewView.jsx'
 import { FormExpense } from './components/FormExpense.jsx'
+import { FormExpenseOCR } from './components/FormExpenseOCR.jsx'
 import { SignInOrRegistration } from './inprogress/SignInOrRegistration.jsx'
 import { FormSaving } from './components/FormSaving.jsx'
 import { FormIncome } from './components/FormIncome.jsx'
@@ -19,6 +20,7 @@ import { FormCategoryBudget } from './components/FormCategoryBudget.jsx'
 import { FormSubcategoryBudget } from './components/FormSubcategoryBudget.jsx'
 import { FormSavingGoal } from './components/FormSavingGoal.jsx'
 import { HomeView } from './components/HomeView.jsx'
+import { MapView } from './components/MapView.jsx'
 
 function App() {
 
@@ -51,11 +53,13 @@ function App() {
           <Route path="/category" element={<CategoryView />} />
           <Route path="/savings-overview" element={<SavingsOverviewView />} />
           <Route path="/form-expense" element={<FormExpense />} />
+          <Route path="/form-expense-ocr" element={<FormExpenseOCR />} />
           <Route path="/form-saving" element={<FormSaving />} />
           <Route path="/form-income" element={<FormIncome />} />
           <Route path="/form-category" element={<FormCategoryBudget />} />
           <Route path='/form-subcategory' element={<FormSubcategoryBudget />} />
           <Route path="/form-goal" element={<FormSavingGoal />} />
+          <Route path="/map" element={<MapView />} />
           <Route path="/sign-in" element={<SignInOrRegistration />} />
         </Routes>
       </main>

@@ -26,7 +26,7 @@ export function TransactionPanel({ transactions , setSuccessMessage, setErrorMes
               // currency={transaction.currency}
               currency = "€"
               shop_id={transaction.shop_id}
-
+              shop_location_pc={transaction.shop_location_pc}
               setSuccessMessage={setSuccessMessage} 
               setErrorMessage={setErrorMessage}
               />

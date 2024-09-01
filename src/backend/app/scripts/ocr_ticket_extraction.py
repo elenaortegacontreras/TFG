@@ -527,7 +527,7 @@ def get_shop_data(text):
 def get_data(text):
     text = text.lower()
 
-    print(repr(text))
+    # print(repr(text))
 
     payment_method = get_payment_method(text)
     date = get_date(text)
@@ -589,6 +589,14 @@ def get_data_from_path(file_name):
 
 
 #------------------------------------------------------------------------------------------
+# Main functionality
+# ----> returns the data of the given ticket
+def extract_data(file_name):
+    ticket_extraction = get_data_from_path(file_name)
+
+    return ticket_extraction
+
+#------------------------------------------------------------------------------------------
 # Main
 # ----> prints the data of the given ticket
 if __name__ == '__main__':
@@ -605,6 +613,8 @@ if __name__ == '__main__':
     print('+ Método de pago:', ticket_extraction['payment_method'])
     print('+ Total:', ticket_extraction['total_amount'])
 
+    print(ticket_extraction)
+
     # ## lectura de todos los tickets
     # for i in range(1, len(tickets_list)):
     #     print('--------------- ', {tickets_list[i]}, ' ---------------------')
@@ -620,3 +630,4 @@ if __name__ == '__main__':
 # PDFs/PDFs/20240409\ Mercadona\ 3\,50\ €.pdf
 # PDFs/carrefour_pamplona.pdf
 # PDFs/carrefour_pamplona_2.pdf
+

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-export function FormExpense() {
+export function FormExpenseOCR() {
   const location = useLocation();
   const state = location.state;
   console.log(state);
@@ -33,7 +33,6 @@ export function FormExpense() {
       .then(response => {
         categories_list = response.data;
         setSelectedCategory(categories_list.find(category => category.name === "Otros"));
-        setInsertDate(new Date().toISOString().split('T')[0]);
         setCategories(categories_list);
       })
       .catch(error => {
@@ -57,23 +56,27 @@ export function FormExpense() {
   }, [selectedCategory]);
 
   useEffect(() => {
-    if(state.transaction_id) {
-      axios.get(`http://localhost:8000/transaction/${state.transaction_id}`)
-        .then(response => {
-          const expense = response.data;
-          console.log('expense:', expense);
-          setAmount(expense.amount);
-          setConcept(expense.name);
-          setShopId(expense.shop_id);
-          setShopLocation(expense.shop_location_pc);
-          setSelectedCategory(categories_list.find(category => category.id === expense.category_id));
-          setSelectedSubcategory(subcategories_list.find(subcategory => subcategory.id === expense.subcategory_id));
-          setInsertDate(new Date(expense.insert_date).toISOString().split('T')[0]);
-          setPaymentMethod(expense.payment_method);
-        })
-        .catch(error => {
-            console.error('Error fetching expense data:', error);
-        });
+    if(state.ticket_data) {
+      const ticket_data = state.ticket_data.result;
+      console.log('ticket_data:', ticket_data);
+      if (ticket_data.total_amount !== "desconocido")
+        setAmount(ticket_data.total_amount);
+      if (ticket_data.shop_name !== "desconocido")
+        setConcept(ticket_data.shop_name);     
+      if (ticket_data.shop_postal_code !== "desconocido")
+        setShopLocation(ticket_data.shop_postal_code);      
+      // setShopId(ticket_data.shop_id);
+      // setSelectedCategory(categories_list.find(category => category.id === expense.category_id));
+      // setSelectedSubcategory(subcategories_list.find(subcategory => subcategory.id === expense.subcategory_id));
+      if (ticket_data.date !== "desconocido")
+        setInsertDate(new Date(ticket_data.date.split('/').reverse().join('-')).toISOString().split('T')[0]);
+      else
+        setInsertDate(new Date().toISOString().split('T')[0]);
+      if (ticket_data.payment_method !== "desconocido")
+        if (ticket_data.payment_method === "tarjeta")
+          setPaymentMethod('Card');
+        else if (ticket_data.payment_method === "efectivo")
+          setPaymentMethod('Cash');   
     }
   }, []);
 
@@ -107,24 +110,14 @@ export function FormExpense() {
 
     console.log('newExpense:', newExpense);
 
-    if (state.transaction_id) {
-      try {
-        await axios.put(`http://localhost:8000/transaction/${state.transaction_id}`, newExpense);
-        console.log('Gasto actualizado con éxito');
-        navigate('/transactions', { state: { transaction_type: "expenses" } });
-      } catch (error) {
-        console.error('Error al actualizar gasto:', error);
-      };
-
-    }else{
-      try {
-        await axios.post('http://localhost:8000/transactions', newExpense);
-        console.log('Gasto creado con éxito');
-        navigate('/transactions', { state: { transaction_type: "expenses" } });
-      } catch (error) {
-        console.error('Error al crear gasto:', error);
-      }
-    };
+    try {
+      await axios.post('http://localhost:8000/transactions', newExpense);
+      console.log('Gasto creado con éxito');
+      navigate('/transactions', { state: { transaction_type: "expenses" } });
+    } catch (error) {
+      console.error('Error al crear gasto:', error);
+    }
+    
   };
 
   const handleCancel = () => {
@@ -133,11 +126,7 @@ export function FormExpense() {
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">  
-      { state.transaction_id ? (
-      <Title title="Editar Gasto" />
-    ) : (
       <Title title="Añadir Gasto" />
-    )}
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-lg">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -224,6 +213,7 @@ export function FormExpense() {
                 value={shopLocation}
                 onChange={(e) => setShopLocation(e.target.value)}
                 // required
+                // maxLength={5}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -310,11 +300,7 @@ export function FormExpense() {
               type="submit"
               className="w-full flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 my-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              { state.transaction_id ? (
-                <p>Editar</p>
-              ) : (
-                <p>Añadir</p>
-              )}
+              <p>Añadir</p>
             </button>
 
             <button onClick={handleCancel}
