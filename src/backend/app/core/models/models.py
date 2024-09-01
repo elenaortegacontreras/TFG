@@ -88,7 +88,6 @@ class Transaction(Base):
     category_id = Column(Integer, ForeignKey('expenditure_categories.id', ondelete='CASCADE'), index=True)
     subcategory_id = Column(Integer, ForeignKey('expenditure_subcategories.id', ondelete='CASCADE'), index=True)
     saving_goal_id = Column(Integer, ForeignKey('savings_goals.id', ondelete='CASCADE'), index=True)
-    shop_id = Column(Integer, ForeignKey('shops.id', ondelete='CASCADE'))
     shop_location_pc = Column(String(5))
     name = Column(String, nullable=False)
     amount = Column(DECIMAL(15,2), nullable=False)
@@ -99,7 +98,6 @@ class Transaction(Base):
     user = relationship('User', back_populates='transactions')
     category = relationship('Category', back_populates='transactions')
     subcategory = relationship('Subcategory', back_populates='transactions')
-    shop = relationship('Shop', back_populates='transactions')
     saving_goal = relationship('Goal', back_populates='transactions')
 
     __table_args__ = (
@@ -107,18 +105,6 @@ class Transaction(Base):
         CheckConstraint(payment_method.in_(['Cash', 'Card']), name='check_payment_method'),
     )
 
-    # 'Expense' should have: user_id, category_id, subcategory_id, shop_id,                 name, amount, description, insert_date, payment_method
+    # 'Expense' should have: user_id, category_id, subcategory_id,        shop_location_pc, name, amount, description, insert_date, payment_method
     # 'Income' should have: user_id,                                                        name, amount, description, insert_date, payment_method
     # 'Saving' should have: user_id,                                        saving_goal_id, name, amount, description ,insert_date, payment_method
-
-# Shop model -----------------------------------------------------------------
-class Shop(Base):
-    __tablename__ = 'shops'
-
-    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
-    latitude = Column(Float, nullable=False)
-    longitude = Column(Float, nullable=False)
-    location_code = Column(String, nullable=False)
-    name = Column(String, unique=True, index=True, nullable=False)
-
-    transactions = relationship('Transaction', back_populates='shop', cascade='all, delete-orphan')

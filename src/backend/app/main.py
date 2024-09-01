@@ -4,15 +4,15 @@ from app.core.models.database import engine, get_db, Base
 from typing import List
 from sqlalchemy import func
 
-from app.core.models.models import User, Category, Subcategory, Goal, Transaction, Shop
-from app.core.schemas.schemas import UserRequest, UserResponse, CategoryRequest, CategoryResponse, SubcategoryRequest, SubcategoryResponse, GoalRequest, GoalResponse, TransactionRequest, TransactionResponse, ShopRequest, ShopResponse
+from app.core.models.models import User, Category, Subcategory, Goal, Transaction
+from app.core.schemas.schemas import UserRequest, UserResponse, CategoryRequest, CategoryResponse, SubcategoryRequest, SubcategoryResponse, GoalRequest, GoalResponse, TransactionRequest, TransactionResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.scripts.ocr_ticket_extraction import extract_data
 from fastapi import UploadFile, File
 from sqlalchemy import text
 
-# Shop.__table__.drop(bind=engine, checkfirst=True)
+# Transaction.__table__.drop(bind=engine, checkfirst=True)
 # CUIDADO - NO BORRAR TABLA MUNICIPIOS
 # Base.metadata.drop_all(bind=engine, checkfirst=True) # Borrar las tablas en la base de datos
 # user_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
@@ -458,30 +458,6 @@ def move_transactions_to_another_goal(goal_id: int, db: Session = Depends(get_db
     db.query(Goal).filter(Goal.id == goal_id).delete()
     db.commit()
     return {"message": "Goal deleted and transactions moved successfully"}
-
-# SHOPS
-
-@app.get("/shops", status_code=status.HTTP_200_OK, response_model=List[ShopResponse])
-def get_all_shops(db: Session = Depends(get_db)):
-    all_shops = db.query(Shop).all()
-    return all_shops
-
-@app.post("/shops", status_code=status.HTTP_201_CREATED, response_model=ShopResponse)
-def create_shop(shop: ShopRequest, db: Session = Depends(get_db)):
-    new_shop = Shop(**shop.dict())
-    db.add(new_shop)
-    db.commit()
-    db.refresh(new_shop)
-    return new_shop
-
-@app.delete("/shops/{shop_id}", status_code=status.HTTP_200_OK)
-def delete_shop(shop_id: int, db: Session = Depends(get_db)):
-    shop = db.query(Shop).filter(Shop.id == shop_id).first()
-    db.delete(shop)
-    db.commit()
-    return {"message": "Shop deleted successfully"}
-
-
 
 # OCR Ticket Data Extraction
 @app.post("/extract_text")

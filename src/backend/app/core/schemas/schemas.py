@@ -96,7 +96,6 @@ class TransactionBase(BaseModel):
     name: str
     amount: float
     transaction_type: str # 'Expense', 'Income' or 'Saving'
-    shop_id: Optional[int] = None
     shop_location_pc: Optional[str]
     payment_method: str # 'Cash' or 'Card'.
     insert_date: Optional[datetime] = None
@@ -111,7 +110,6 @@ class TransactionRequest(TransactionBase):
         if transaction_type == 'Expense':
             assert 'category_id' in values, 'category_id is required for Expense transactions'
             assert 'subcategory_id' in values, 'subcategory_id is required for Expense transactions'
-            # assert 'shop_id' in values, 'shop_id is required for Expense transactions'
         elif transaction_type == 'Saving':
             assert 'saving_goal_id' in values, 'saving_goal_id is required for Saving transactions'
         return values
@@ -129,28 +127,7 @@ class TransactionResponse(TransactionBase):
 class ExpenseTransaction(TransactionBase):
     category_id: int
     subcategory_id: int
-    shop_id: int
-
-    class Config:
-        orm_mode = True
-
-
-# Shop schema -----------------------------------------------------------------
-class ShopBase(BaseModel):
-    latitude: float
-    longitude: float
-    location_code: str
-    name: str
-
-    class Config:
-        orm_mode = True
-        
-class ShopRequest(ShopBase):
-    class Config:
-        orm_mode = True
-
-class ShopResponse(ShopBase):
-    id: int
+    shop_location_pc: Optional[str]
 
     class Config:
         orm_mode = True
