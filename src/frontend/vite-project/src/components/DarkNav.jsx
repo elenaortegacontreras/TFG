@@ -2,6 +2,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import sigmaLogo from '../assets/sigma4_bg.png';
 
 const user = {
   name: 'Elena Ortega Contreras',
@@ -56,9 +57,9 @@ export function DarkNav() {
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
                       <img
-                        className="h-8 w-8"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                        alt="Your Company"
+                        className="h-14"
+                        src={sigmaLogo}
+                        alt="SIGMA"
                       />
                     </div>
                     <div className="hidden md:block">
