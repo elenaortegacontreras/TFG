@@ -5,10 +5,10 @@ import { PhotoIcon } from '@heroicons/react/24/solid'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-export function AddExpenseModal(){ // ({ element_type, element_id }) {
+export function AddExpenseModal(){
   const navigate = useNavigate();
   const [open, setOpen] = useState(true)
-  const [ticketFile, setTicketFile] = useState(null); // Assuming ticketFile is a state variable
+  const [ticketFile, setTicketFile] = useState(null);
 
 
   const handleAddExpense = () => {
@@ -23,7 +23,7 @@ export function AddExpenseModal(){ // ({ element_type, element_id }) {
     }
 
     const formData = new FormData();
-    formData.append("file", file); // "image" es el nombre del campo esperado por el servidor
+    formData.append("file", file); // "file" es el nombre del campo esperado por el servidor
 
     try {
         const response = await axios.post("http://localhost:8000/extract_text", formData, {
@@ -41,7 +41,6 @@ export function AddExpenseModal(){ // ({ element_type, element_id }) {
     } catch (error) {
         console.error("Error uploading image:", error);
     }
-        // navigate('/form-expense-ocr', { state: { transaction_id: "" } });
     };
   
   const [showUploadImage, setShowUploadImage] = useState(false);
@@ -51,14 +50,14 @@ export function AddExpenseModal(){ // ({ element_type, element_id }) {
     };
 
     const uploadTicket = ticket => {
-        setTicketFile(ticket); // Guarda el archivo seleccionado en el estado
+        setTicketFile(ticket); 
     };
 
     useEffect(() => {
-        if (ticketFile) { // Verifica si ticketFile no es null
-          handleUploadImage(); // Llama a handleUploadImage solo si ticketFile ha cambiado y no es null
+        if (ticketFile) {
+          handleUploadImage();
         }
-      }, [ticketFile]); // Este efecto depende de ticketFile, así que se ejecutará cada vez que ticketFile cambie
+      }, [ticketFile]);
     
 
 return (
@@ -125,7 +124,7 @@ return (
                     </div>
                     { showUploadImage && (
                     <>
-                    <div className="col-span-full">
+                    <div className="col-span-full bg-gray-50">
                         <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                             <div className="text-center">
                             <PhotoIcon aria-hidden="true" className="mx-auto h-12 w-12 text-gray-300" />
@@ -134,29 +133,18 @@ return (
                                 htmlFor="file-upload"
                                 className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                                 >
-                                <span>Upload a file</span>
+                                <span>Subir archivo</span>
                                 <input 
                                     id="file-upload" 
                                     name="file-upload" 
-                                    type="file" 
-                                    // className="sr-only" 
+                                    type="file"
                                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer border-gray-300 rounded-md" 
-                                    // onChange={handleFileChange}
                                     onChange={(e) => uploadTicket(e.target.files[0])} 
                                 />
-                                </label>
-                                <p className="pl-1">or drag and drop</p>
+                                </label>                                
                             </div>
-                            <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                            <p className="text-xs leading-5 text-gray-600">PNG, JPG o PDF</p>
                             </div>
-                            {/* <button
-                                type="button"
-                                data-autofocus
-                                onClick={() =>handleUploadImage()}
-                                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                >
-                                Enviar
-                            </button> */}
                         </div>
                     </div>
                     </>
