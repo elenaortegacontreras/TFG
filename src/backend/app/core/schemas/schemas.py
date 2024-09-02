@@ -30,7 +30,6 @@ class GoalBase(BaseModel):
     name: str
     description: Optional[str] = None
     target_amount: float
-    current_amount_saved: float = 0.00
     target_date: date
 
     class Config:
@@ -52,8 +51,7 @@ class CategoryBase(BaseModel):
     user_id: int
     name: str
     description: Optional[str] = None
-    budget_amount: int = 0
-    current_amount_spent: float = 0.00
+    budget_amount: float
 
     class Config:
         orm_mode = True
@@ -96,7 +94,7 @@ class TransactionBase(BaseModel):
     name: str
     amount: float
     transaction_type: str # 'Expense', 'Income' or 'Saving'
-    shop_location_pc: Optional[str]
+    shop_location_pc: Optional[str] = None
     payment_method: str # 'Cash' or 'Card'.
     insert_date: Optional[datetime] = None
 
@@ -127,7 +125,7 @@ class TransactionResponse(TransactionBase):
 class ExpenseTransaction(TransactionBase):
     category_id: int
     subcategory_id: int
-    shop_location_pc: Optional[str]
+    shop_location_pc: Optional[str] = None
 
     class Config:
         orm_mode = True
