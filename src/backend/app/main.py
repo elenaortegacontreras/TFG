@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.scripts.ocr_ticket_extraction import extract_data
 from fastapi import UploadFile, File
 from sqlalchemy import text
+from datetime import datetime
 
 # Transaction.__table__.drop(bind=engine, checkfirst=True)
 # CUIDADO - NO BORRAR TABLA MUNICIPIOS
@@ -18,6 +19,10 @@ from sqlalchemy import text
 # user_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
 
 # Transaction.__table__.drop(bind=engine, checkfirst=True)
+# Subcategory.__table__.drop(bind=engine, checkfirst=True)
+# Category.__table__.drop(bind=engine, checkfirst=True)
+# Goal.__table__.drop(bind=engine, checkfirst=True)
+# User.__table__.drop(bind=engine, checkfirst=True)
 
 Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
 
@@ -56,13 +61,19 @@ def create_user(user: UserRequest, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
 
-    # Por cada usuario nuevo creado se crea una categoría de gastos llamada "Otros" para gastos generales con budget_amount = 0
-    create_category(CategoryRequest(name="Otros", user_id=new_user.id), db)
+    # Por cada usuario nuevo creado se crea una categoría de gastos llamada "Otros" para gastos generales con budget_amount = 100 (y subcategoría "Otros" correspondiente)
+    create_category(CategoryRequest(name="Otros", description="Otros gastos", budget_amount= 100, user_id=new_user.id), db)
+    create_category(CategoryRequest(name="Alimentación", budget_amount= 100, user_id=new_user.id), db)
+    create_category(CategoryRequest(name="Ocio", budget_amount= 100, user_id=new_user.id), db)
+    create_category(CategoryRequest(name="Transporte", budget_amount= 100, user_id=new_user.id), db)
 
-    # y una subcategoría "Otros" para la categoría "Otros" con budget_amount = 0
-    create_subcategory(SubcategoryRequest(name="Otros", category_id=new_user.id), db)
+    # Por cada usuario nuevo creado se crea una meta de ahorro llamada "Otros" con target_amount = 1000 y hasta final de año
+    current_year = datetime.now().year
+    target_date = f"{current_year}-12-31"
 
-    # TODO: Crear varias categorías (de gastos) por defecto para cada usuario nuevo
+    create_goal(GoalRequest(name="Otros", description="Otros ahorros", target_amount= 1000, user_id=new_user.id, target_date=target_date), db)
+    create_goal(GoalRequest(name="Viaje", target_amount= 1000, user_id=new_user.id, target_date=target_date), db)
+
     return new_user
 
 @app.delete("/users/{user_id}", status_code=status.HTTP_200_OK)
