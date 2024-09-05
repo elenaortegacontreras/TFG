@@ -1,49 +1,44 @@
-import { Title } from './Title.jsx'
-import { LoadingDots } from './LoadingDots.jsx';
-
-import React, { useEffect, useState } from 'react';
+import { Title } from './Title.jsx';
+import React, { useEffect, useRef } from 'react';
 import axios from 'axios';
+import L from 'leaflet';
 
-
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
-
-
-export function MapView() {   
-    
-    const [expensesByLocation, setExpensesByLocation] = useState([]);
+export function MapView() {
+    const mapRef = useRef(null);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/expenses_by_location_and_coordinates')
-            .then(response => {
-                setExpensesByLocation(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching the expenses:', error);
-            });
+        if (!mapRef.current) return;
+
+        const map = L.map(mapRef.current).setView([40.4637, -3.7492], 6);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        const loadAndAddMarkers = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/expenses_by_location');
+                response.data.forEach(item => {
+                    L.marker([item.latitude, item.longitude]).addTo(map)
+                        .bindPopup(`${item.entidad_nombre}: ${item.current_amount_spent}€`);
+                });
+            } catch (error) {
+                console.error('Error al cargar los datos de la API:', error);
+            }
+        };
+
+        // Llamar a la función después de que el mapa esté listo
+        loadAndAddMarkers();
+
+        return () => {
+            map.remove(); // Limpiar el mapa y sus listeners cuando el componente se desmonte
+        };
     }, []);
-
-    
-
-    // ...
 
     return (
         <div>
             <Title title="Mapa de gastos por municipio" />
-
-            <div className="divider"></div>
-
-            {expensesByLocation ? (
-                <MapContainer center={[37.1512306, -3.6167146]} zoom={13} style={{ height: '400px', width: '100%' }}>
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                    {expensesByLocation.map((expense, index) => (
-                        <Marker key={index} position={[expense.latitude, expense.longitude]} />
-                    ))}
-                </MapContainer>
-            ) : (
-                <LoadingDots />
-            )}
-
-            <div className="divider"></div>
+            <div ref={mapRef} style={{ height: '500px', width: '100%' }}></div>
         </div>
     );
-};
+}
