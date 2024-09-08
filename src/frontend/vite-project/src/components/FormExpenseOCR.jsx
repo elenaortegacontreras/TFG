@@ -5,6 +5,7 @@ import { Title } from './Title.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { LocationMiniMap } from './LocationMiniMap.jsx';
 
 export function FormExpenseOCR() {
   const location = useLocation();
@@ -18,6 +19,7 @@ export function FormExpenseOCR() {
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [payment_method, setPaymentMethod] = useState('');
   const [insertDate, setInsertDate] = useState('');
+  const [showLocationMiniMap, setShowLocationMiniMap] = useState(false);
 
   const navigate = useNavigate();
 
@@ -121,6 +123,10 @@ export function FormExpenseOCR() {
     navigate('/transactions', { state: { transaction_type: "expenses" } });
   }
 
+  const handleLocation = () => {
+    setShowLocationMiniMap(true);
+  }
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">  
       <Title title="Añadir Gasto" />
@@ -176,24 +182,6 @@ export function FormExpenseOCR() {
                 onChange={(e) => setInsertDate(e.target.value)}
                 // required
                 placeholder='dd/mm/aaaa'
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="shop_location_pc" className="block text-sm font-medium leading-6 text-gray-900">
-              Código postal del comercio
-            </label>
-            <div className="mt-2">
-              <input
-                type="text"
-                id="shop_location_pc"
-                name="shop_location_pc"
-                value={shopLocation}
-                onChange={(e) => setShopLocation(e.target.value)}
-                // required
-                // maxLength={5}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -256,7 +244,7 @@ export function FormExpenseOCR() {
             </div>
 
           <div>
-            <label className="block text-sm font-medium leading-6 text-gray-900">Tipo de Ahorro</label>
+            <label className="block text-sm font-medium leading-6 text-gray-900">Método de pago</label>
             <div className="mt-2 flex justify-around">
               <button
                 type="button"
@@ -276,17 +264,64 @@ export function FormExpenseOCR() {
           </div>
 
           <div>
+            <label htmlFor="shop_location_pc" className="block text-sm font-medium leading-6 text-gray-900">
+              Código postal del comercio
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                id="shop_location_pc"
+                name="shop_location_pc"
+                value={shopLocation}
+                onChange={(e) => setShopLocation(e.target.value)}
+                // required
+                // maxLength={5}
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="shop" className="block text-sm font-medium leading-6 text-gray-900">
+              Comercio
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                id="shop"
+                name="shop"
+                // value={shop}
+                // onChange={(e) => setShopLocation(e.target.value)}
+                // required
+                // maxLength={5}
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+
+          <button
+            type="button"
+             onClick={handleLocation}
+             className="w-full flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 my-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Usar mi ubicación
+          </button>
+
+        { showLocationMiniMap && (
+          <div>
+            <LocationMiniMap />
+          </div>
+        )}
+
+          <div>
             <button
               type="submit"
-              className="w-full flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 my-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
+              className="w-full flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 my-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               <p>Añadir</p>
             </button>
 
             <button onClick={handleCancel}
               type="submit"
-              className="flex w-full justify-center rounded-md px-3 py-1.5 my-2 text-sm font-semibold leading-6 bg-white text-gray-900 border border-gray-300"
-            >
+              className="flex w-full justify-center rounded-md px-3 py-1.5 my-2 text-sm font-semibold leading-6 bg-white text-gray-900 border border-gray-300">
               Cancelar
             </button>
           </div>
