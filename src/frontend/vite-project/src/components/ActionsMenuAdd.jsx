@@ -69,8 +69,8 @@ export function ActionsMenuAdd( { action, category_id } ) {
         </div>
         )}
         { showAddExpenseModal && (
-                <AddExpenseModal />
-            )}
+            <AddExpenseModal />
+        )}
         </div>
     );
 };
