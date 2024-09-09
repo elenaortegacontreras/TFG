@@ -1,37 +1,33 @@
 import React, { useEffect, useState, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet.locatecontrol';
+import axios from 'axios';
 
-export function LocationMiniMap() {
+export function LocationMiniMap() { // marisol: 37.1438607 -3.6273500
     const mapRef = useRef(null);
-    // const [places, setPlaces] = useState([]);
+    const mapInstance = useRef(null); // Ref para almacenar la instancia del mapa
+    const [places, setPlaces] = useState([]);
+    const [userLocation, setUserLocation] = useState(null);
 
     useEffect(() => {
-        if (!mapRef.current) return; // 37.14348360812482, -3.6323339037885454
+        if (mapInstance.current) return; // Verifica si el mapa ya ha sido inicializado
 
-        // const southWest = L.latLng(25.5, -20.0); // Suroeste (Islas Canarias)
-        // const northEast = L.latLng(47.0, 15.0);   // Noreste (noreste de España)
-        // const bounds = L.latLngBounds(southWest, northEast);
-
-        const map = L.map(mapRef.current, {
+        mapInstance.current = L.map(mapRef.current, {
             center: [40.4637, -3.7492], // Coordenadas iniciales centradas en España
             zoom: 10,
             minZoom: 10,
             maxZoom: 20,
-            // maxBounds: bounds,
-            // maxBoundsViscosity: 1.0,
-            // zoomControl: false, // Desactivar controles de zoom
-            dragging: false, // Desactivar arrastre del mapa
-            scrollWheelZoom: false, // Desactivar zoom con la rueda del ratón
-            doubleClickZoom: false, // Desactivar zoom con doble clic
-            boxZoom: false, // Desactivar zoom con la selección de una caja
-            keyboard: false, // Desactivar controles del teclado
-            tap: false // Desactivar interacciones táctiles
+            dragging: false,
+            scrollWheelZoom: false,
+            doubleClickZoom: false,
+            boxZoom: false,
+            keyboard: false,
+            tap: false
         });
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+        }).addTo(mapInstance.current);
 
         const locateControl = L.control.locate({
             position: 'topleft',
@@ -46,16 +42,57 @@ export function LocationMiniMap() {
                 maxZoom: 15,
                 enableHighAccuracy: true
             }
-        }).addTo(map).start();
+        }).addTo(mapInstance.current);
+
+        mapInstance.current.on('locationfound', (e) => {
+            const { lat, lng } = e.latlng; // Obtén las coordenadas de la ubicación encontrada
+            setUserLocation({ lat, lon: lng });
+            fetchNearbyPlaces(lat, lng);
+        });
+
+        locateControl.start();
+
+        const fetchNearbyPlaces = async (lat, lon) => {
+            const overpassQuery = `
+                [out:json];
+                (
+                  node["shop"](around:250,${lat},${lon});
+                  node["amenity"~"restaurant|cafe|bar"](around:250,${lat},${lon});
+                  node["leisure"](around:250,${lat},${lon});
+                );
+                out body;
+            `;
+            const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
+
+            try {
+                const response = await axios.get(url);
+                setPlaces(response.data.elements);
+            } catch (error) {
+                console.error('Error fetching places:', error);
+            }
+        };
 
         return () => {
-            map.remove(); // Limpiar el mapa y sus listeners cuando el componente se desmonte
+            mapInstance.current.remove(); // Limpiar el mapa al desmontar el componente
+            mapInstance.current = null; // Asegurarse de que la referencia se reinicie
         };
     }, []);
 
     return (
         <div>
-            <div ref={mapRef} style={{ height: '150px'}}></div>
+            <div ref={mapRef} style={{ height: '150px' }}></div>
+            {userLocation && (
+                <div>
+                    <h3>Lugares Cercanos</h3>
+                    <ul>
+                        {places.map((place) => (
+                            <li key={place.id}>
+                                {place.tags.name || 'Sin Nombre'} - {place.tags.shop || place.tags.amenity || place.tags.leisure || 'Otro'}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </div>
     );
 }
