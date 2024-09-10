@@ -49,7 +49,7 @@ export function Transaction({transaction_id, transaction_type, name, category_na
                             )}
                             <div className="py-4">
                                 <p>Método de pago</p>
-                                <p>{payment_method}</p>
+                                {payment_method === "Card" ? <p>Tarjeta</p> : <p>Efectivo</p>}
                             </div>
                             <div className="py-4">
                                 <p>Cantidad</p>
