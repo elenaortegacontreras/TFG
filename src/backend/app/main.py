@@ -486,13 +486,27 @@ def extract_text(file: UploadFile = File(...)):
 
     return {"result": result}    
 
-
-# Map (expenses by location)
 @app.get("/location/{postal_code}", status_code=status.HTTP_200_OK)
 def get_location_by_postal_code(postal_code: str, db: Session = Depends(get_db)):
-    return get_location_by_postal_code(postal_code, db)
+    query = text("SELECT latitud, longitud, coords_elegidas, provincia_nombre, entidad_nombre FROM es_municipios_cp WHERE codigo_postal = :postal_code")
+    result = db.execute(query, {"postal_code": postal_code}).fetchone()
+    if result:
+        if result[2] == True:
+            latitude = result[0]
+            longitude = result[1]
+            entidad_nombre = result[4]
+            return {"latitude": latitude, "longitude": longitude, "entidad_nombre": entidad_nombre}
+        else:
+            query = text("SELECT latitud, longitud, entidad_nombre FROM es_municipios_cp WHERE provincia_nombre = :provincia_nombre AND entidad_nombre = :entidad_nombre AND coords_elegidas = true")
+            result = db.execute(query, {"provincia_nombre": result[3], "entidad_nombre": result[4]}).fetchone()
+            if result:
+                latitude = result[0]
+                longitude = result[1]
+                entidad_nombre = result[2]
+                return {"latitude": latitude, "longitude": longitude, "entidad_nombre": entidad_nombre}   
+    return {"desconocido"}
     
-
+# Map (expenses by location)
 @app.get("/expenses_by_location", status_code=status.HTTP_200_OK)
 def get_expenses_by_location(db: Session = Depends(get_db)):
     expenses_by_location_query = db.query(
@@ -514,22 +528,31 @@ def get_expenses_by_location(db: Session = Depends(get_db)):
 
     return expenses_with_coordinates
 
-
-def get_location_by_postal_code(postal_code: str, db: Session = Depends(get_db)):
-    query = text("SELECT latitud, longitud, coords_elegidas, provincia_nombre, entidad_nombre FROM es_municipios_cp WHERE codigo_postal = :postal_code")
+@app.get("/latlon/{postal_code}", status_code=status.HTTP_200_OK)
+def get_coords_by_postal_code(postal_code: str, db: Session = Depends(get_db)):
+    query = text("SELECT latitud, longitud FROM es_municipios_cp WHERE codigo_postal = :postal_code")
     result = db.execute(query, {"postal_code": postal_code}).fetchone()
     if result:
-        if result[2] == True:
-            latitude = result[0]
-            longitude = result[1]
-            entidad_nombre = result[4]
-            return {"latitude": latitude, "longitude": longitude, "entidad_nombre": entidad_nombre}
-        else:
-            query = text("SELECT latitud, longitud, entidad_nombre FROM es_municipios_cp WHERE provincia_nombre = :provincia_nombre AND entidad_nombre = :entidad_nombre AND coords_elegidas = true")
-            result = db.execute(query, {"provincia_nombre": result[3], "entidad_nombre": result[4]}).fetchone()
-            if result:
-                latitude = result[0]
-                longitude = result[1]
-                entidad_nombre = result[2]
-                return {"latitude": latitude, "longitude": longitude, "entidad_nombre": entidad_nombre}   
-    return {"desconocido"}
+        latitude = result[0]
+        longitude = result[1]
+        return {"latitude": latitude, "longitude": longitude}
+    return {"latitude": None, "longitude": None}
+
+# def get_location_by_postal_code(postal_code: str, db: Session = Depends(get_db)):
+#     query = text("SELECT latitud, longitud, coords_elegidas, provincia_nombre, entidad_nombre FROM es_municipios_cp WHERE codigo_postal = :postal_code")
+#     result = db.execute(query, {"postal_code": postal_code}).fetchone()
+#     if result:
+#         if result[2] == True:
+#             latitude = result[0]
+#             longitude = result[1]
+#             entidad_nombre = result[4]
+#             return {"latitude": latitude, "longitude": longitude, "entidad_nombre": entidad_nombre}
+#         else:
+#             query = text("SELECT latitud, longitud, entidad_nombre FROM es_municipios_cp WHERE provincia_nombre = :provincia_nombre AND entidad_nombre = :entidad_nombre AND coords_elegidas = true")
+#             result = db.execute(query, {"provincia_nombre": result[3], "entidad_nombre": result[4]}).fetchone()
+#             if result:
+#                 latitude = result[0]
+#                 longitude = result[1]
+#                 entidad_nombre = result[2]
+#                 return {"latitude": latitude, "longitude": longitude, "entidad_nombre": entidad_nombre}   
+#     return {"desconocido"}
