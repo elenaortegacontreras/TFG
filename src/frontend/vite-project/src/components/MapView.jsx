@@ -7,8 +7,6 @@ import 'leaflet.locatecontrol';
 export function MapView() {
     const mapRef = useRef(null);
 
-    
-
     useEffect(() => {
         if (!mapRef.current) return;
 
@@ -22,7 +20,7 @@ export function MapView() {
             center: [40.4637, -3.7492], // Coordenadas iniciales centradas en España
             zoom: 6,
             minZoom: 5,
-            maxZoom: 10,
+            maxZoom: 20,
             maxBounds: bounds,
             maxBoundsViscosity: 1.0
         });
@@ -52,7 +50,7 @@ export function MapView() {
                 title: "Mostrar mi ubicación"
             },
             locateOptions: {
-                maxZoom: 15,
+                maxZoom: 20,
                 enableHighAccuracy: true
             }
         }).addTo(map);
