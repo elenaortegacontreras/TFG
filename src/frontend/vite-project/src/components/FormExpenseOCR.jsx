@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { LocationMiniMap } from './LocationMiniMap.jsx';
+import { FindLocationMiniMap } from './FindLocationMiniMap.jsx';
 
 export function FormExpenseOCR() {
   const location = useLocation();
@@ -19,7 +20,9 @@ export function FormExpenseOCR() {
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [payment_method, setPaymentMethod] = useState('');
   const [insertDate, setInsertDate] = useState('');
+  const [find_shop_option, setFindShopOption] = useState('');
   const [showLocationMiniMap, setShowLocationMiniMap] = useState(false);
+  const [showFindLocationMiniMap, setShowFindLocationMiniMap] = useState(false);
 
   const navigate = useNavigate();
 
@@ -92,6 +95,17 @@ export function FormExpenseOCR() {
     setPaymentMethod(type);
   };
 
+  const handleFindShopOptionChange = (type) => {
+    setFindShopOption(type);
+    if (type === 'Geolocation') {
+      setShowLocationMiniMap(true);
+      setShowFindLocationMiniMap(false);
+    } else {
+      setShowFindLocationMiniMap(true);
+      setShowLocationMiniMap(false);
+    };
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -121,10 +135,6 @@ export function FormExpenseOCR() {
 
   const handleCancel = () => {
     navigate('/transactions', { state: { transaction_type: "expenses" } });
-  }
-
-  const handleLocation = () => {
-    setShowLocationMiniMap(true);
   }
 
   return (
@@ -299,16 +309,35 @@ export function FormExpenseOCR() {
             </div>
           </div>
 
-          <button
-            type="button"
-             onClick={handleLocation}
-             className="w-full flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 my-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          <div>
+            <label className="block text-sm font-medium leading-6 text-gray-900">Comercio</label>
+            <div className="mt-2 flex justify-around">
+              <button
+                type="button"
+                onClick={() => handleFindShopOptionChange('Geolocation')}
+                className={`w-1/3 py-2 rounded-md font-semibold ${find_shop_option === 'Geolocation' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-900 border border-gray-300'}`}
+              >
                 Usar mi ubicación
-          </button>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleFindShopOptionChange('Search') }
+                className={`w-1/3 py-2 rounded-md font-semibold ${find_shop_option === 'Search' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-900 border border-gray-300'}`}
+              >
+                Encontrar en el mapa
+              </button>
+            </div>
+          </div>
 
-        { showLocationMiniMap && (
+        { showLocationMiniMap && find_shop_option === 'Geolocation' && (
           <div>
             <LocationMiniMap />
+          </div>
+        )}
+
+        { showFindLocationMiniMap && find_shop_option === 'Search' && (
+          <div>
+            <FindLocationMiniMap />
           </div>
         )}
 
