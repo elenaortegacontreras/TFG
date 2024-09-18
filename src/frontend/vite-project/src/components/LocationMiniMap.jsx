@@ -46,6 +46,8 @@ export function LocationMiniMap() { // marisol: 37.1438607 -3.6273500
 
         mapInstance.current.on('locationfound', (e) => {
             const { lat, lng } = e.latlng; // Obtén las coordenadas de la ubicación encontrada
+            // const lat = 37.1438607;
+            // const lng = -3.6273500;
             setUserLocation({ lat, lon: lng });
             fetchNearbyPlaces(lat, lng);
         });
@@ -56,9 +58,9 @@ export function LocationMiniMap() { // marisol: 37.1438607 -3.6273500
             const overpassQuery = `
                 [out:json];
                 (
-                  node["shop"](around:250,${lat},${lon});
-                  node["amenity"~"restaurant|cafe|bar"](around:250,${lat},${lon});
-                  node["leisure"](around:250,${lat},${lon});
+                  node["shop"](around:400,${lat},${lon});
+                  node["amenity"~"restaurant|cafe|bar"](around:400,${lat},${lon});
+                  node["leisure"](around:400,${lat},${lon});
                 );
                 out body;
             `;
