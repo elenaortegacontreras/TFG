@@ -292,40 +292,35 @@ export function FormExpenseOCR() {
           </div>
 
           <div>
-            <label htmlFor="shop" className="block text-sm font-medium leading-6 text-gray-900">
-              Comercio
-            </label>
-            <div className="mt-2">
-              <input
-                type="text"
-                id="shop"
-                name="shop"
-                // value={shop}
-                // onChange={(e) => setShopLocation(e.target.value)}
-                // required
-                // maxLength={5}
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-
-          <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Comercio</label>
+            {shopLocation === '' && (
+              <p className="text-red-500 text-sm mt-1">Se necesita indicar código postal</p>
+            )}
             <div className="mt-2 flex justify-around">
-              <button
-                type="button"
-                onClick={() => handleFindShopOptionChange('Geolocation')}
-                className={`w-1/3 py-2 rounded-md font-semibold ${find_shop_option === 'Geolocation' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-900 border border-gray-300'}`}
-              >
-                Usar mi ubicación
-              </button>
-              <button
-                type="button"
-                onClick={() => handleFindShopOptionChange('Search') }
-                className={`w-1/3 py-2 rounded-md font-semibold ${find_shop_option === 'Search' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-900 border border-gray-300'}`}
-              >
-                Encontrar en el mapa
-              </button>
+            <button
+              type="button"
+              disabled={!shopLocation}
+              onClick={() => handleFindShopOptionChange('Geolocation')}
+              className={`w-1/3 py-2 rounded-md font-semibold 
+                ${find_shop_option === 'Geolocation' ? 'bg-indigo-600 text-white' : 
+                  'bg-white text-gray-900 border border-gray-300'} 
+                ${!shopLocation ? 'cursor-not-allowed opacity-50' : ''}
+              `}
+            >
+              Usar mi ubicación
+            </button>
+            <button
+              type="button"
+              disabled={!shopLocation}
+              onClick={() => handleFindShopOptionChange('Search')}
+              className={`w-1/3 py-2 rounded-md font-semibold 
+                ${find_shop_option === 'Search' ? 'bg-indigo-600 text-white' : 
+                  'bg-white text-gray-900 border border-gray-300'} 
+                ${!shopLocation ? 'cursor-not-allowed opacity-50' : ''}
+              `}
+            >
+              Encontrar en el mapa
+            </button>
             </div>
           </div>
 
@@ -338,6 +333,36 @@ export function FormExpenseOCR() {
         { showFindLocationMiniMap && find_shop_option === 'Search' && (
           <div>
             <FindLocationMiniMap />
+          </div>
+        )}
+
+        { showFindLocationMiniMap || showLocationMiniMap && (
+          <div>
+            <label htmlFor="selectedCategory" className="block text-sm font-medium leading-6 text-gray-900">
+              Comercio
+            </label>
+            <div className="mt-2">
+              <Menu as="div" className="relative inline-block text-left w-full">
+                <div>
+                  <MenuButton className="inline-flex w-full justify-between gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    {selectedCategory ? selectedCategory.name : 'Seleccionar categoría'}
+                    <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400" />
+                  </MenuButton>
+                </div>
+                <MenuItems className="absolute z-10 mt-2 w-full origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  {categories.map((category) => (
+                    <MenuItem
+                      key={category.id}
+                      as="button"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      onClick={() => handleCategoryChange(category)}
+                    >
+                      {category.name}
+                    </MenuItem>
+                  ))}
+                </MenuItems>
+              </Menu>
+            </div>
           </div>
         )}
 
