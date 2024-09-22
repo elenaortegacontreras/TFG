@@ -1,5 +1,5 @@
 from app.core.models.database import Base
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DECIMAL, Date, TIMESTAMP, func, UniqueConstraint, CheckConstraint
+from sqlalchemy import Column, Integer, String, BigInteger, Float, ForeignKey, DECIMAL, Date, TIMESTAMP, func, UniqueConstraint, CheckConstraint
 from sqlalchemy.orm import relationship
 
 # User model -----------------------------------------------------------------
@@ -83,6 +83,7 @@ class Transaction(Base):
     subcategory_id = Column(Integer, ForeignKey('expenditure_subcategories.id', ondelete='CASCADE'), index=True)
     saving_goal_id = Column(Integer, ForeignKey('savings_goals.id', ondelete='CASCADE'), index=True)
     shop_location_pc = Column(String(5))
+    shop_id = Column(BigInteger)
     name = Column(String, nullable=False)
     amount = Column(DECIMAL(15,2), nullable=False)
     transaction_type = Column(String, nullable=False, index=True) # 'Expense', 'Income' or 'Saving'
@@ -99,6 +100,6 @@ class Transaction(Base):
         CheckConstraint(payment_method.in_(['Cash', 'Card']), name='check_payment_method'),
     )
 
-    # 'Expense' should have: user_id, category_id, subcategory_id,        shop_location_pc, name, amount, description, insert_date, payment_method
+    # 'Expense' should have: user_id, category_id, subcategory_id,     shop_id, shop_location_pc, name, amount, description, insert_date, payment_method
     # 'Income' should have: user_id,                                                        name, amount, description, insert_date, payment_method
     # 'Saving' should have: user_id,                                        saving_goal_id, name, amount, description ,insert_date, payment_method

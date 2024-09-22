@@ -95,6 +95,7 @@ class TransactionBase(BaseModel):
     amount: float
     transaction_type: str # 'Expense', 'Income' or 'Saving'
     shop_location_pc: Optional[str] = None
+    shop_id: Optional[str] = None
     payment_method: str # 'Cash' or 'Card'.
     insert_date: Optional[datetime] = None
 
@@ -126,6 +127,7 @@ class ExpenseTransaction(TransactionBase):
     category_id: int
     subcategory_id: int
     shop_location_pc: Optional[str] = None
+    shop_id: Optional[str] = None
 
     class Config:
         orm_mode = True
