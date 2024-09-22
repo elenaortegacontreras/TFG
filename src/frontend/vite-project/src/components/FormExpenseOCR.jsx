@@ -23,6 +23,12 @@ export function FormExpenseOCR() {
   const [find_shop_option, setFindShopOption] = useState('');
   const [showLocationMiniMap, setShowLocationMiniMap] = useState(false);
   const [showFindLocationMiniMap, setShowFindLocationMiniMap] = useState(false);
+  const [potentialShops, setPotentialShops] = useState([]);
+  const [selectedShop, setSelectedShop] = useState(null);
+
+  const handlePotentialShopsChange = (shops) => {
+    setPotentialShops(shops);
+  };
 
   const navigate = useNavigate();
 
@@ -104,6 +110,12 @@ export function FormExpenseOCR() {
       setShowFindLocationMiniMap(true);
       setShowLocationMiniMap(false);
     };
+  };
+
+  const handleShopChange = (shop) => {
+    console.log('SELECTED shop:', shop);
+    // añadir aquí marcador con la ubicación del comercio
+    setSelectedShop(shop);
   };
 
   const handleSubmit = async (event) => {
@@ -319,47 +331,58 @@ export function FormExpenseOCR() {
                 ${!shopLocation ? 'cursor-not-allowed opacity-50' : ''}
               `}
             >
-              Encontrar en el mapa
+              Buscar
             </button>
             </div>
           </div>
 
         { showLocationMiniMap && find_shop_option === 'Geolocation' && (
           <div>
-            <LocationMiniMap />
+            <LocationMiniMap onPotentialShopsChange={handlePotentialShopsChange}/>
           </div>
         )}
 
         { showFindLocationMiniMap && find_shop_option === 'Search' && (
           <div>
-            <FindLocationMiniMap />
+            <FindLocationMiniMap onPotentialShopsChange={handlePotentialShopsChange} postalCode={shopLocation}/>
           </div>
         )}
 
-        { showFindLocationMiniMap || showLocationMiniMap && (
+        { (showFindLocationMiniMap || showLocationMiniMap) && (
           <div>
-            <label htmlFor="selectedCategory" className="block text-sm font-medium leading-6 text-gray-900">
-              Comercio
-            </label>
+            Comercios cercanos: {potentialShops.length}
             <div className="mt-2">
               <Menu as="div" className="relative inline-block text-left w-full">
                 <div>
                   <MenuButton className="inline-flex w-full justify-between gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                    {selectedCategory ? selectedCategory.name : 'Seleccionar categoría'}
+                    {selectedShop ? (
+                      <>
+                      {selectedShop.tags.name || 'Sin Nombre'}
+                      {selectedShop.tags['addr:street'] ? ` - ${selectedShop.tags['addr:street']}` : ''}        
+                      </>               
+                    ) : 'Seleccionar comercio'}
                     <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400" />
                   </MenuButton>
                 </div>
+
                 <MenuItems className="absolute z-10 mt-2 w-full origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {categories.map((category) => (
+                {potentialShops.length > 0 ? (
+                  potentialShops.map((shop) => (
                     <MenuItem
-                      key={category.id}
+                      key={shop.id}
                       as="button"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                      onClick={() => handleCategoryChange(category)}
+                      onClick={() => handleShopChange(shop)}
                     >
-                      {category.name}
+                      {shop.tags.name || 'Sin Nombre'}
+                      {shop.tags['addr:street'] ? ` - ${shop.tags['addr:street']}` : ''}
                     </MenuItem>
-                  ))}
+                  ))
+                ) : (
+                  <MenuItem as="button">
+                  No se encontraron lugares con ese nombre
+                  </MenuItem>
+                )}
                 </MenuItems>
               </Menu>
             </div>
