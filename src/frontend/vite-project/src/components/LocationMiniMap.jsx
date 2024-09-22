@@ -3,10 +3,10 @@ import L from 'leaflet';
 import 'leaflet.locatecontrol';
 import axios from 'axios';
 
-export function LocationMiniMap() { // marisol: 37.1438607 -3.6273500
+export function LocationMiniMap(props) { // Ej: marisol: 37.1438607 -3.6273500
     const mapRef = useRef(null);
-    const mapInstance = useRef(null); // Ref para almacenar la instancia del mapa
-    const [places, setPlaces] = useState([]);
+    const mapInstance = useRef(null); // Amacenar la instancia del mapa
+    const [potentialShops, setPotentialShops] = useState([]);
     const [userLocation, setUserLocation] = useState(null);
 
     useEffect(() => {
@@ -45,7 +45,7 @@ export function LocationMiniMap() { // marisol: 37.1438607 -3.6273500
         }).addTo(mapInstance.current);
 
         mapInstance.current.on('locationfound', (e) => {
-            const { lat, lng } = e.latlng; // Obtén las coordenadas de la ubicación encontrada
+            const { lat, lng } = e.latlng; // Obtener las coordenadas de la ubicación encontrada
             // const lat = 37.1438607;
             // const lng = -3.6273500;
             setUserLocation({ lat, lon: lng });
@@ -68,33 +68,22 @@ export function LocationMiniMap() { // marisol: 37.1438607 -3.6273500
 
             try {
                 const response = await axios.get(url);
-                setPlaces(response.data.elements);
+                setPotentialShops(response.data.elements);
+                props.onPotentialShopsChange(response.data.elements);
             } catch (error) {
                 console.error('Error fetching places:', error);
             }
         };
 
         return () => {
-            mapInstance.current.remove(); // Limpiar el mapa al desmontar el componente
-            mapInstance.current = null; // Asegurarse de que la referencia se reinicie
+            mapInstance.current.remove();
+            mapInstance.current = null;
         };
     }, []);
 
     return (
         <div>
             <div ref={mapRef} style={{ height: '150px' }}></div>
-            {userLocation && (
-                <div>
-                    <h3>Lugares Cercanos</h3>
-                    <ul>
-                        {places.map((place) => (
-                            <li key={place.id}>
-                                {place.tags.name || 'Sin Nombre'} - {place.tags.shop || place.tags.amenity || place.tags.leisure || 'Otro'}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
         </div>
     );
 }
