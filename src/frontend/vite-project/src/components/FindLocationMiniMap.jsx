@@ -2,14 +2,15 @@ import React, { useEffect, useState, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet.locatecontrol';
 import axios from 'axios';
+import { LoadingDots} from './LoadingDots.jsx';
 
-export function FindLocationMiniMap() {
+export function FindLocationMiniMap(props) {
     const mapRef = useRef(null);
-    const mapInstance = useRef(null); // Ref para almacenar la instancia del mapa
-    const [places, setPlaces] = useState([]);
-    const [searchTerm, setSearchTerm] = useState(""); // Campo de búsqueda para el nombre de la tienda
-    const [postalCode, setPostalCode] = useState(""); // Campo de búsqueda para el código postal
-    const [location, setLocation] = useState(null); // Para almacenar las coordenadas de geocodificación
+    const mapInstance = useRef(null); // Almacenar la instancia del mapa
+    const [searchStr, setSearchStr] = useState(""); 
+    const [potentialShops, setPotentialShops] = useState([]);
+    const [location, setLocation] = useState(null);
+    const [showLoadingDots, setShowLoadingDots] = useState(false);
 
     useEffect(() => {
         if (mapInstance.current) return; // Verifica si el mapa ya ha sido inicializado
@@ -32,20 +33,36 @@ export function FindLocationMiniMap() {
         }).addTo(mapInstance.current);
 
         return () => {
-            mapInstance.current.remove(); // Limpiar el mapa al desmontar el componente
-            mapInstance.current = null; // Asegurarse de que la referencia se reinicie
+            mapInstance.current.remove();
+            mapInstance.current = null;
         };
     }, []);
 
+    const capitalize = (str) => {
+        const exceptions = ["de", "la", "los", "del", "y", "o", "en", "a", "el", "al"];
+    
+        return str
+            .split(' ')
+            .map((word, index, arr) => {
+                // Si la palabra está en las excepciones y no es la primera palabra, no la capitaliza
+                if (exceptions.includes(word.toLowerCase()) && index !== 0 && index !== arr.length - 1) {
+                    return word.toLowerCase();
+                } else {
+                    // Capitaliza la primera letra y mantiene el resto de la palabra // en minúsculas
+                    return word.charAt(0).toUpperCase() + word.slice(1); //.toLowerCase();
+                }
+            })
+            .join(' ');
+    };
+
     const getCoords = async () => {
-        if (!postalCode) return;
+        if (!props.postalCode) return;
 
         try {
-            const response = await axios.get(`http://localhost:8000/latlon/${postalCode}`);
+            const response = await axios.get(`http://localhost:8000/latlon/${props.postalCode}`);
             if (response.data) {
                 console.log('Response:', response.data);
                 const { latitude, longitude } = response.data;
-                setLocation({ lat: latitude, lon: longitude });
                 return { lat: latitude, lon: longitude };
             } else {
                 console.error('No se encontró una ubicación para ese código postal.');
@@ -57,78 +74,66 @@ export function FindLocationMiniMap() {
         }
     };
 
-    // Función para manejar la búsqueda de lugares cuando se hace clic en el botón "Buscar"
     const handleSearchPlace = async (e) => {
-        e.preventDefault(); // Evitar comportamiento predeterminado del botón de formulario
+        setShowLoadingDots(true);
+        e.preventDefault();
 
-        if (!searchTerm || !postalCode) {
+        if (!searchStr || !props.postalCode) {
             alert("Por favor, ingrese el código postal y el nombre del comercio.");
             return;
         }
 
-        // Obtener las coordenadas del código postal
         const coordinates = await getCoords();
+        console.log('Postal Code:', props.postalCode);
         console.log('Coordinates:', coordinates);
         if (!coordinates) return;
 
         const { lat, lon } = coordinates;
+        // const lat = 37.1438607;
+        // const lng = -3.6273500;
+        const meters = 2000; // Radio de búsqueda
 
         const overpassQuery = `
             [out:json];
             (
-              node["name"~"${searchTerm}"]["shop"](around:8000,${lat},${lon});
-              node["name"~"${searchTerm}"]["amenity"~"restaurant|cafe|bar"](around:8000,${lat},${lon});
-              node["name"~"${searchTerm}"]["leisure"](around:8000,${lat},${lon});
+            node["name"~"${capitalize(searchStr)}"](around:${meters}, ${lat}, ${lon});
+            node["shop"~"${capitalize(searchStr)}"](around:${meters}, ${lat}, ${lon});
+            node["amenity"~"${capitalize(searchStr)}"](around:${meters}, ${lat}, ${lon});
+            node["addr:street"~"${capitalize(searchStr)}"](around:${meters}, ${lat}, ${lon});
             );
             out body;
+
         `;
         const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
 
         try {
             const response = await axios.get(url);
-            setPlaces(response.data.elements); // Actualiza el estado con los lugares encontrados
+            setPotentialShops(response.data.elements);
+            props.onPotentialShopsChange(response.data.elements);
             if (mapInstance.current) {
-                mapInstance.current.setView([lat, lon], 15); // Centrar el mapa en la ubicación del código postal
+                mapInstance.current.setView([lat, lon], 13); // Centrar el mapa en la ubicación del código postal
             }
         } catch (error) {
-            console.error('Error fetching places by name:', error);
+            console.error('Error fetching places:', error);
         }
+        setShowLoadingDots(false);
     };
 
     return (
         <div>
             <div ref={mapRef} style={{ height: '150px' }}></div>
-            <div>
-                <h3>Búsqueda de Tiendas</h3>
-                <div>
-                    <input
-                        type="text"
-                        value={postalCode}
-                        onChange={(e) => setPostalCode(e.target.value)}
-                        placeholder="Ingresar código postal..."
-                    />
-                    <input 
-                        type="text" 
-                        value={searchTerm} 
-                        onChange={(e) => setSearchTerm(e.target.value)} 
-                        placeholder="Buscar por nombre de tienda..." 
-                    />
-                    <button onClick={handleSearchPlace}>Buscar</button> {/* The button triggers the search */}
-                </div>
-
-                <h3>Lugares Encontrados</h3>
-                <ul>
-                    {places.length > 0 ? (
-                        places.map((place) => (
-                            <li key={place.id}>
-                                {place.tags.name || 'Sin Nombre'} - {place.tags.shop || place.tags.amenity || place.tags.leisure || 'Otro'}
-                            </li>
-                        ))
-                    ) : (
-                        <li>No se encontraron lugares con ese nombre.</li>
-                    )}
-                </ul>
+            <div className="mt-2 flex">
+                <input
+                    type="text" 
+                    value={searchStr} 
+                    onChange={(e) => setSearchStr(e.target.value)} 
+                    placeholder="Buscar por nombre de comercio / calle" 
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+                <button onClick={handleSearchPlace} className="ml-2">Buscar</button>
             </div>
+                
+            {showLoadingDots && <LoadingDots />}
         </div>
     );
 }
