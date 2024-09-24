@@ -115,11 +115,35 @@ export function FormExpenseOCR() {
   const handleShopChange = (shop) => {
     console.log('SELECTED shop:', shop);
     // añadir aquí marcador con la ubicación del comercio
-    setSelectedShop(shop);
+    console.log('latitud:', shop.lat);
+    console.log('longitud:', shop.lon);
+    setSelectedShop({
+      id: shop.id,
+      name: shop.tags.name ? shop.tags.name : null,
+      lat: shop.lat,
+      lon: shop.lon,
+      postcode: shop.tags['addr:postcode'] ? shop.tags['addr:postcode'] : null,
+      street: shop.tags['addr:street'] ? shop.tags['addr:street'] : null
+    });
+  };
+
+  const handleCancelSelectedShop = () => {
+    setSelectedShop(null);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (selectedShop) {
+      console.log('selectedShop:', selectedShop);
+    
+      try {
+        await axios.post('http://localhost:8000/shops', selectedShop);
+        console.log('Comercio creado con éxito');
+      } catch (error) {
+        console.error('Error al crear comercio:', error);
+      }
+    }
 
     const newExpense = {
       amount: parseFloat(amount),
@@ -131,6 +155,7 @@ export function FormExpenseOCR() {
       user_id: 1,
       transaction_type: "Expense",
       insert_date: insertDate ? insertDate : null,
+      shop_id: selectedShop ? selectedShop.id : null,
     };
 
     console.log('newExpense:', newExpense);
@@ -221,7 +246,7 @@ export function FormExpenseOCR() {
                     <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400" />
                   </MenuButton>
                 </div>
-                <MenuItems className="absolute z-10 mt-2 w-full origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <MenuItems className="max-h-40 overflow-y-auto absolute z-10 mt-2 w-full origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   {categories.map((category) => (
                     <MenuItem
                       key={category.id}
@@ -249,7 +274,7 @@ export function FormExpenseOCR() {
                       <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400" />
                     </MenuButton>
                   </div>
-                  <MenuItems className="absolute z-10 mt-2 w-full origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <MenuItems className="max-h-40 overflow-y-auto absolute z-10 mt-2 w-full origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     {subcategories.map((subcategory) => (
                       <MenuItem
                         key={subcategory.id}
@@ -351,21 +376,21 @@ export function FormExpenseOCR() {
         { (showFindLocationMiniMap || showLocationMiniMap) && (
           <div>
             Comercios cercanos: {potentialShops.length}
-            <div className="mt-2">
-              <Menu as="div" className="relative inline-block text-left w-full">
+            <div className="mt-2 flex">
+              <Menu as="div" className="w-full relative inline-block text-left">
                 <div>
-                  <MenuButton className="inline-flex w-full justify-between gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                  <MenuButton className="w-full inline-flex justify-between gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                     {selectedShop ? (
                       <>
-                      {selectedShop.tags.name || 'Sin Nombre'}
-                      {selectedShop.tags['addr:street'] ? ` - ${selectedShop.tags['addr:street']}` : ''}        
+                      {selectedShop.name || 'Sin Nombre'}
+                      {selectedShop.street ? ` - ${selectedShop.street}` : ''}        
                       </>               
                     ) : 'Seleccionar comercio'}
                     <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400" />
                   </MenuButton>
                 </div>
 
-                <MenuItems className="absolute z-10 mt-2 w-full origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <MenuItems className="w-full max-h-40 overflow-y-auto absolute z-10 mt-2 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 {potentialShops.length > 0 ? (
                   potentialShops.map((shop) => (
                     <MenuItem
@@ -385,6 +410,11 @@ export function FormExpenseOCR() {
                 )}
                 </MenuItems>
               </Menu>
+                <a onClick={handleCancelSelectedShop}>
+                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                 <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                 </svg>
+                </a>
             </div>
           </div>
         )}
