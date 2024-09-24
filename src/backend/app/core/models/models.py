@@ -1,5 +1,5 @@
 from app.core.models.database import Base
-from sqlalchemy import Column, Integer, String, BigInteger, Float, ForeignKey, DECIMAL, Date, TIMESTAMP, func, UniqueConstraint, CheckConstraint
+from sqlalchemy import Column, Integer, String, BigInteger, ForeignKey, DECIMAL, DOUBLE_PRECISION, Date, TIMESTAMP, func, UniqueConstraint, CheckConstraint
 from sqlalchemy.orm import relationship
 
 # User model -----------------------------------------------------------------
@@ -83,7 +83,7 @@ class Transaction(Base):
     subcategory_id = Column(Integer, ForeignKey('expenditure_subcategories.id', ondelete='CASCADE'), index=True)
     saving_goal_id = Column(Integer, ForeignKey('savings_goals.id', ondelete='CASCADE'), index=True)
     shop_location_pc = Column(String(5))
-    shop_id = Column(BigInteger)
+    shop_id = Column(BigInteger, ForeignKey('shops.id', ondelete='CASCADE'), index=True)
     name = Column(String, nullable=False)
     amount = Column(DECIMAL(15,2), nullable=False)
     transaction_type = Column(String, nullable=False, index=True) # 'Expense', 'Income' or 'Saving'
@@ -94,6 +94,7 @@ class Transaction(Base):
     category = relationship('Category', back_populates='transactions')
     subcategory = relationship('Subcategory', back_populates='transactions')
     saving_goal = relationship('Goal', back_populates='transactions')
+    shop = relationship('Shop', back_populates='transactions')
 
     __table_args__ = (
         CheckConstraint(transaction_type.in_(['Expense', 'Income', 'Saving']), name='check_transaction_type'),
@@ -103,3 +104,15 @@ class Transaction(Base):
     # 'Expense' should have: user_id, category_id, subcategory_id,     shop_id, shop_location_pc, name, amount, description, insert_date, payment_method
     # 'Income' should have: user_id,                                                        name, amount, description, insert_date, payment_method
     # 'Saving' should have: user_id,                                        saving_goal_id, name, amount, description ,insert_date, payment_method
+
+class Shop(Base):
+    __tablename__ = 'shops'
+
+    id = Column(BigInteger, primary_key=True, nullable=False)
+    name = Column(String, nullable=False, index=True)
+    lat = Column(DOUBLE_PRECISION, nullable=False)
+    lon = Column(DOUBLE_PRECISION, nullable=False)
+    street = Column(String)
+    postcode = Column(String(5))
+
+    transactions = relationship('Transaction', back_populates='shop', cascade='all, delete-orphan')

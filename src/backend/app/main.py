@@ -4,8 +4,8 @@ from app.core.models.database import engine, get_db, Base
 from typing import List
 from sqlalchemy import func
 
-from app.core.models.models import User, Category, Subcategory, Goal, Transaction
-from app.core.schemas.schemas import UserRequest, UserResponse, CategoryRequest, CategoryResponse, SubcategoryRequest, SubcategoryResponse, GoalRequest, GoalResponse, TransactionRequest, TransactionResponse
+from app.core.models.models import User, Category, Subcategory, Goal, Transaction, Shop
+from app.core.schemas.schemas import UserRequest, UserResponse, CategoryRequest, CategoryResponse, SubcategoryRequest, SubcategoryResponse, GoalRequest, GoalResponse, TransactionRequest, TransactionResponse, ShopRequest, ShopResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.scripts.ocr_ticket_extraction import extract_data
@@ -14,6 +14,7 @@ from sqlalchemy import text
 from datetime import datetime
 
 # Transaction.__table__.drop(bind=engine, checkfirst=True)
+# Shop.__table__.drop(bind=engine, checkfirst=True)
 # CUIDADO - NO BORRAR TABLA MUNICIPIOS
 # Base.metadata.drop_all(bind=engine, checkfirst=True) # Borrar las tablas en la base de datos
 # user_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
@@ -23,6 +24,7 @@ from datetime import datetime
 # Category.__table__.drop(bind=engine, checkfirst=True)
 # Goal.__table__.drop(bind=engine, checkfirst=True)
 # User.__table__.drop(bind=engine, checkfirst=True)
+# Shop.__table__.drop(bind=engine, checkfirst=True)
 
 Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
 
@@ -486,6 +488,9 @@ def extract_text(file: UploadFile = File(...)):
 
     return {"result": result}    
 
+
+# Map (expenses by location)
+
 @app.get("/location/{postal_code}", status_code=status.HTTP_200_OK)
 def get_location_by_postal_code(postal_code: str, db: Session = Depends(get_db)):
     query = text("SELECT latitud, longitud, coords_elegidas, provincia_nombre, entidad_nombre FROM es_municipios_cp WHERE codigo_postal = :postal_code")
@@ -506,7 +511,7 @@ def get_location_by_postal_code(postal_code: str, db: Session = Depends(get_db))
                 return {"latitude": latitude, "longitude": longitude, "entidad_nombre": entidad_nombre}   
     return {"desconocido"}
     
-# Map (expenses by location)
+
 @app.get("/expenses_by_location", status_code=status.HTTP_200_OK)
 def get_expenses_by_location(db: Session = Depends(get_db)):
     expenses_by_location_query = db.query(
@@ -537,3 +542,40 @@ def get_coords_by_postal_code(postal_code: str, db: Session = Depends(get_db)):
         longitude = result[1]
         return {"latitude": latitude, "longitude": longitude}
     return {"latitude": None, "longitude": None}
+
+# SHOPS
+@app.get("/shops", status_code=status.HTTP_200_OK, response_model=List[ShopResponse])
+def get_all_shops(db: Session = Depends(get_db)):
+    all_shops = db.query(Shop).all()
+    return all_shops
+
+@app.post("/shops", status_code=status.HTTP_201_CREATED, response_model=ShopResponse)
+def create_shop(shop: ShopRequest, db: Session = Depends(get_db)):
+    new_shop = Shop(**shop.dict())
+    db.add(new_shop)
+    db.commit()
+    db.refresh(new_shop)
+    return new_shop
+
+# SHOPS (expenses by shop)
+@app.get("/expenses_by_shop", status_code=status.HTTP_200_OK)
+def get_expenses_by_shop(db: Session = Depends(get_db)):
+    expenses_by_shop_query = db.query(
+        Transaction.shop_id,
+        func.coalesce(func.sum(Transaction.amount), 0).label('current_amount_spent')
+    ).filter(Transaction.shop_id != None).group_by(Transaction.shop_id).all()
+
+    expenses_by_shop = [row._asdict() for row in expenses_by_shop_query]
+
+    expenses_with_shop_info = []
+    for expense in expenses_by_shop:
+        shop_id = expense['shop_id']
+        shop = db.query(Shop).filter(Shop.id == shop_id).first()
+        if shop:
+            expense['shop_name'] = shop.name
+            expense['shop_latitude'] = shop.lat
+            expense['shop_longitude'] = shop.lon
+            expenses_with_shop_info.append(expense)        
+
+    return expenses_with_shop_info
+
