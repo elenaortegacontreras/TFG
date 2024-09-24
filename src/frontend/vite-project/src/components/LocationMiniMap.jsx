@@ -54,13 +54,15 @@ export function LocationMiniMap(props) { // Ej: marisol: 37.1438607 -3.6273500
 
         locateControl.start();
 
+        const meters = 150;
         const fetchNearbyPlaces = async (lat, lon) => {
             const overpassQuery = `
                 [out:json];
                 (
-                  node["shop"](around:400,${lat},${lon});
-                  node["amenity"~"restaurant|cafe|bar"](around:400,${lat},${lon});
-                  node["leisure"](around:400,${lat},${lon});
+                node["name"](around:${meters}, ${lat}, ${lon});
+                node["shop"](around:${meters}, ${lat}, ${lon});
+                node["amenity"~"restaurant|cafe|bar|bank|pharmacy|post_office|fast_food|clinic|vending_machine"](around:400,${lat},${lon});
+                node["addr:street"](around:${meters}, ${lat}, ${lon});               
                 );
                 out body;
             `;
