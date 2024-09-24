@@ -1,10 +1,13 @@
 import { Title } from './Title.jsx';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import L from 'leaflet';
 import 'leaflet.locatecontrol';
 
 export function MapView() {
+    const location = useLocation();
+    const state = location.state;
     const mapRef = useRef(null);
 
     useEffect(() => {
@@ -20,7 +23,7 @@ export function MapView() {
             center: [40.4637, -3.7492], // Coordenadas iniciales centradas en España
             zoom: 6,
             minZoom: 5,
-            maxZoom: 20,
+            maxZoom: 18,
             maxBounds: bounds,
             maxBoundsViscosity: 1.0
         });
@@ -50,20 +53,32 @@ export function MapView() {
                 title: "Mostrar mi ubicación"
             },
             locateOptions: {
-                maxZoom: 20,
+                maxZoom: 18,
                 enableHighAccuracy: true
             }
         }).addTo(map);
 
         const loadAndAddMarkers = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/expenses_by_location');
-                response.data.forEach(item => {
-                    L.marker([item.latitude, item.longitude]).addTo(map)
-                        .bindPopup(`${item.entidad_nombre}: ${item.current_amount_spent}€`);
-                });
-            } catch (error) {
-                console.error('Error al cargar los datos de la API:', error);
+            if (state.type === 'location') {
+                try {
+                    const response = await axios.get('http://localhost:8000/expenses_by_location');
+                    response.data.forEach(item => {
+                        L.marker([item.latitude, item.longitude]).addTo(map)
+                            .bindPopup(`${item.entidad_nombre}: ${item.current_amount_spent}€`);
+                    });
+                } catch (error) {
+                    console.error('Error al cargar los datos de la API:', error);
+                }
+            } else if (state.type === 'shop') {
+                try {
+                    const response = await axios.get('http://localhost:8000/expenses_by_shop');
+                    response.data.forEach(item => {
+                        L.marker([item.shop_latitude, item.shop_longitude]).addTo(map)
+                            .bindPopup(`${item.shop_name}: ${item.current_amount_spent}€`);
+                    });
+                } catch (error) {
+                    console.error('Error al cargar los datos de la API:', error);
+                }
             }
         };
 
@@ -77,7 +92,11 @@ export function MapView() {
 
     return (
         <div>
+            {state.type === 'location' ? (
             <Title title="Mapa de gastos por municipio" />
+            ) : state.type === 'shop' ? (
+            <Title title="Mapa de gastos por tienda" />
+            ) : null}
             <div ref={mapRef} style={{ height: '500px', width: '100%' }}></div>
         </div>
     );
