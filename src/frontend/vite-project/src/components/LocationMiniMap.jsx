@@ -44,44 +44,60 @@ export function LocationMiniMap(props) { // Ej: marisol: 37.1438607 -3.6273500
             }
         }).addTo(mapInstance.current);
 
-        mapInstance.current.on('locationfound', (e) => {
+        if (!props.selectedShop ) {
+            mapInstance.current.on('locationfound', (e) => {
             const { lat, lng } = e.latlng; // Obtener las coordenadas de la ubicación encontrada
             // const lat = 37.1438607;
             // const lng = -3.6273500;
             setUserLocation({ lat, lon: lng });
             fetchNearbyPlaces(lat, lng);
-        });
+            });
 
-        locateControl.start();
+            locateControl.start();
 
-        const meters = 150;
-        const fetchNearbyPlaces = async (lat, lon) => {
-            const overpassQuery = `
-                [out:json];
-                (
-                node["name"](around:${meters}, ${lat}, ${lon});
-                node["shop"](around:${meters}, ${lat}, ${lon});
-                node["amenity"~"restaurant|cafe|bar|bank|pharmacy|post_office|fast_food|clinic|vending_machine"](around:400,${lat},${lon});
-                node["addr:street"](around:${meters}, ${lat}, ${lon});               
-                );
-                out body;
-            `;
-            const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
+            const meters = 150;
+            const fetchNearbyPlaces = async (lat, lon) => {
+                const overpassQuery = `
+                    [out:json];
+                    (
+                    node["name"](around:${meters}, ${lat}, ${lon});
+                    node["shop"](around:${meters}, ${lat}, ${lon});
+                    node["amenity"~"restaurant|cafe|bar|bank|pharmacy|post_office|fast_food|clinic|vending_machine"](around:400,${lat},${lon});
+                    node["addr:street"](around:${meters}, ${lat}, ${lon});               
+                    );
+                    out body;
+                `;
+                const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
 
-            try {
-                const response = await axios.get(url);
-                setPotentialShops(response.data.elements);
-                props.onPotentialShopsChange(response.data.elements);
-            } catch (error) {
-                console.error('Error fetching places:', error);
-            }
-        };
+                try {
+                    const response = await axios.get(url);
+                    setPotentialShops(response.data.elements);
+                    props.onPotentialShopsChange(response.data.elements);
+                } catch (error) {
+                    console.error('Error fetching places:', error);
+                }
+            };
+        }else {
+            loadAndAddShop();
+        }
 
         return () => {
             mapInstance.current.remove();
             mapInstance.current = null;
         };
-    }, []);
+    }, [props.selectedShop]);
+
+    const loadAndAddShop = () => {
+        if (mapInstance.current){
+            if (props.selectedShop ) {
+                L.marker([props.selectedShop.lat, props.selectedShop.lon]).addTo(mapInstance.current)
+                .bindPopup(props.selectedShop.name);
+                mapInstance.current.setView([props.selectedShop.lat, props.selectedShop.lon], 13);
+            }
+
+            console.log('Selected Shop:', props.selectedShop);
+        }
+    };
 
     return (
         <div>

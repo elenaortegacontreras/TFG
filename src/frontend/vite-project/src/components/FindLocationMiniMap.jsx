@@ -32,11 +32,23 @@ export function FindLocationMiniMap(props) {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(mapInstance.current);
 
+        const loadAndAddShop = async () => {
+            if (props.selectedShop ) {
+                L.marker([props.selectedShop.lat, props.selectedShop.lon]).addTo(mapInstance.current)
+                  .bindPopup(props.selectedShop.name);
+                  mapInstance.current.setView([props.selectedShop.lat, props.selectedShop.lon], 13);
+            }
+        };
+
+        console.log('Selected Shop:', props.selectedShop);
+
+        loadAndAddShop();
+
         return () => {
             mapInstance.current.remove();
             mapInstance.current = null;
         };
-    }, []);
+    }, [props.selectedShop]);
 
     const capitalize = (str) => {
         const exceptions = ["de", "la", "los", "del", "y", "o", "en", "a", "el", "al"];
