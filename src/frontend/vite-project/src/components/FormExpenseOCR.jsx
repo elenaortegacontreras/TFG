@@ -114,7 +114,6 @@ export function FormExpenseOCR() {
 
   const handleShopChange = (shop) => {
     console.log('SELECTED shop:', shop);
-    // añadir aquí marcador con la ubicación del comercio
     console.log('latitud:', shop.lat);
     console.log('longitud:', shop.lon);
     setSelectedShop({
@@ -363,13 +362,13 @@ export function FormExpenseOCR() {
 
         { showLocationMiniMap && find_shop_option === 'Geolocation' && (
           <div>
-            <LocationMiniMap onPotentialShopsChange={handlePotentialShopsChange}/>
+            <LocationMiniMap onPotentialShopsChange={handlePotentialShopsChange} selectedShop={selectedShop}/>
           </div>
         )}
 
         { showFindLocationMiniMap && find_shop_option === 'Search' && (
           <div>
-            <FindLocationMiniMap onPotentialShopsChange={handlePotentialShopsChange} postalCode={shopLocation}/>
+            <FindLocationMiniMap onPotentialShopsChange={handlePotentialShopsChange} postalCode={shopLocation} selectedShop={selectedShop}/>
           </div>
         )}
 
@@ -393,15 +392,17 @@ export function FormExpenseOCR() {
                 <MenuItems className="w-full max-h-40 overflow-y-auto absolute z-10 mt-2 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 {potentialShops.length > 0 ? (
                   potentialShops.map((shop) => (
+                    (shop.tags.name || shop.tags.brand) && (
                     <MenuItem
                       key={shop.id}
                       as="button"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       onClick={() => handleShopChange(shop)}
                     >
-                      {shop.tags.name || 'Sin Nombre'}
+                      {shop.tags.name || shop.tags.brand}
                       {shop.tags['addr:street'] ? ` - ${shop.tags['addr:street']}` : ''}
                     </MenuItem>
+                    )
                   ))
                 ) : (
                   <MenuItem as="button">
