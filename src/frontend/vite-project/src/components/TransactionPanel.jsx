@@ -1,7 +1,7 @@
 import React from 'react';
 import { Transaction } from './Transaction.jsx'
 
-export function TransactionPanel(transactions) {
+export function TransactionPanel({transactions}) {
     return (
       <div className="container mx-auto p-4">
       {/* <div className="bg-white shadow overflow-hidden sm:rounded-lg"> */}
