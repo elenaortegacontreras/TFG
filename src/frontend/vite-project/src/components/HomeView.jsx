@@ -77,8 +77,8 @@ export function HomeView() {
     };
 
     //TODO: valorar hacer las peticiones desde aquí y pasar los datos
-    const handleAllIncomesViewClick = () => {
-        navigate('/transactions', { state: { transaction_type:"incomes" } });
+    const handleIncomesViewClick = () => {
+        navigate('/incomes-overview');
     };
 
     const handleLocationMapViewClick = () => {
@@ -103,7 +103,7 @@ export function HomeView() {
              
                 <div className="text-white flex justify-evenly py-12">
                     <div>
-                        <button className="bg-gray-700 rounded-full" onClick={handleAllIncomesViewClick}>
+                        <button className="bg-gray-700 rounded-full" onClick={handleIncomesViewClick}>
                             <p>Ingresos</p>
                             <p>{incomes_amount} €</p>
                         </button>
