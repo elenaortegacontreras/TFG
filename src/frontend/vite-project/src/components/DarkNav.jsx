@@ -2,7 +2,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import sigmaLogo from '../assets/sigma4_bg.png';
+import sigmaLogo from '../assets/icono_hucha.png';
 
 const user = {
   name: 'Elena Ortega Contreras',
@@ -12,7 +12,7 @@ const user = {
 }
 const navigation = [
   { name: 'Home', href: '/', current: true },
-  { name: 'Ingresos', href: '/transactions', current: false, state: { transaction_type: "incomes" } },
+  { name: 'Ingresos', href: '/incomes-overview', current: false },
   { name: 'Ahorros', href: '/savings-overview', current: false },
   { name: 'Gastos', href: '/expenses-overview', current: false },
 ]
