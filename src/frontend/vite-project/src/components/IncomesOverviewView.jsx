@@ -18,8 +18,10 @@ export function IncomesOverviewView() {
     const currentMonth = new Date().getMonth() + 1;
 
     useEffect(() => {
-        axios.get('http://localhost:8000/total_incomes')
+        axios.get(`http://localhost:8000/total_incomes/${currentMonth}`)
             .then(response => {
+                console.log('response:', response);
+                setIncomes(response.data.incomes);
                 setIncomesAmount(response.data.amount);
                 setCashIncomes(response.data.cash);
                 setCardIncomes(response.data.card);
@@ -29,24 +31,9 @@ export function IncomesOverviewView() {
             });
     }, []);
 
-    useEffect(() => {
-        axios.get('http://localhost:8000/incomes')
-            .then(response => {
-                setIncomes(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching the incomes:', error);
-        });
-    }, []);
-
     const handleAllIncomesViewClick = () => {
         navigate('/transactions', { state: { transaction_type:"incomes" } });
     };
-
-    const current_month_incomes = incomes.filter(income => {
-        const incomeDate = new Date(income.insert_date);
-        return incomeDate.getMonth() + 1 === currentMonth;
-    });
 
     return (
         <div>
@@ -56,7 +43,7 @@ export function IncomesOverviewView() {
 
             <div>
                 <p><strong>Ingresos de este mes</strong></p>
-                <TransactionPanel transactions={current_month_incomes}/>
+                <TransactionPanel transactions={incomes}/>
             </div> 
 
             <div className="divider"></div>

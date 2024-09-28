@@ -263,9 +263,44 @@ def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
     return {"message": "Transaction deleted successfully"}
 
     # income
+# @app.get("/incomes", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
+# def get_all_incomes(db: Session = Depends(get_db)):
+#     all_incomes = db.query(Transaction).filter(Transaction.transaction_type == "Income").order_by(Transaction.insert_date.desc()).all()
+#     return all_incomes
+
+#     # consultar la suma de los transactions de tipo income
+# @app.get("/total_incomes", status_code=status.HTTP_200_OK)
+# def get_total_incomes(db: Session = Depends(get_db)):
+#     all_incomes = get_all_incomes(db)
+#     total_incomes_amount = sum([income.amount for income in all_incomes])
+#     total_incomes_card = sum([income.amount for income in all_incomes if income.payment_method == "Card"])
+#     total_incomes_cash = sum([income.amount for income in all_incomes if income.payment_method == "Cash"])
+#     return {"amount": total_incomes_amount, "card": total_incomes_card, "cash": total_incomes_cash, "incomes": all_incomes}
+
+
 @app.get("/incomes", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
-def get_all_incomes(db: Session = Depends(get_db)):
-    all_incomes = db.query(Transaction).filter(Transaction.transaction_type == "Income").order_by(Transaction.insert_date.desc()).all()
+def get_all_incomes(db: Session = Depends(get_db), month: int = None):
+    if month:
+        all_incomes = db.query(Transaction).filter(Transaction.transaction_type == "Income", func.extract('month', Transaction.insert_date) == month).order_by(Transaction.insert_date.desc()).all()
+    else:
+        all_incomes = db.query(Transaction).filter(Transaction.transaction_type == "Income").order_by(Transaction.insert_date.desc()).all()
+    return all_incomes
+
+# consultar la suma de los transactions de tipo income
+@app.get("/total_incomes/", status_code=status.HTTP_200_OK)
+def get_total_incomes(db: Session = Depends(get_db), month: int = None):
+    if month:
+        all_incomes = get_all_incomes(db, month)
+    else:
+        all_incomes = get_all_incomes(db)
+    total_incomes_amount = sum([income.amount for income in all_incomes])
+    total_incomes_card = sum([income.amount for income in all_incomes if income.payment_method == "Card"])
+    total_incomes_cash = sum([income.amount for income in all_incomes if income.payment_method == "Cash"])
+    return {"amount": total_incomes_amount, "card": total_incomes_card, "cash": total_incomes_cash, "incomes": all_incomes}
+
+@app.get("/total_incomes/{month}", status_code=status.HTTP_200_OK)
+def get_total_incomes_by_month(month: int, db: Session = Depends(get_db)):
+    all_incomes = get_total_incomes(db, month)
     return all_incomes
 
     # expense
@@ -275,7 +310,7 @@ def get_all_expenses(db: Session = Depends(get_db)):
     return all_expenses
 
 @app.get("/expenses_with_names", status_code=status.HTTP_200_OK)
-def get_all_expenses(db: Session = Depends(get_db)):
+def get_all_expenses_with_categories_names(db: Session = Depends(get_db)):
     all_expenses = db.query(
         Transaction, 
         Category.name.label("category_name"), 
@@ -329,7 +364,7 @@ def get_all_savings(db: Session = Depends(get_db)):
     return all_savings
 
 @app.get("/savings_with_names", status_code=status.HTTP_200_OK)
-def get_all_savings_with_names(db: Session = Depends(get_db)):
+def get_all_savings_with_categories_names(db: Session = Depends(get_db)):
     all_savings = db.query(
         Transaction, 
         Goal.name.label("saving_goal_name")
@@ -378,15 +413,6 @@ def get_total_expenses(db: Session = Depends(get_db)):
     total_expenses_card = sum([expense.amount for expense in total_expenses if expense.payment_method == "Card"])
     total_expenses_cash = sum([expense.amount for expense in total_expenses if expense.payment_method == "Cash"])
     return {"amount": total_expenses_amount, "card": total_expenses_card, "cash": total_expenses_cash}
-
-# consultar la suma de los transactions de tipo income
-@app.get("/total_incomes", status_code=status.HTTP_200_OK)
-def get_total_incomes(db: Session = Depends(get_db)):
-    total_incomes = db.query(Transaction).filter(Transaction.transaction_type == "Income").all()
-    total_incomes_amount = sum([income.amount for income in total_incomes])
-    total_incomes_card = sum([income.amount for income in total_incomes if income.payment_method == "Card"])
-    total_incomes_cash = sum([income.amount for income in total_incomes if income.payment_method == "Cash"])
-    return {"amount": total_incomes_amount, "card": total_incomes_card, "cash": total_incomes_cash}
 
 # consultar la suma de los transactions de tipo saving
 @app.get("/total_savings", status_code=status.HTTP_200_OK)
