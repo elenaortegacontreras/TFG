@@ -16,14 +16,17 @@ export function SavingsOverviewView() {
     const navigate = useNavigate();
 
     const [savingGoals, setSavingGoals] = useState([]);
-    const [savings, setSavings] = useState([]);
+    // const [savings, setSavings] = useState([]);
+    const [allSavings, setAllSavings] = useState([]);
     const [savings_amount, setSavingsAmount] = useState(null);
     const [cashSavings, setCashSavings] = useState(0);
     const [cardSavings, setCardSavings] = useState(0);
+    const currentMonth = new Date().getMonth() + 1;
 
     useEffect(() => {
-        axios.get('http://localhost:8000/total_savings')
+        axios.get(`http://localhost:8000/total_savings/${currentMonth}`)
             .then(response => {
+                // setSavings(response.data.savings);
                 setSavingsAmount(response.data.amount);
                 setCashSavings(response.data.cash);
                 setCardSavings(response.data.card);
@@ -46,7 +49,7 @@ export function SavingsOverviewView() {
     useEffect(() => {
         axios.get('http://localhost:8000/savings')
             .then(response => {
-                setSavings(response.data);
+                setAllSavings(response.data);
             })
             .catch(error => {
                 console.error('Error fetching the savings:', error);
@@ -64,8 +67,8 @@ export function SavingsOverviewView() {
             <div className="divider"></div>
 
             <div className="max-w-sm mx-auto">
-                {savings.length !== 0 ? (
-                    <SavingsLineChart savings={savings} className="max-w-sm mx-auto"/>
+                {allSavings.length !== 0 ? (
+                    <SavingsLineChart savings={allSavings} className="max-w-sm mx-auto"/>
                 ) : (
                     <LoadingDots />
                 )}

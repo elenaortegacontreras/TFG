@@ -13,6 +13,7 @@ export function SavingView(){
     console.log(state); 
 
     const [savings, setSavings] = useState([]);
+    const currentMonth = new Date().getMonth() + 1;
 
     useEffect(() => {
         axios.get(`http://localhost:8000/savings/${state.id}`)
@@ -23,6 +24,16 @@ export function SavingView(){
                 console.error('Error fetching the savings:', error);
             });
     }, []);
+
+    const current_month_savings = savings.filter(saving => {
+        const savingDate = new Date(saving.insert_date);
+        return savingDate.getMonth() + 1 === currentMonth;
+    });
+
+    const other_months_savings = savings.filter(expense => {
+        const expenseDate = new Date(expense.insert_date);
+        return expenseDate.getMonth() + 1 !== currentMonth;
+    });
 
     return (
         <div>
@@ -49,9 +60,13 @@ export function SavingView(){
                 <div className="divider"></div>
 
                 <div>
-                    <p>Movimientos</p>
-                    <div className="divider"></div>
-                    <TransactionPanel transactions={savings}/>
+                    <div>
+                        <p><strong>Ahorros de este mes</strong></p>
+                        <TransactionPanel transactions={current_month_savings}/>
+                        <div className="divider"></div>
+                        <p><strong>Otros ahorros</strong></p>
+                        <TransactionPanel transactions={other_months_savings}/>
+                    </div> 
                 </div>
 
                 <div className="divider"></div>
