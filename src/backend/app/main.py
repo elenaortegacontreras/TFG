@@ -263,21 +263,6 @@ def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
     return {"message": "Transaction deleted successfully"}
 
     # income
-# @app.get("/incomes", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
-# def get_all_incomes(db: Session = Depends(get_db)):
-#     all_incomes = db.query(Transaction).filter(Transaction.transaction_type == "Income").order_by(Transaction.insert_date.desc()).all()
-#     return all_incomes
-
-#     # consultar la suma de los transactions de tipo income
-# @app.get("/total_incomes", status_code=status.HTTP_200_OK)
-# def get_total_incomes(db: Session = Depends(get_db)):
-#     all_incomes = get_all_incomes(db)
-#     total_incomes_amount = sum([income.amount for income in all_incomes])
-#     total_incomes_card = sum([income.amount for income in all_incomes if income.payment_method == "Card"])
-#     total_incomes_cash = sum([income.amount for income in all_incomes if income.payment_method == "Cash"])
-#     return {"amount": total_incomes_amount, "card": total_incomes_card, "cash": total_incomes_cash, "incomes": all_incomes}
-
-
 @app.get("/incomes", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
 def get_all_incomes(db: Session = Depends(get_db), month: int = None):
     if month:
@@ -359,8 +344,28 @@ def get_expenses_by_category(category_id: int, db: Session = Depends(get_db)):
 
     # saving
 @app.get("/savings", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
-def get_all_savings(db: Session = Depends(get_db)):
-    all_savings = db.query(Transaction).filter(Transaction.transaction_type == "Saving").order_by(Transaction.insert_date.desc()).all()
+def get_all_savings(db: Session = Depends(get_db), month: int = None):
+    if month:
+        all_savings = db.query(Transaction).filter(Transaction.transaction_type == "Saving", func.extract('month', Transaction.insert_date) == month).order_by(Transaction.insert_date.desc()).all()
+    else:
+        all_savings = db.query(Transaction).filter(Transaction.transaction_type == "Saving").order_by(Transaction.insert_date.desc()).all()
+    return all_savings
+
+# consultar la suma de los transactions de tipo saving
+@app.get("/total_savings", status_code=status.HTTP_200_OK)
+def get_total_savings(db: Session = Depends(get_db), month: int = None):
+    if month:
+        all_savings = get_all_savings(db, month)
+    else:
+        all_savings = get_all_savings(db)
+    total_savings_amount = sum([saving.amount for saving in all_savings])
+    total_savings_card = sum([saving.amount for saving in all_savings if saving.payment_method == "Card"])
+    total_savings_cash = sum([saving.amount for saving in all_savings if saving.payment_method == "Cash"])
+    return {"amount": total_savings_amount, "card": total_savings_card, "cash": total_savings_cash, "savings": all_savings}
+
+@app.get("/total_savings/{month}", status_code=status.HTTP_200_OK)
+def get_total_savings_by_month(month: int, db: Session = Depends(get_db)):
+    all_savings = get_total_savings(db, month)
     return all_savings
 
 @app.get("/savings_with_names", status_code=status.HTTP_200_OK)
@@ -414,14 +419,6 @@ def get_total_expenses(db: Session = Depends(get_db)):
     total_expenses_cash = sum([expense.amount for expense in total_expenses if expense.payment_method == "Cash"])
     return {"amount": total_expenses_amount, "card": total_expenses_card, "cash": total_expenses_cash}
 
-# consultar la suma de los transactions de tipo saving
-@app.get("/total_savings", status_code=status.HTTP_200_OK)
-def get_total_savings(db: Session = Depends(get_db)):
-    total_savings = db.query(Transaction).filter(Transaction.transaction_type == "Saving").all()
-    total_savings_amount = sum([saving.amount for saving in total_savings])
-    total_savings_card = sum([saving.amount for saving in total_savings if saving.payment_method == "Card"])
-    total_savings_cash = sum([saving.amount for saving in total_savings if saving.payment_method == "Cash"])
-    return {"amount": total_savings_amount, "card": total_savings_card, "cash": total_savings_cash}
 
 # SAVINGS GOALS
 
