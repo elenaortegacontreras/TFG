@@ -11,6 +11,7 @@ import { TransactionsView } from './components/TransactionsView.jsx'
 import { SavingView } from './components/SavingView.jsx'
 import { ExpensesOverviewView } from './components/ExpensesOverviewView.jsx'
 import { SavingsOverviewView } from './components/SavingsOverviewView.jsx'
+import { IncomesOverviewView } from './components/IncomesOverviewView.jsx';
 import { FormExpense } from './components/FormExpense.jsx'
 import { FormExpenseOCR } from './components/FormExpenseOCR.jsx'
 import { SignInOrRegistration } from './inprogress/SignInOrRegistration.jsx'
@@ -52,6 +53,7 @@ function App() {
           <Route path="/expenses-overview" element={<ExpensesOverviewView />} />
           <Route path="/category" element={<CategoryView />} />
           <Route path="/savings-overview" element={<SavingsOverviewView />} />
+          <Route path="/incomes-overview" element={<IncomesOverviewView />} />
           <Route path="/form-expense" element={<FormExpense />} />
           <Route path="/form-expense-ocr" element={<FormExpenseOCR />} />
           <Route path="/form-saving" element={<FormSaving />} />
