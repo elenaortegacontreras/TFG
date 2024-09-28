@@ -1,10 +1,11 @@
 import React from 'react';
 import { Transaction } from './Transaction.jsx'
 
-export function TransactionPanel({ transactions , setSuccessMessage, setErrorMessage}) {
+export function TransactionPanel(transactions) {
     return (
       <div className="container mx-auto p-4">
-      <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+      {/* <div className="bg-white shadow overflow-hidden sm:rounded-lg"> */}
+      <div className="bg-white shadow overflow-y-auto sm:rounded-lg">
         <div className="border-t border-gray-200 py-4">
         <dl>
           {transactions.length === 0 ? ( 
@@ -26,8 +27,6 @@ export function TransactionPanel({ transactions , setSuccessMessage, setErrorMes
               // currency={transaction.currency}
               currency = "€"
               shop_location_pc={transaction.shop_location_pc}
-              setSuccessMessage={setSuccessMessage} 
-              setErrorMessage={setErrorMessage}
               />
               {index !== transactions.length - 1 && <div className="divider"></div>}
             </div>

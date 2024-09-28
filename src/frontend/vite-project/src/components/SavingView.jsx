@@ -2,12 +2,9 @@ import { Title } from './Title.jsx'
 import { TransactionPanel } from './TransactionPanel.jsx'
 import { SavingsLineChart } from './SavingsLineChart.jsx';
 import { LoadingDots } from './LoadingDots.jsx';
-import { ErrorAlert } from './ErrorAlert';
-import { SuccessAlert } from './SuccessAlert';
 import { ActionsMenuEditDelete } from './ActionsMenuEditDelete.jsx';
-
-import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 export function SavingView(){
@@ -16,8 +13,6 @@ export function SavingView(){
     console.log(state); 
 
     const [savings, setSavings] = useState([]);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
         axios.get(`http://localhost:8000/savings/${state.id}`)
@@ -47,7 +42,7 @@ export function SavingView(){
                 
                 { state.name !== "Otros" && (
                     <div className="flex justify-end px-20">
-                        <ActionsMenuEditDelete element_type="goal" element_id={state.id} setSuccessMessage="" setErrorMessage=""/>
+                        <ActionsMenuEditDelete element_type="goal" element_id={state.id}/>
                     </div>
                 )}
 
@@ -56,9 +51,7 @@ export function SavingView(){
                 <div>
                     <p>Movimientos</p>
                     <div className="divider"></div>
-                    {successMessage && <SuccessAlert message={successMessage} />}
-                    {errorMessage && <ErrorAlert message={errorMessage} />}
-                    <TransactionPanel transactions={savings} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
+                    <TransactionPanel transactions={savings}/>
                 </div>
 
                 <div className="divider"></div>
