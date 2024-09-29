@@ -29,9 +29,11 @@ export function CategoryView() {
     }, []);
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/subcategories_with_amounts/${state.id}${currentMonth}`)
+        axios.get(`http://localhost:8000/subcategories_with_amounts/${state.id}/${currentMonth}`)
             .then(response => {
                 setSubcategories(response.data);
+                console.log(`http://localhost:8000/subcategories_with_amounts/${state.id}/${currentMonth}`);
+                console.log('subcategories:', response.data);
             })
             .catch(error => {
                 console.error('Error fetching the subcategories:', error);
@@ -52,7 +54,7 @@ export function CategoryView() {
                 <p className="text-center">{state.current_amount_spent} / {state.budget_amount} {state.currency}</p>
 
                 <div className="max-w-sm mx-auto">
-                    {expenses.length !== 0 ? (
+                    {subcategories.length !== 0 ? (
                         <CategoriesDoughnutChart categories={subcategories} className="max-w-sm mx-auto" />
                     ) : (
                         <LoadingDots />

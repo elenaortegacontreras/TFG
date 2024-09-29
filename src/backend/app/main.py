@@ -105,6 +105,19 @@ def get_categories_with_amounts(db: Session = Depends(get_db)):
     categories_with_amounts = [row._asdict() for row in categories_with_amounts_query]
     return categories_with_amounts
 
+@app.get("/categories_with_amounts/{month}", status_code=status.HTTP_200_OK)
+def get_categories_with_amounts_by_month(month: int, db: Session = Depends(get_db)):    
+    categories_with_amounts_query = db.query(
+        Category.id,
+        Category.name,
+        Category.description,
+        Category.budget_amount,
+        func.coalesce(func.sum(Transaction.amount), 0).label('current_amount_spent')
+    ).join(Transaction, (Transaction.category_id == Category.id) & (func.extract('month', Transaction.insert_date) == month), isouter=True).group_by(Category.id).all()
+
+    categories_with_amounts = [row._asdict() for row in categories_with_amounts_query]
+    return categories_with_amounts
+
 @app.post("/categories", status_code=status.HTTP_201_CREATED, response_model=CategoryResponse)
 def create_category(category: CategoryRequest, db: Session = Depends(get_db)):
     new_category = Category(**category.dict())
@@ -188,6 +201,18 @@ def get_subcategories_with_amounts(category_id: int, db: Session = Depends(get_d
     ).join(Transaction, Transaction.subcategory_id == Subcategory.id, isouter=True).filter(Subcategory.category_id == category_id).group_by(Subcategory.id).all()
 
     subcategories_with_amounts = [row._asdict() for row in subcategories_with_amounts_query]
+    return subcategories_with_amounts
+
+@app.get("/subcategories_with_amounts/{category_id}/{month}", status_code=status.HTTP_200_OK)
+def get_subcategories_with_amounts_by_month(category_id: int, month: int, db: Session = Depends(get_db)):
+    subcategories_with_amounts_query = db.query(
+        Subcategory.id,
+        Subcategory.name,
+        Subcategory.category_id,
+        func.coalesce(func.sum(Transaction.amount), 0).label('current_amount_spent')
+    ).join(Transaction, (Transaction.subcategory_id == Subcategory.id) & (Transaction.category_id == Subcategory.category_id) & (func.extract('month', Transaction.insert_date) == month), isouter=True).filter(Subcategory.category_id == category_id).group_by(Subcategory.id, Subcategory.name, Subcategory.category_id).all()
+
+    subcategories_with_amounts = [{'id': row.id, 'name': row.name, 'category_id': row.category_id, 'current_amount_spent': row.current_amount_spent} for row in subcategories_with_amounts_query]
     return subcategories_with_amounts
 
 @app.post("/subcategories", status_code=status.HTTP_201_CREATED, response_model=SubcategoryResponse)
@@ -290,8 +315,27 @@ def get_total_incomes_by_month(month: int, db: Session = Depends(get_db)):
 
     # expense
 @app.get("/expenses", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
-def get_all_expenses(db: Session = Depends(get_db)):
-    all_expenses = db.query(Transaction).filter(Transaction.transaction_type == "Expense").order_by(Transaction.insert_date.desc()).all()
+def get_all_expenses(db: Session = Depends(get_db), month: int = None):
+    if month:
+        all_expenses = db.query(Transaction).filter(Transaction.transaction_type == "Expense", func.extract('month', Transaction.insert_date) == month).order_by(Transaction.insert_date.desc()).all()
+    else:
+        all_expenses = db.query(Transaction).filter(Transaction.transaction_type == "Expense").order_by(Transaction.insert_date.desc()).all()
+    return all_expenses
+
+@app.get("/total_expenses", status_code=status.HTTP_200_OK)
+def get_total_expenses(db: Session = Depends(get_db), month: int = None):
+    if month:
+        all_expenses = get_all_expenses(db, month)
+    else:
+        all_expenses = get_all_expenses(db)
+    total_expenses_amount = sum([expense.amount for expense in all_expenses])
+    total_expenses_card = sum([expense.amount for expense in all_expenses if expense.payment_method == "Card"])
+    total_expenses_cash = sum([expense.amount for expense in all_expenses if expense.payment_method == "Cash"])
+    return {"amount": total_expenses_amount, "card": total_expenses_card, "cash": total_expenses_cash, "expenses": all_expenses}
+
+@app.get("/total_expenses/{month}", status_code=status.HTTP_200_OK)
+def get_total_expenses_by_month(month: int, db: Session = Depends(get_db)):
+    all_expenses = get_total_expenses(db, month)
     return all_expenses
 
 @app.get("/expenses_with_names", status_code=status.HTTP_200_OK)
@@ -409,15 +453,6 @@ def get_savings_by_category(saving_goal_id: int, db: Session = Depends(get_db)):
         saving_dict.pop("_sa_instance_state", None)
         savings.append(saving_dict)
     return savings
-
-# consultar la suma de los transactions de tipo expense
-@app.get("/total_expenses", status_code=status.HTTP_200_OK)
-def get_total_expenses(db: Session = Depends(get_db)):
-    total_expenses = db.query(Transaction).filter(Transaction.transaction_type == "Expense").all()
-    total_expenses_amount = sum([expense.amount for expense in total_expenses])
-    total_expenses_card = sum([expense.amount for expense in total_expenses if expense.payment_method == "Card"])
-    total_expenses_cash = sum([expense.amount for expense in total_expenses if expense.payment_method == "Cash"])
-    return {"amount": total_expenses_amount, "card": total_expenses_card, "cash": total_expenses_cash}
 
 
 # SAVINGS GOALS
