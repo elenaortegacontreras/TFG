@@ -17,10 +17,12 @@ export function ExpensesOverviewView() {
     const [expenses_amount, setExpensesAmount] = useState(null);
     const [cashExpenses, setCashExpenses] = useState(0);
     const [cardExpenses, setCardExpenses] = useState(0);
+    const currentMonth = new Date().getMonth() + 1;
 
     useEffect(() => {
-        axios.get('http://localhost:8000/total_expenses')
+        axios.get(`http://localhost:8000/total_expenses/${currentMonth}`)
             .then(response => {
+                // setExpenses(response.data.expenses);
                 setExpensesAmount(response.data.amount);
                 setCashExpenses(response.data.cash);
                 setCardExpenses(response.data.card);
@@ -31,7 +33,7 @@ export function ExpensesOverviewView() {
     }, []);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/categories_with_amounts')
+        axios.get(`http://localhost:8000/categories_with_amounts/${currentMonth}`)
             .then(response => {
                 setCategories(response.data);
             })

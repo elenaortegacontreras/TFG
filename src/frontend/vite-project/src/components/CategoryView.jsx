@@ -2,28 +2,21 @@ import { Title } from './Title.jsx'
 import { TransactionPanel } from './TransactionPanel.jsx'
 import { CategoriesDoughnutChart } from './CategoriesDoughnutChart.jsx';
 import { LoadingDots } from './LoadingDots.jsx';
-import { ErrorAlert } from './ErrorAlert';
-import { SuccessAlert } from './SuccessAlert';
+import { SubcategoriesList } from './SubcategoriesList.jsx';
 import { ActionsMenuAdd } from './ActionsMenuAdd.jsx';
 import { ActionsMenuEditDelete } from './ActionsMenuEditDelete.jsx';
-
-import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { SubcategoriesList } from './SubcategoriesList.jsx';
 
 export function CategoryView() {
     const location = useLocation();
     const state = location.state;
     console.log(state);
 
-    const currentMonth = new Date().getMonth() + 1;
-    console.log('currentMonth:', currentMonth);
-
     const [expenses, setExpenses] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
+    const currentMonth = new Date().getMonth() + 1;
 
     useEffect(() => {
         axios.get(`http://localhost:8000/expenses/${state.id}`)
@@ -36,7 +29,7 @@ export function CategoryView() {
     }, []);
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/subcategories_with_amounts/${state.id}`)
+        axios.get(`http://localhost:8000/subcategories_with_amounts/${state.id}${currentMonth}`)
             .then(response => {
                 setSubcategories(response.data);
             })
@@ -48,11 +41,6 @@ export function CategoryView() {
     const current_month_expenses = expenses.filter(expense => {
         const expenseDate = new Date(expense.insert_date);
         return expenseDate.getMonth() + 1 === currentMonth;
-    });
-
-    const other_months_expenses = expenses.filter(expense => {
-        const expenseDate = new Date(expense.insert_date);
-        return expenseDate.getMonth() + 1 !== currentMonth;
     });
 
     return (
@@ -75,26 +63,16 @@ export function CategoryView() {
                     <SubcategoriesList subcategories={subcategories} />
                     <ActionsMenuAdd action="add_subcategory" category_id={state.id} />
                     {state.name !== "Otros" && (
-                        <ActionsMenuEditDelete element_type="category" element_id={state.id} setSuccessMessage="" setErrorMessage="" />
+                        <ActionsMenuEditDelete element_type="category" element_id={state.id}/>
                     )}
                 </div>
 
                 <div className="divider"></div>
 
                 <div>
-                    <p>Movimientos</p>
-                    <div className="divider"></div>
-                    {successMessage && <SuccessAlert message={successMessage} />}
-                    {errorMessage && <ErrorAlert message={errorMessage} />}
-
-                    <p>Gastos de este mes:</p>
-                    <TransactionPanel transactions={current_month_expenses} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />
-                    <div className="divider"></div>
-                    <p>Otros gastos:</p>
-                    <TransactionPanel transactions={other_months_expenses} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />
+                    <p><strong>Gastos de este mes</strong></p>
+                    <TransactionPanel transactions={current_month_expenses}/>
                 </div>
-
-                <div className="divider"></div>
 
             </div>
         </div>
