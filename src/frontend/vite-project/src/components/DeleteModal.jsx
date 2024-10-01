@@ -12,7 +12,26 @@ export function DeleteModal({ element_type, element_id }) {
 
     const [open, setOpen] = useState(true);
     const handleDeleteClick = async (how_many) => {
-        if (element_type === 'category') {
+        if ( element_type === 'Expense' || element_type === 'Income' || element_type === 'Saving'){
+            try {
+                await axios.delete(`http://localhost:8000/transactions/${element_id}`);
+                console.log('Movimiento eliminado');
+
+            } catch (error) {
+                console.error(error);
+                console.log('No se pudo eliminar el movimiento');
+            }
+            setOpen(false);
+            how_many = "";
+            if (element_type === 'Expense') {
+                navigate('/transactions', { state: { transaction_type:"expenses" } });
+            } else if (element_type === 'Income') {
+                navigate('/transactions', { state: { transaction_type:"incomes" } });
+            } else if (element_type === 'Saving') {
+                navigate('/transactions', { state: { transaction_type:"savings" } });
+            }
+
+        } else if (element_type === 'category') {
             if (how_many === "all") {
                 try {
                     await axios.delete(`http://localhost:8000/categories/${element_id}/delete_transactions`);
@@ -107,6 +126,8 @@ export function DeleteModal({ element_type, element_id }) {
                                             <p>Eliminar categoría de gasto</p>
                                         ) : element_type === 'subcategory' ? (
                                             <p>Eliminar subcategoría de gasto</p>
+                                        ) : element_type === 'Expense' || element_type === 'Income' || element_type === 'Saving' ? (
+                                            <p>Eliminar movimiento</p>
                                         ) : (
                                             <p>Delete Account</p>
                                         )}
@@ -121,6 +142,8 @@ export function DeleteModal({ element_type, element_id }) {
                                         ) : element_type === 'subcategory' ? (
                                             <p className="text-sm text-gray-500">¿Estás seguro? Al eliminar tu subcategoría tus movimientos se 
                                             transfieren a la subcategoría de gasto "Otros".</p>
+                                        ) : element_type === 'Expense' || element_type === 'Income' || element_type === 'Saving' ? (
+                                            <p className="text-sm text-gray-500">¿Estás seguro? Esta acción es irreversible.</p>
                                         ) : (
                                             <p className="text-sm text-gray-500">Are you sure you want to deactivate your account? All of your data will be permanently removed.
                                                 This action cannot be undone.</p>
@@ -164,7 +187,7 @@ export function DeleteModal({ element_type, element_id }) {
                                         Eliminar todo
                                     </button>
                                 </>
-                            ) : element_type === 'subcategory' ? (
+                            ) : element_type === 'subcategory' || element_type === 'Expense' || element_type === 'Income' || element_type === 'Saving' ? (
                                 <>
                                     <button
                                         type="button"
