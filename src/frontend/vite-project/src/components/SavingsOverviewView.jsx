@@ -3,6 +3,7 @@ import { SavingGoalPanel } from './SavingGoalPanel.jsx'
 import { SavingsLineChart } from './SavingsLineChart.jsx';
 import { LoadingDots } from './LoadingDots.jsx';
 import { ActionsMenuAdd } from './ActionsMenuAdd.jsx';
+import { MonederoSavingsGoalCard } from './MonederoSavingsGoalCard.jsx';
 
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
@@ -85,6 +86,8 @@ export function SavingsOverviewView() {
                 <div className="divider"></div>
                 <SavingGoalPanel saving_goals={savingGoals}/>
             </div>
+
+            <MonederoSavingsGoalCard currency="€"/>
 
             <div className="divider"></div>
 

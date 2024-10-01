@@ -14,11 +14,22 @@ export function SavingView(){
 
     const [savings, setSavings] = useState([]);
     const currentMonth = new Date().getMonth() + 1;
+    const [currentMonthAmount, setCurrentMonthAmount] = useState(null);
 
     useEffect(() => {
         axios.get(`http://localhost:8000/savings/${state.id}`)
             .then(response => {
                 setSavings(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching the savings:', error);
+            });
+    }, []);
+
+    useEffect(() => {
+        axios.get(`http://localhost:8000/total_savings_goal/${state.id}/${currentMonth}`)
+            .then(response => {
+                setCurrentMonthAmount(response.data.amount);
             })
             .catch(error => {
                 console.error('Error fetching the savings:', error);
@@ -42,6 +53,7 @@ export function SavingView(){
                 <p>{state.description}</p>
                 <progress className="progress w-56" value={state.current_amount_saved} max={state.target_amount}></progress>
                 <p className="text-center">{state.current_amount_saved} / {state.target_amount} {state.currency}</p>
+                <p className="text-indigo-600"> Este mes: {currentMonthAmount} {state.currency}</p>
 
                 <div className="max-w-sm mx-auto">
                     {savings.length !== 0 ? (
