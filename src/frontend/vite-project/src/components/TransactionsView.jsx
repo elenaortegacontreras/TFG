@@ -1,11 +1,8 @@
 import { Title } from './Title.jsx'
 import { TransactionPanel } from './TransactionPanel.jsx'
 import { LoadingDots } from "./LoadingDots.jsx";
-import { ErrorAlert } from './ErrorAlert';
-import { SuccessAlert } from './SuccessAlert';
-
-import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 // TODO: añadir aquí posibilidad de mostrar todas las transacciones
@@ -17,12 +14,13 @@ export function TransactionsView() {
     const state = location.state;
     console.log(state); 
 
+    const currentMonth = new Date().getMonth() + 1;
+    console.log('currentMonth:', currentMonth);
+
     const [savings, setSavings] = useState([]);
     const [expenses, setExpenses] = useState([]);
     const [incomes, setIncomes] = useState([]);
-    const [allTransactions, setAllTransactions] = useState([]);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
+    // const [allTransactions, setAllTransactions] = useState([]);
 
     useEffect(() => {
         if (state.transaction_type === 'savings') {
@@ -49,39 +47,82 @@ export function TransactionsView() {
                 .catch(error => {
                     console.error('Error fetching the incomes:', error);
                 });
-        } else if (state.transaction_type === 'all') {
-            axios.get('http://localhost:8000/transactions')
-                .then(response => {
-                    setAllTransactions(response.data);
-                })
-                .catch(error => {
-                    console.error('Error fetching all the transactions:', error);
-                });
-        }
+        } 
+        // else if (state.transaction_type === 'all') {
+        //     axios.get('http://localhost:8000/transactions')
+        //         .then(response => {
+        //             setAllTransactions(response.data);
+        //         })
+        //         .catch(error => {
+        //             console.error('Error fetching all the transactions:', error);
+        //         });
+        // }
     }, []);
+
+    const current_month_incomes = incomes.filter(income => {
+        const incomeDate = new Date(income.insert_date);
+        return incomeDate.getMonth() + 1 === currentMonth;
+    });
+
+    const other_months_incomes = incomes.filter(income => {
+        const incomeDate = new Date(income.insert_date);
+        return incomeDate.getMonth() + 1 !== currentMonth;
+    });
+
+    const current_month_savings = savings.filter(saving => {
+        const savingDate = new Date(saving.insert_date);
+        return savingDate.getMonth() + 1 === currentMonth;
+    });
+
+    const other_months_savings = savings.filter(expense => {
+        const expenseDate = new Date(expense.insert_date);
+        return expenseDate.getMonth() + 1 !== currentMonth;
+    });
+
+    const current_month_expenses = expenses.filter(expense => {
+        const expenseDate = new Date(expense.insert_date);
+        return expenseDate.getMonth() + 1 === currentMonth;
+    });
+
+    const other_months_expenses = expenses.filter(expense => {
+        const expenseDate = new Date(expense.insert_date);
+        return expenseDate.getMonth() + 1 !== currentMonth;
+    });
 
     return (
         <div>
             {state.transaction_type === 'incomes' ? (
                 <>
-                    <Title title="Ingresos" />
-                    {successMessage && <SuccessAlert message={successMessage} />}
-                    {errorMessage && <ErrorAlert message={errorMessage} />}
-                    <TransactionPanel transactions={incomes} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
+                    <Title title="Todos mis ingresos" />
+                    <div>
+                        <p><strong>Ingresos de este mes</strong></p>
+                        <TransactionPanel transactions={current_month_incomes}/>
+                        <div className="divider"></div>
+                        <p><strong>Otros ingresos</strong></p>
+                        <TransactionPanel transactions={other_months_incomes}/>
+                    </div>                
                 </>
             ) : state.transaction_type === 'savings' ? (
                 <>
-                    <Title title="Ahorros" />
-                    {successMessage && <SuccessAlert message={successMessage} />}
-                    {errorMessage && <ErrorAlert message={errorMessage} />}
-                    <TransactionPanel transactions={savings} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
+                    <Title title="Todos mis ahorros" />
+                    <div>
+                        <p><strong>Ahorros de este mes</strong></p>
+                        <TransactionPanel transactions={current_month_savings}/>
+                        <div className="divider"></div>
+                        <p><strong>Otros ahorros</strong></p>
+                        <TransactionPanel transactions={other_months_savings}/>
+                    </div>   
                 </>
             ) : state.transaction_type === 'expenses' ? (
                 <>
-                    <Title title="Gastos" />
-                    {successMessage && <SuccessAlert message={successMessage} />}
-                    {errorMessage && <ErrorAlert message={errorMessage} />}
-                    <TransactionPanel transactions={expenses} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
+                    <Title title="Todos mis gastos" />
+                    <div>
+                        <p><strong>Gastos de este mes</strong></p>
+                        <TransactionPanel transactions={current_month_expenses}/>
+                        <div className="divider"></div>
+                        <p><strong>Otros gastos</strong></p>
+                        <TransactionPanel transactions={other_months_expenses}/>
+                    </div>   
                 </>
             ) : (
                 <>
