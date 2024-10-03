@@ -6,5 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     hmr: true,
+    // host: '0.0.0.0'
+    // open: true // Abre el navegador automáticamente
   },
 })
