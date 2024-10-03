@@ -22,6 +22,7 @@ import { FormSubcategoryBudget } from './components/FormSubcategoryBudget.jsx'
 import { FormSavingGoal } from './components/FormSavingGoal.jsx'
 import { HomeView } from './components/HomeView.jsx'
 import { MapView } from './components/MapView.jsx'
+import { WalletSavingsView } from './components/WalletSavingsView.jsx'
 
 function App() {
 
@@ -54,6 +55,7 @@ function App() {
           <Route path="/category" element={<CategoryView />} />
           <Route path="/savings-overview" element={<SavingsOverviewView />} />
           <Route path="/incomes-overview" element={<IncomesOverviewView />} />
+          <Route path="/wallet-savings" element={<WalletSavingsView />} />
           <Route path="/form-expense" element={<FormExpense />} />
           <Route path="/form-expense-ocr" element={<FormExpenseOCR />} />
           <Route path="/form-saving" element={<FormSaving />} />
