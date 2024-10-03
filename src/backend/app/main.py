@@ -51,12 +51,12 @@ def root():
 
 # USERS
 
-@app.get("/users", status_code=status.HTTP_200_OK, response_model=List[UserResponse])
+@app.get("/users", tags=["Users"], status_code=status.HTTP_200_OK, response_model=List[UserResponse])
 def get_all_users(db: Session = Depends(get_db)):
     all_users = db.query(User).all()
     return all_users
 
-@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
+@app.post("/users", tags=["Users"], status_code=status.HTTP_201_CREATED, response_model=UserResponse)
 def create_user(user: UserRequest, db: Session = Depends(get_db)):
     new_user = User(**user.dict())
     db.add(new_user)
@@ -78,7 +78,7 @@ def create_user(user: UserRequest, db: Session = Depends(get_db)):
 
     return new_user
 
-@app.delete("/users/{user_id}", status_code=status.HTTP_200_OK)
+@app.delete("/users/{user_id}", tags=["Users"], status_code=status.HTTP_200_OK)
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
     db.delete(user)
@@ -87,12 +87,12 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
 
 # CATEGORIES
 
-@app.get("/categories", status_code=status.HTTP_200_OK, response_model=List[CategoryResponse])
+@app.get("/categories", tags=["Categories"], status_code=status.HTTP_200_OK, response_model=List[CategoryResponse])
 def get_all_categories(db: Session = Depends(get_db)):
     all_categories = db.query(Category).all()
     return all_categories
 
-@app.get("/categories_with_amounts", status_code=status.HTTP_200_OK)
+@app.get("/categories_with_amounts", tags=["Categories"], status_code=status.HTTP_200_OK)
 def get_categories_with_amounts(db: Session = Depends(get_db)):
     categories_with_amounts_query = db.query(
         Category.id,
@@ -105,7 +105,7 @@ def get_categories_with_amounts(db: Session = Depends(get_db)):
     categories_with_amounts = [row._asdict() for row in categories_with_amounts_query]
     return categories_with_amounts
 
-@app.get("/categories_with_amounts/{month}", status_code=status.HTTP_200_OK)
+@app.get("/categories_with_amounts/{month}", tags=["Categories"], status_code=status.HTTP_200_OK)
 def get_categories_with_amounts_by_month(month: int, db: Session = Depends(get_db)):    
     categories_with_amounts_query = db.query(
         Category.id,
@@ -118,7 +118,7 @@ def get_categories_with_amounts_by_month(month: int, db: Session = Depends(get_d
     categories_with_amounts = [row._asdict() for row in categories_with_amounts_query]
     return categories_with_amounts
 
-@app.post("/categories", status_code=status.HTTP_201_CREATED, response_model=CategoryResponse)
+@app.post("/categories", tags=["Categories"], status_code=status.HTTP_201_CREATED, response_model=CategoryResponse)
 def create_category(category: CategoryRequest, db: Session = Depends(get_db)):
     new_category = Category(**category.dict())
     db.add(new_category)
@@ -132,7 +132,7 @@ def create_category(category: CategoryRequest, db: Session = Depends(get_db)):
     db.refresh(new_subcategory)
     return new_category
 
-@app.delete("/categories/{category_id}", status_code=status.HTTP_200_OK)
+@app.delete("/categories/{category_id}", tags=["Categories"], status_code=status.HTTP_200_OK)
 def delete_category(category_id: int, db: Session = Depends(get_db)):
     # TODO if not in default categories: (list with default)
     category = db.query(Category).filter(Category.id == category_id).first()
@@ -140,12 +140,12 @@ def delete_category(category_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Category deleted successfully"}
 
-@app.get("/category/{category_id}", status_code=status.HTTP_200_OK, response_model=CategoryResponse)
+@app.get("/category/{category_id}", tags=["Categories"], status_code=status.HTTP_200_OK, response_model=CategoryResponse)
 def get_category_by_id(category_id: int, db: Session = Depends(get_db)):
     category = db.query(Category).filter(Category.id == category_id).first()
     return category
 
-@app.put("/category/{category_id}", status_code=status.HTTP_200_OK, response_model=CategoryResponse)
+@app.put("/category/{category_id}", tags=["Categories"], status_code=status.HTTP_200_OK, response_model=CategoryResponse)
 def update_category(category_id: int, category: CategoryRequest, db: Session = Depends(get_db)):
     existing_category = db.query(Category).filter(Category.id == category_id).first()
     if existing_category:
@@ -159,7 +159,7 @@ def update_category(category_id: int, category: CategoryRequest, db: Session = D
         return {"message": "Category not found"}
 
 # Endpoint para borrar una categoría y también antes eliminar todas las transacciones asociadas a esa categoría
-@app.delete("/categories/{category_id}/delete_transactions", status_code=status.HTTP_200_OK)
+@app.delete("/categories/{category_id}/delete_transactions", tags=["Categories"], status_code=status.HTTP_200_OK)
 def delete_category_and_transactions(category_id: int, db: Session = Depends(get_db)):
     category = db.query(Category).filter(Category.id == category_id).first()
     db.query(Transaction).filter(Transaction.category_id == category_id).delete()
@@ -170,7 +170,7 @@ def delete_category_and_transactions(category_id: int, db: Session = Depends(get
 # Endpoint para borrar una categoría pero antes pasar todas las transacciones asociadas a otra categoría
 # para cambiar a otra categoría se hace así:
 # la nueva categoría será siempre la categoría con name == "Otros" y subcategoría con name == "Otros"
-@app.delete("/categories/{category_id}/move_transactions", status_code=status.HTTP_200_OK)
+@app.delete("/categories/{category_id}/move_transactions", tags=["Categories"], status_code=status.HTTP_200_OK)
 def move_transactions_to_another_category(category_id: int, db: Session = Depends(get_db)):
     category = db.query(Category).filter(Category.name == "Otros").first()
     subcategory = db.query(Subcategory).filter(Subcategory.name == "Otros", Subcategory.category_id == category.id).first()
@@ -181,17 +181,17 @@ def move_transactions_to_another_category(category_id: int, db: Session = Depend
 
 # SUBCATEGORIES
 
-@app.get("/subcategories", status_code=status.HTTP_200_OK, response_model=List[SubcategoryResponse])
+@app.get("/subcategories", tags=["Subcategories"], status_code=status.HTTP_200_OK, response_model=List[SubcategoryResponse])
 def get_all_subcategories(db: Session = Depends(get_db)):
     all_subcategories = db.query(Subcategory).all()
     return all_subcategories
 
-@app.get("/subcategories/{category_id}", status_code=status.HTTP_200_OK)
+@app.get("/subcategories/{category_id}", tags=["Subcategories"], status_code=status.HTTP_200_OK)
 def get_subcategories_by_category(category_id: int, db: Session = Depends(get_db)):
     subcategories = db.query(Subcategory).filter(Subcategory.category_id == category_id).all()
     return subcategories
 
-@app.get("/subcategories_with_amounts/{category_id}", status_code=status.HTTP_200_OK)
+@app.get("/subcategories_with_amounts/{category_id}", tags=["Subcategories"], status_code=status.HTTP_200_OK)
 def get_subcategories_with_amounts(category_id: int, db: Session = Depends(get_db)):
     subcategories_with_amounts_query = db.query(
         Subcategory.id,
@@ -203,7 +203,7 @@ def get_subcategories_with_amounts(category_id: int, db: Session = Depends(get_d
     subcategories_with_amounts = [row._asdict() for row in subcategories_with_amounts_query]
     return subcategories_with_amounts
 
-@app.get("/subcategories_with_amounts/{category_id}/{month}", status_code=status.HTTP_200_OK)
+@app.get("/subcategories_with_amounts/{category_id}/{month}", tags=["Subcategories"], status_code=status.HTTP_200_OK)
 def get_subcategories_with_amounts_by_month(category_id: int, month: int, db: Session = Depends(get_db)):
     subcategories_with_amounts_query = db.query(
         Subcategory.id,
@@ -215,7 +215,7 @@ def get_subcategories_with_amounts_by_month(category_id: int, month: int, db: Se
     subcategories_with_amounts = [{'id': row.id, 'name': row.name, 'category_id': row.category_id, 'current_amount_spent': row.current_amount_spent} for row in subcategories_with_amounts_query]
     return subcategories_with_amounts
 
-@app.post("/subcategories", status_code=status.HTTP_201_CREATED, response_model=SubcategoryResponse)
+@app.post("/subcategories", tags=["Subcategories"], status_code=status.HTTP_201_CREATED, response_model=SubcategoryResponse)
 def create_subcategory(subcategory: SubcategoryRequest, db: Session = Depends(get_db)):
     new_subcategory = Subcategory(**subcategory.dict())
     db.add(new_subcategory)
@@ -223,7 +223,7 @@ def create_subcategory(subcategory: SubcategoryRequest, db: Session = Depends(ge
     db.refresh(new_subcategory)
     return new_subcategory
 
-@app.delete("/subcategories/{subcategory_id}", status_code=status.HTTP_200_OK)
+@app.delete("/subcategories/{subcategory_id}", tags=["Subcategories"], status_code=status.HTTP_200_OK)
 def delete_subcategory(subcategory_id: int, db: Session = Depends(get_db)):
     # TODO if not in default subcategories: (list with default)
     subcategory = db.query(Subcategory).filter(Subcategory.id == subcategory_id).first()
@@ -231,7 +231,7 @@ def delete_subcategory(subcategory_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Subcategory deleted successfully"}
 
-@app.delete("/subcategories/{subcategory_id}/move_transactions", status_code=status.HTTP_200_OK)
+@app.delete("/subcategories/{subcategory_id}/move_transactions", tags=["Subcategories"], status_code=status.HTTP_200_OK)
 def move_transactions_to_another_subcategory(subcategory_id: int, db: Session = Depends(get_db)):
     new_subcategory_id = db.query(Subcategory).filter(Subcategory.name == "Otros").first().id
     subcategory = db.query(Subcategory).filter(Subcategory.id == subcategory_id).first()
@@ -242,17 +242,17 @@ def move_transactions_to_another_subcategory(subcategory_id: int, db: Session = 
     return {"message": "Subcategory deleted and transactions moved successfully"}
 
 # TRANSACTIONS
-@app.get("/transactions", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
+@app.get("/transactions", status_code=status.HTTP_200_OK, tags=["Transactions"], response_model=List[TransactionResponse])
 def get_all_transactions(db: Session = Depends(get_db)):
     all_transactions = db.query(Transaction).order_by(Transaction.insert_date.desc()).all()
     return all_transactions
 
-@app.get("/transaction/{transaction_id}", status_code=status.HTTP_200_OK, response_model=TransactionResponse)
+@app.get("/transaction/{transaction_id}", tags=["Transactions"], status_code=status.HTTP_200_OK, response_model=TransactionResponse)
 def get_transaction_by_id(transaction_id: int, db: Session = Depends(get_db)):
     transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
     return transaction
 
-@app.post("/transactions", status_code=status.HTTP_201_CREATED, response_model=TransactionResponse)
+@app.post("/transactions", tags=["Transactions"], status_code=status.HTTP_201_CREATED, response_model=TransactionResponse)
 def create_transaction(transaction: TransactionRequest, db: Session = Depends(get_db)):
     transaction_dict = transaction.dict()
     if transaction_dict.get("insert_date") is None:
@@ -264,7 +264,7 @@ def create_transaction(transaction: TransactionRequest, db: Session = Depends(ge
     db.refresh(new_transaction)
     return new_transaction
 
-@app.put("/transaction/{transaction_id}", status_code=status.HTTP_200_OK, response_model=TransactionResponse)
+@app.put("/transaction/{transaction_id}", tags=["Transactions"], status_code=status.HTTP_200_OK, response_model=TransactionResponse)
 def update_transaction(transaction_id: int, transaction: TransactionRequest, db: Session = Depends(get_db)):
     existing_transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
     if existing_transaction:
@@ -280,7 +280,7 @@ def update_transaction(transaction_id: int, transaction: TransactionRequest, db:
     else:
         return {"message": "Transaction not found"}
 
-@app.delete("/transactions/{transaction_id}", status_code=status.HTTP_200_OK)
+@app.delete("/transactions/{transaction_id}", tags=["Transactions"], status_code=status.HTTP_200_OK)
 def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
     transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
     db.delete(transaction)
@@ -288,7 +288,7 @@ def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
     return {"message": "Transaction deleted successfully"}
 
     # income
-@app.get("/incomes", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
+@app.get("/incomes", tags=["Incomes"], status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
 def get_all_incomes(db: Session = Depends(get_db), month: int = None):
     if month:
         all_incomes = db.query(Transaction).filter(Transaction.transaction_type == "Income", func.extract('month', Transaction.insert_date) == month).order_by(Transaction.insert_date.desc()).all()
@@ -297,7 +297,7 @@ def get_all_incomes(db: Session = Depends(get_db), month: int = None):
     return all_incomes
 
 # consultar la suma de los transactions de tipo income
-@app.get("/total_incomes/", status_code=status.HTTP_200_OK)
+@app.get("/total_incomes/", tags=["Incomes"], status_code=status.HTTP_200_OK)
 def get_total_incomes(db: Session = Depends(get_db), month: int = None):
     if month:
         all_incomes = get_all_incomes(db, month)
@@ -308,13 +308,13 @@ def get_total_incomes(db: Session = Depends(get_db), month: int = None):
     total_incomes_cash = sum([income.amount for income in all_incomes if income.payment_method == "Cash"])
     return {"amount": total_incomes_amount, "card": total_incomes_card, "cash": total_incomes_cash, "incomes": all_incomes}
 
-@app.get("/total_incomes/{month}", status_code=status.HTTP_200_OK)
+@app.get("/total_incomes/{month}", tags=["Incomes"], status_code=status.HTTP_200_OK)
 def get_total_incomes_by_month(month: int, db: Session = Depends(get_db)):
     all_incomes = get_total_incomes(db, month)
     return all_incomes
 
     # expense
-@app.get("/expenses", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
+@app.get("/expenses", tags=["Expenses"], status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
 def get_all_expenses(db: Session = Depends(get_db), month: int = None):
     if month:
         all_expenses = db.query(Transaction).filter(Transaction.transaction_type == "Expense", func.extract('month', Transaction.insert_date) == month).order_by(Transaction.insert_date.desc()).all()
@@ -322,7 +322,7 @@ def get_all_expenses(db: Session = Depends(get_db), month: int = None):
         all_expenses = db.query(Transaction).filter(Transaction.transaction_type == "Expense").order_by(Transaction.insert_date.desc()).all()
     return all_expenses
 
-@app.get("/total_expenses", status_code=status.HTTP_200_OK)
+@app.get("/total_expenses", tags=["Expenses"], status_code=status.HTTP_200_OK)
 def get_total_expenses(db: Session = Depends(get_db), month: int = None):
     if month:
         all_expenses = get_all_expenses(db, month)
@@ -333,12 +333,12 @@ def get_total_expenses(db: Session = Depends(get_db), month: int = None):
     total_expenses_cash = sum([expense.amount for expense in all_expenses if expense.payment_method == "Cash"])
     return {"amount": total_expenses_amount, "card": total_expenses_card, "cash": total_expenses_cash, "expenses": all_expenses}
 
-@app.get("/total_expenses/{month}", status_code=status.HTTP_200_OK)
+@app.get("/total_expenses/{month}", tags=["Expenses"], status_code=status.HTTP_200_OK)
 def get_total_expenses_by_month(month: int, db: Session = Depends(get_db)):
     all_expenses = get_total_expenses(db, month)
     return all_expenses
 
-@app.get("/expenses_with_names", status_code=status.HTTP_200_OK)
+@app.get("/expenses_with_names", tags=["Expenses"], status_code=status.HTTP_200_OK)
 def get_all_expenses_with_categories_names(db: Session = Depends(get_db)):
     all_expenses = db.query(
         Transaction, 
@@ -361,7 +361,7 @@ def get_all_expenses_with_categories_names(db: Session = Depends(get_db)):
         expenses.append(expense_dict)
     return expenses
 
-@app.get("/expenses/{category_id}", status_code=status.HTTP_200_OK)
+@app.get("/expenses/{category_id}", tags=["Expenses"], status_code=status.HTTP_200_OK)
 def get_expenses_by_category(category_id: int, db: Session = Depends(get_db)):
     expenses_query = db.query(
         Transaction, 
@@ -387,7 +387,7 @@ def get_expenses_by_category(category_id: int, db: Session = Depends(get_db)):
     return expenses
 
     # saving
-@app.get("/savings", status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
+@app.get("/savings", tags=["Savings"], status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
 def get_all_savings(db: Session = Depends(get_db), month: int = None):
     if month:
         all_savings = db.query(Transaction).filter(Transaction.transaction_type == "Saving", func.extract('month', Transaction.insert_date) == month).order_by(Transaction.insert_date.desc()).all()
@@ -396,7 +396,7 @@ def get_all_savings(db: Session = Depends(get_db), month: int = None):
     return all_savings
 
 # consultar la suma de los transactions de tipo saving
-@app.get("/total_savings", status_code=status.HTTP_200_OK)
+@app.get("/total_savings", tags=["Savings"], status_code=status.HTTP_200_OK)
 def get_total_savings(db: Session = Depends(get_db), month: int = None):
     if month:
         all_savings = get_all_savings(db, month)
@@ -407,12 +407,22 @@ def get_total_savings(db: Session = Depends(get_db), month: int = None):
     total_savings_cash = sum([saving.amount for saving in all_savings if saving.payment_method == "Cash"])
     return {"amount": total_savings_amount, "card": total_savings_card, "cash": total_savings_cash, "savings": all_savings}
 
-@app.get("/total_savings/{month}", status_code=status.HTTP_200_OK)
+@app.get("/total_savings/{month}", tags=["Savings"], status_code=status.HTTP_200_OK)
 def get_total_savings_by_month(month: int, db: Session = Depends(get_db)):
     all_savings = get_total_savings(db, month)
     return all_savings
 
-@app.get("/savings_with_names", status_code=status.HTTP_200_OK)
+
+@app.get("/total_savings_goal/{saving_goal_id}/{month}", tags=["Savings"], status_code=status.HTTP_200_OK)
+def get_total_savings_by_month_and_goal(month: int, saving_goal_id: int, db: Session = Depends(get_db)):
+    all_savings = db.query(Transaction).filter(Transaction.transaction_type == "Saving", func.extract('month', Transaction.insert_date) == month, Transaction.saving_goal_id == saving_goal_id).order_by(Transaction.insert_date.desc()).all()
+    total_savings_amount = sum([saving.amount for saving in all_savings])
+    total_savings_card = sum([saving.amount for saving in all_savings if saving.payment_method == "Card"])
+    total_savings_cash = sum([saving.amount for saving in all_savings if saving.payment_method == "Cash"])
+    return {"amount": total_savings_amount, "card": total_savings_card, "cash": total_savings_cash, "savings": all_savings}
+
+
+@app.get("/savings_with_names", tags=["Savings"], status_code=status.HTTP_200_OK)
 def get_all_savings_with_categories_names(db: Session = Depends(get_db)):
     all_savings = db.query(
         Transaction, 
@@ -433,7 +443,7 @@ def get_all_savings_with_categories_names(db: Session = Depends(get_db)):
         savings.append(saving_dict)
     return savings
 
-@app.get("/savings/{saving_goal_id}", status_code=status.HTTP_200_OK)
+@app.get("/savings/{saving_goal_id}", tags=["Savings"], status_code=status.HTTP_200_OK)
 def get_savings_by_category(saving_goal_id: int, db: Session = Depends(get_db)):
     savings_query = db.query(
         Transaction,
@@ -454,15 +464,14 @@ def get_savings_by_category(saving_goal_id: int, db: Session = Depends(get_db)):
         savings.append(saving_dict)
     return savings
 
-
 # SAVINGS GOALS
 
-@app.get("/goals", status_code=status.HTTP_200_OK, response_model=List[GoalResponse])
+@app.get("/goals", tags=["Saving Goals"], status_code=status.HTTP_200_OK, response_model=List[GoalResponse])
 def get_all_goals(db: Session = Depends(get_db)):
     all_goals = db.query(Goal).all()
     return all_goals
 
-@app.post("/goals", status_code=status.HTTP_201_CREATED, response_model=GoalResponse)
+@app.post("/goals", tags=["Saving Goals"], status_code=status.HTTP_201_CREATED, response_model=GoalResponse)
 def create_goal(goal: GoalRequest, db: Session = Depends(get_db)):
     new_goal = Goal(**goal.dict())
     db.add(new_goal)
@@ -470,19 +479,19 @@ def create_goal(goal: GoalRequest, db: Session = Depends(get_db)):
     db.refresh(new_goal)
     return new_goal
 
-@app.delete("/goals/{goal_id}", status_code=status.HTTP_200_OK)
+@app.delete("/goals/{goal_id}", tags=["Saving Goals"], status_code=status.HTTP_200_OK)
 def delete_goal(goal_id: int, db: Session = Depends(get_db)):
     goal = db.query(Goal).filter(Goal.id == goal_id).first()
     db.delete(goal)
     db.commit()
     return {"message": "Goal deleted successfully"}
 
-@app.get("/goal/{goal_id}", status_code=status.HTTP_200_OK, response_model=GoalResponse)
+@app.get("/goal/{goal_id}", tags=["Saving Goals"], status_code=status.HTTP_200_OK, response_model=GoalResponse)
 def get_goal_by_id(goal_id: int, db: Session = Depends(get_db)):
     goal = db.query(Goal).filter(Goal.id == goal_id).first()
     return goal
 
-@app.put("/goal/{goal_id}", status_code=status.HTTP_200_OK, response_model=GoalResponse)
+@app.put("/goal/{goal_id}", tags=["Saving Goals"], status_code=status.HTTP_200_OK, response_model=GoalResponse)
 def update_goal(goal_id: int, goal: GoalRequest, db: Session = Depends(get_db)):
     existing_goal = db.query(Goal).filter(Goal.id == goal_id).first()
     if existing_goal:
@@ -495,7 +504,7 @@ def update_goal(goal_id: int, goal: GoalRequest, db: Session = Depends(get_db)):
     else:
         return {"message": "Goal not found"}
 
-@app.get("/goals_with_amounts", status_code=status.HTTP_200_OK)
+@app.get("/goals_with_amounts", tags=["Saving Goals"], status_code=status.HTTP_200_OK)
 def get_goals_with_amounts(db: Session = Depends(get_db)):
     goals_with_amounts_query = db.query(
         Goal.id,
@@ -511,7 +520,7 @@ def get_goals_with_amounts(db: Session = Depends(get_db)):
     return goals_with_amounts
 
 # Endpoint para borrar un ojetivo de ahorro y también antes eliminar todas las transacciones asociadas a ese objetivo
-@app.delete("/goals/{goal_id}/delete_transactions", status_code=status.HTTP_200_OK)
+@app.delete("/goals/{goal_id}/delete_transactions", tags=["Saving Goals"], status_code=status.HTTP_200_OK)
 def delete_goal_and_transactions(goal_id: int, db: Session = Depends(get_db)):
     goal = db.query(Goal).filter(Goal.id == goal_id).first()
     db.query(Transaction).filter(Transaction.saving_goal_id == goal_id).delete()
@@ -522,7 +531,7 @@ def delete_goal_and_transactions(goal_id: int, db: Session = Depends(get_db)):
 # Endpoint para borrar un ojetivo de ahorro pero antes pasar todos los transactions asociados a otro objetivo
 # para cambiar a otro objetivo se hace así:
 # el nuevo objetivo de ahorro será siempre el objetivo con name == "Otros"
-@app.delete("/goals/{goal_id}/move_transactions", status_code=status.HTTP_200_OK)
+@app.delete("/goals/{goal_id}/move_transactions", tags=["Saving Goals"], status_code=status.HTTP_200_OK)
 def move_transactions_to_another_goal(goal_id: int, db: Session = Depends(get_db)):
     goal = db.query(Goal).filter(Goal.name == "Otros").first()
     db.query(Transaction).filter(Transaction.saving_goal_id == goal_id).update({Transaction.saving_goal_id: goal.id})
@@ -530,84 +539,13 @@ def move_transactions_to_another_goal(goal_id: int, db: Session = Depends(get_db
     db.commit()
     return {"message": "Goal deleted and transactions moved successfully"}
 
-# OCR Ticket Data Extraction
-@app.post("/extract_text")
-def extract_text(file: UploadFile = File(...)):
-
-    if file.filename.endswith('.pdf'):
-        with open(f'app/tests/tickets_PDFs/{file.filename}', "wb") as f:
-            f.write(file.file.read())
-
-    else:
-        with open(f'app/tests/tickets_images/{file.filename}', "wb") as f:
-            f.write(file.file.read())
-
-    result = extract_data(file.filename)
-
-    return {"result": result}    
-
-
-# Map (expenses by location)
-
-@app.get("/location/{postal_code}", status_code=status.HTTP_200_OK)
-def get_location_by_postal_code(postal_code: str, db: Session = Depends(get_db)):
-    query = text("SELECT latitud, longitud, coords_elegidas, provincia_nombre, entidad_nombre FROM es_municipios_cp WHERE codigo_postal = :postal_code")
-    result = db.execute(query, {"postal_code": postal_code}).fetchone()
-    if result:
-        if result[2] == True:
-            latitude = result[0]
-            longitude = result[1]
-            entidad_nombre = result[4]
-            return {"latitude": latitude, "longitude": longitude, "entidad_nombre": entidad_nombre}
-        else:
-            query = text("SELECT latitud, longitud, entidad_nombre FROM es_municipios_cp WHERE provincia_nombre = :provincia_nombre AND entidad_nombre = :entidad_nombre AND coords_elegidas = true")
-            result = db.execute(query, {"provincia_nombre": result[3], "entidad_nombre": result[4]}).fetchone()
-            if result:
-                latitude = result[0]
-                longitude = result[1]
-                entidad_nombre = result[2]
-                return {"latitude": latitude, "longitude": longitude, "entidad_nombre": entidad_nombre}   
-    return {"desconocido"}
-    
-
-@app.get("/expenses_by_location", status_code=status.HTTP_200_OK)
-def get_expenses_by_location(db: Session = Depends(get_db)):
-    expenses_by_location_query = db.query(
-        Transaction.shop_location_pc,
-        func.coalesce(func.sum(Transaction.amount), 0).label('current_amount_spent')
-    ).filter(Transaction.shop_location_pc != None).group_by(Transaction.shop_location_pc).all()
-
-    expenses_by_location = [row._asdict() for row in expenses_by_location_query]
-
-    expenses_with_coordinates = []
-    for expense in expenses_by_location:
-        postal_code = expense['shop_location_pc']
-        coordinates = get_location_by_postal_code(postal_code, db)
-        if coordinates != {"desconocido"}:
-            expense['latitude'] = coordinates['latitude']
-            expense['longitude'] = coordinates['longitude']
-            expense['entidad_nombre'] = coordinates['entidad_nombre']
-            expenses_with_coordinates.append(expense)        
-
-    return expenses_with_coordinates
-
-@app.get("/latlon/{postal_code}", status_code=status.HTTP_200_OK)
-def get_coords_by_postal_code(postal_code: str, db: Session = Depends(get_db)):
-    query = text("SELECT latitud, longitud FROM es_municipios_cp WHERE codigo_postal = :postal_code")
-    result = db.execute(query, {"postal_code": postal_code}).fetchone()
-    if result:
-        latitude = result[0]
-        longitude = result[1]
-        return {"latitude": latitude, "longitude": longitude}
-    return {"latitude": None, "longitude": None}
-
 # SHOPS
-@app.get("/shops", status_code=status.HTTP_200_OK, response_model=List[ShopResponse])
+@app.get("/shops", tags=["Shops"], status_code=status.HTTP_200_OK, response_model=List[ShopResponse])
 def get_all_shops(db: Session = Depends(get_db)):
     all_shops = db.query(Shop).all()
     return all_shops
 
-@app.post("/shops", status_code=status.HTTP_201_CREATED, response_model=ShopResponse)
+@app.post("/shops", tags=["Shops"], status_code=status.HTTP_201_CREATED, response_model=ShopResponse)
 def create_shop(shop: ShopRequest, db: Session = Depends(get_db)):
     new_shop = Shop(**shop.dict())
     db.add(new_shop)
@@ -616,7 +554,7 @@ def create_shop(shop: ShopRequest, db: Session = Depends(get_db)):
     return new_shop
 
 # SHOPS (expenses by shop)
-@app.get("/expenses_by_shop", status_code=status.HTTP_200_OK)
+@app.get("/expenses_by_shop", tags=["Shops"], status_code=status.HTTP_200_OK)
 def get_expenses_by_shop(db: Session = Depends(get_db)):
     expenses_by_shop_query = db.query(
         Transaction.shop_id,
@@ -637,3 +575,163 @@ def get_expenses_by_shop(db: Session = Depends(get_db)):
 
     return expenses_with_shop_info
 
+    # obtener transacciones con transaction_type = "GlobalSaving"
+@app.get("/global_savings", tags=["Global savings"], status_code=status.HTTP_200_OK, response_model=List[TransactionResponse])
+def get_global_savings_transactions(db: Session = Depends(get_db), month: int = None):
+    if month:
+        all_global_savings = db.query(Transaction).filter(Transaction.transaction_type == "GlobalSaving", func.extract('month', Transaction.insert_date) == month).order_by(Transaction.insert_date.desc()).all()
+    else:
+        all_global_savings = db.query(Transaction).filter(Transaction.transaction_type == "GlobalSaving").order_by(Transaction.insert_date.desc()).all()
+    return all_global_savings
+
+# consultar la suma de los transactions de tipo GlobalSaving
+@app.get("/total_global_savings/", tags=["Global savings"], status_code=status.HTTP_200_OK)
+def get_total_global_savings(db: Session = Depends(get_db), month: int = None):
+    if month:
+        all_global_savings = get_global_savings_transactions(db, month)
+    else:
+        all_global_savings = get_global_savings_transactions(db)
+    total_global_savings_amount = sum([global_saving.amount for global_saving in all_global_savings])
+    total_global_savings_card = sum([global_saving.amount for global_saving in all_global_savings if global_saving.payment_method == "Card"])
+    total_global_savings_cash = sum([global_saving.amount for global_saving in all_global_savings if global_saving.payment_method == "Cash"])
+    return {"amount": total_global_savings_amount, "card": total_global_savings_card, "cash": total_global_savings_cash, "global_savings": all_global_savings}
+
+@app.get("/total_global_savings/{month}", tags=["Global savings"], status_code=status.HTTP_200_OK)
+def get_total_global_savings_by_month(month: int, db: Session = Depends(get_db)):
+    all_global_savings = get_total_global_savings(db, month)
+    return all_global_savings
+
+
+@app.get("/global_savings_by_month", tags=["Wallet"], status_code=status.HTTP_200_OK)
+def get_global_wallet_transactions(db: Session = Depends(get_db)):
+    first_transaction_date = db.query(func.min(Transaction.insert_date)).scalar()
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+    months = range(first_transaction_date.month, current_month) # sin incluir el mes actual
+    wallet_savings_by_month = []
+
+    savings = []
+    global_savings_transactions = get_global_savings_transactions(db, current_month)
+    for saving in global_savings_transactions:
+            savings.append(saving)
+    wallet_savings_by_month.append({
+            "month": current_month,
+            "year": current_year,
+            "global_savings": savings
+    })
+    for month in reversed(months):
+        wallet = get_wallet_balance_by_month(month, db)
+        savings = []
+        global_savings_transactions = get_global_savings_transactions(db, month)
+        for saving in global_savings_transactions:
+            savings.append(saving)
+        wallet_savings_by_month.append({
+            "month": month,
+            "year": current_year,
+            "wallet": wallet,
+            "global_savings": savings
+        })
+    return wallet_savings_by_month
+
+# WALLET
+# el monedero global incluye todos los monederos de todos los meses anteriores al actual
+# pero excluye al monedero del mes actual
+@app.get("/global_wallet", tags=["Wallet"], status_code=status.HTTP_200_OK)
+def get_wallet_balance(db: Session = Depends(get_db)):
+
+    total_incomes = get_total_incomes(db)
+    total_expenses = get_total_expenses(db)
+    total_savings = get_total_savings(db)
+    
+    current_month_wallet = get_wallet_balance_by_month(datetime.now().month, db)
+
+    amount = total_incomes['amount'] - total_expenses['amount'] - total_savings['amount'] - current_month_wallet['amount']
+    cash = total_incomes['cash'] - total_expenses['cash'] - total_savings['cash'] - current_month_wallet['cash']
+    card = total_incomes['card'] - total_expenses['card'] - total_savings['card'] - current_month_wallet['card']
+
+    return {"amount": amount, "cash": cash, "card": card}
+
+
+@app.get("/wallet/{month}", tags=["Wallet"], status_code=status.HTTP_200_OK)
+def get_wallet_balance_by_month(month: int, db: Session = Depends(get_db)):
+    incomes = get_total_incomes_by_month(month, db)
+    expenses = get_total_expenses_by_month(month, db)
+    savings = get_total_savings_by_month(month, db)
+    global_savings = get_total_global_savings_by_month(month, db)
+
+    amount = incomes['amount'] - expenses['amount'] - savings['amount'] + global_savings['amount']
+    cash = incomes['cash'] - expenses['cash'] - savings['cash'] + global_savings['cash']
+    card = incomes['card'] - expenses['card'] - savings['card'] + global_savings['card']
+
+    return {"amount": amount, "cash": cash, "card": card}
+
+# OCR Ticket Data Extraction
+@app.post("/extract_text", tags=["OCR"],)
+def extract_text(file: UploadFile = File(...)):
+
+    if file.filename.endswith('.pdf'):
+        with open(f'app/tests/tickets_PDFs/{file.filename}', "wb") as f:
+            f.write(file.file.read())
+
+    else:
+        with open(f'app/tests/tickets_images/{file.filename}', "wb") as f:
+            f.write(file.file.read())
+
+    result = extract_data(file.filename)
+
+    return {"result": result}    
+
+
+# Map (expenses by location)
+
+@app.get("/location/{postal_code}", tags=["Map"], status_code=status.HTTP_200_OK)
+def get_location_by_postal_code(postal_code: str, db: Session = Depends(get_db)):
+    query = text("SELECT latitud, longitud, coords_elegidas, provincia_nombre, entidad_nombre FROM es_municipios_cp WHERE codigo_postal = :postal_code")
+    result = db.execute(query, {"postal_code": postal_code}).fetchone()
+    if result:
+        if result[2] == True:
+            latitude = result[0]
+            longitude = result[1]
+            entidad_nombre = result[4]
+            return {"latitude": latitude, "longitude": longitude, "entidad_nombre": entidad_nombre}
+        else:
+            query = text("SELECT latitud, longitud, entidad_nombre FROM es_municipios_cp WHERE provincia_nombre = :provincia_nombre AND entidad_nombre = :entidad_nombre AND coords_elegidas = true")
+            result = db.execute(query, {"provincia_nombre": result[3], "entidad_nombre": result[4]}).fetchone()
+            if result:
+                latitude = result[0]
+                longitude = result[1]
+                entidad_nombre = result[2]
+                return {"latitude": latitude, "longitude": longitude, "entidad_nombre": entidad_nombre}   
+    return {"desconocido"}
+    
+
+@app.get("/expenses_by_location", tags=["Map"], status_code=status.HTTP_200_OK)
+def get_expenses_by_location(db: Session = Depends(get_db)):
+    expenses_by_location_query = db.query(
+        Transaction.shop_location_pc,
+        func.coalesce(func.sum(Transaction.amount), 0).label('current_amount_spent')
+    ).filter(Transaction.shop_location_pc != None).group_by(Transaction.shop_location_pc).all()
+
+    expenses_by_location = [row._asdict() for row in expenses_by_location_query]
+
+    expenses_with_coordinates = []
+    for expense in expenses_by_location:
+        postal_code = expense['shop_location_pc']
+        coordinates = get_location_by_postal_code(postal_code, db)
+        if coordinates != {"desconocido"}:
+            expense['latitude'] = coordinates['latitude']
+            expense['longitude'] = coordinates['longitude']
+            expense['entidad_nombre'] = coordinates['entidad_nombre']
+            expenses_with_coordinates.append(expense)        
+
+    return expenses_with_coordinates
+
+@app.get("/latlon/{postal_code}", tags=["Map"], status_code=status.HTTP_200_OK)
+def get_coords_by_postal_code(postal_code: str, db: Session = Depends(get_db)):
+    query = text("SELECT latitud, longitud FROM es_municipios_cp WHERE codigo_postal = :postal_code")
+    result = db.execute(query, {"postal_code": postal_code}).fetchone()
+    if result:
+        latitude = result[0]
+        longitude = result[1]
+        return {"latitude": latitude, "longitude": longitude}
+    return {"latitude": None, "longitude": None}
