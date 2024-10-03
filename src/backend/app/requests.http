@@ -1,0 +1,365 @@
+###
+GET http://localhost:8000/users
+Content-Type: application/json
+
+### 
+POST http://localhost:8000/users
+Content-Type: application/json
+
+{   
+    "phone": "123456789",
+    "email": "user1@example.com",
+    "password": "password1",
+    "first_name": "Laura"
+}
+
+###
+# DELETE http://localhost:8000/users/1
+
+# ###
+# POST http://localhost:8000/users
+# Content-Type: application/json
+
+# {
+#     "phone": "987654321",
+#     "email": "user2@example.com",
+#     "password": "password2",
+#     "first_name": "Pedro"
+# }
+
+###
+POST http://localhost:8000/goals
+Content-Type: application/json
+
+{
+    "name": "Viaje",
+    "user_id": 2,
+    "target_amount": 160.0,
+    "target_date": "2024-12-31"
+}
+
+###
+POST http://localhost:8000/goals
+Content-Type: application/json
+
+{
+    "name": "Otros",
+    "user_id": 1,
+    "target_amount": 500.0,
+    "target_date": "2024-07-31"
+}
+###
+POST http://localhost:8000/goals
+Content-Type: application/json
+
+{
+    "name": "Móvil nuevo",
+    "user_id": 2,
+    "description": "Comprar un móvil nuevo",
+    "target_amount": 500.0,
+    "target_date": "2024-07-31"
+}
+
+###
+GET http://localhost:8000/goals
+
+###
+POST http://localhost:8000/categories
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "name": "Transporte",
+    "budget_amount": 100
+}
+
+###
+POST http://localhost:8000/categories
+Content-Type: application/json
+
+{
+    "user_id": 2,
+    "name": "Alimentación",
+    "budget_amount": 200
+}
+
+### 
+GET http://localhost:8000/categories
+
+###
+POST http://localhost:8000/subcategories
+Content-Type: application/json
+
+{
+    "name": "Gasolina",
+    "category_id": 3
+}
+
+###
+POST http://localhost:8000/subcategories
+Content-Type: application/json
+
+{
+    "name": "Metro",
+    "category_id": 3
+}
+
+###
+POST http://localhost:8000/subcategories
+Content-Type: application/json
+
+{
+    "name": "Dentista",
+    "category_id": 2
+}
+
+###
+POST http://localhost:8000/subcategories
+Content-Type: application/json
+
+{
+    "name": "Carne",
+    "category_id": 4
+}
+
+###
+GET http://localhost:8000/subcategories
+
+### 
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "name": "Nomina",
+    "amount": 1200,
+    "payment_method": "Card",
+    "transaction_type": "Income"
+}
+
+###
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 2,
+    "name": "Pizzas con amigos",
+    "category_id": 4,
+    "subcategory_id": 4,
+    "amount": 9.0,
+    "payment_method": "Cash",
+    "transaction_type": "Expense"
+}
+
+###
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 2,
+    "name": "Para el viaje",
+    "amount": 5.5,
+    "saving_goal_id": 1,
+    "payment_method": "Cash",
+    "transaction_type": "Saving"
+}
+
+###
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "name": "Ahorro para móvil nuevo",
+    "amount": 100.0,
+    "saving_goal_id": 1,
+    "payment_method": "Card",
+    "transaction_type": "Saving"
+}
+
+### 
+GET http://localhost:8000/transactions
+
+###
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 2,
+    "name": "Compra semanal",
+    "category_id": 4,
+    "subcategory_id": 4,
+    "amount": 25.8,
+    "payment_method": "Card",
+    "transaction_type": "Expense"
+}
+### Viaje
+
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 2,
+    "saving_goal_id": 1,
+    "name": "Viaje",
+    "amount": 2.5,
+    "transaction_type": "Saving",
+    "payment_method": "Cash",
+    "insert_date": "2024-08-21T13:14:40.893Z"
+}
+
+###
+
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 2,
+    "saving_goal_id": 1,
+    "name": "Viaje",
+    "amount": 10.5,
+    "transaction_type": "Saving",
+    "payment_method": "Cash",
+    "insert_date": "2024-08-10T13:14:40.893Z"
+}
+
+###
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 2,
+    "saving_goal_id": 1,
+    "name": "Ahorro para el viaje",
+    "amount": 1.0,
+    "transaction_type": "Saving",
+    "payment_method": "Cash",
+    "insert_date": "2024-08-13T13:14:40.893Z"
+}
+
+### Otros: por hacer
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "saving_goal_id": 2,
+    "name": "Ahorros de casa",
+    "amount": 166.0,
+    "transaction_type": "Saving",
+    "payment_method": "Card",
+    "insert_date": "2024-08-13T13:14:40.893Z"
+}
+
+### Otros
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "saving_goal_id": 2,
+    "name": "Ahorros de casa",
+    "amount": 166.0,
+    "transaction_type": "Saving",
+    "payment_method": "Card",
+    "insert_date": "2024-08-13T13:14:40.893Z"
+}
+
+### Móvil
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 2,
+    "saving_goal_id": 3,
+    "name": "Ahorro móvil",
+    "amount": 50.0,
+    "transaction_type": "Saving",
+    "payment_method": "Cash",
+    "insert_date": "2024-11-13T13:14:40.893Z"
+}
+
+### crear gastos de las subcategoria metro y gasolina dentro de categoría transporte
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "category_id": 3,
+    "subcategory_id": 5,
+    "name": "Gasolina sem 1",
+    "amount": 50.0,
+    "payment_method": "Card",
+    "transaction_type": "Expense",
+    "insert_date": "2024-05-03T13:14:40.893Z"
+}
+
+###
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "category_id": 3,
+    "subcategory_id": 5,
+    "name": "Gasolina sem 2",
+    "amount": 25.0,
+    "payment_method": "Card",
+    "transaction_type": "Expense",
+    "insert_date": "2024-05-13T13:14:40.893Z"
+}
+
+###
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "category_id": 3,
+    "subcategory_id": 6,
+    "name": "Metro",
+    "amount": 10.0,
+    "payment_method": "Card",
+    "transaction_type": "Expense",
+    "insert_date": "2024-09-22T00:00:00.893Z"
+}
+
+
+### 
+POST http://localhost:8000/transactions
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "category_id": 3,
+    "subcategory_id": 3,
+    "name": "Arreglos coche",
+    "amount": 74.92,
+    "payment_method": "Card",
+    "transaction_type": "Expense",
+    "insert_date": "2024-09-22T00:00:00.893Z"
+}
+
+### 
+GET https://app.einforma.com/servlet/app/portal/CMRC/credito/0/dbk/fb5cbfd4d204f799677113b8e4fb2774/usuario/CMDTA-genericUser/id_sess/00145713092000191597090000047692/prod/ETIQUETA_EMPRESA/nif/A46103834
+
+###
+GET https://app.einforma.com/servlet/app/portal/CMRC/credito/0/dbk/fb5cbfd4d204f799677113b8e4fb2774/usuario/CMDTA-genericUser/id_sess/00145713092000191597090000047692/prod/ETIQUETA_EMPRESA/nif/B93140218
+
+###
+GET https://app.einforma.com/servlet/app/portal/CMRC/credito/0/dbk/fb5cbfd4d204f799677113b8e4fb2774/usuario/CMDTA-genericUser/id_sess/00145713092000191597090000047692/prod/ETIQUETA_EMPRESA/nif/A28812618
+
+
+###
+GET https://app.einforma.com/servlet/app/portal/CMRC/credito/0/dbk/fb5cbfd4d204f799677113b8e4fb2774/usuario/CMDTA-genericUser/id_sess/00145713092000191597090000047692/prod/ETIQUETA_EMPRESA/nif/B82356981
+
+
+###
+GET https://app.einforma.com/servlet/app/portal/CMRC/credito/0/dbk/fb5cbfd4d204f799677113b8e4fb2774/usuario/CMDTA-genericUser/id_sess/00145713092000191597090000047692/prod/ETIQUETA_EMPRESA/nif/A28017896
+
+
+###
+GET https://app.einforma.com/servlet/app/portal/CMRC/credito/0/dbk/fb5cbfd4d204f799677113b8e4fb2774/usuario/CMDTA-genericUser/id_sess/00145713092000191597090000047692/prod/ETIQUETA_EMPRESA/nif/B19667500
+
+###
+GET https://app.einforma.com/servlet/app/portal/CMRC/credito/0/dbk/fb5cbfd4d204f799677113b8e4fb2774/usuario/CMDTA-genericUser/id_sess/00145713092000191597090000047692/prod/ETIQUETA_EMPRESA/nif/E19545508
