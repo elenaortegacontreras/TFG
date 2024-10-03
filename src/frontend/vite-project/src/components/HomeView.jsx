@@ -106,6 +106,10 @@ export function HomeView() {
         navigate('/map', { state: { type:"shop" } });
     };
 
+    const handleAllTransactionsViewClick = () => {
+        navigate('/transactions', { state: { transaction_type:"all" } });
+    };
+
     return (
         <div>
             {amount !== null ? (
@@ -116,6 +120,10 @@ export function HomeView() {
             ) : (
                 <ResumeTitle amount="loading" title="Monedero" card="loading" cash="loading" currency="€"/>
             )}
+
+            <div className="panel flex w-full justify-evenly">
+                <button onClick={handleAllTransactionsViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Ver todos mis movimientos</button>
+            </div>
 
             <div>
 
