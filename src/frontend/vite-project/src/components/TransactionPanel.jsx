@@ -1,7 +1,7 @@
 import React from 'react';
 import { Transaction } from './Transaction.jsx'
 
-export function TransactionPanel({transactions}) {
+export function TransactionPanel({transactions, transaction_view}) {
     return (
       <div className="container mx-auto p-4">
       {/* <div className="bg-white shadow overflow-hidden sm:rounded-lg"> */}
@@ -14,7 +14,7 @@ export function TransactionPanel({transactions}) {
             <>
             {transactions.map((transaction, index) => (
             <div key={transaction.id} className="bg-white px-4 grid sm:px-6">
-              <Transaction
+              <Transaction transaction_view={transaction_view}
               transaction_id={transaction.id}
               transaction_type={transaction.transaction_type}
               category_name={transaction.category_name}

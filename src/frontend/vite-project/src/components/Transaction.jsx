@@ -1,6 +1,6 @@
 import { ActionsMenuEditDelete } from "./ActionsMenuEditDelete";
 
-export function Transaction({transaction_id, transaction_type, name, category_name, subcategory_name, saving_goal_name, payment_method, amount, insert_date, currency, shop_location_pc}) {
+export function Transaction({transaction_view, transaction_id, transaction_type, name, category_name, subcategory_name, saving_goal_name, payment_method, amount, insert_date, currency, shop_location_pc}) {
     const modalId = `transaction_info_${transaction_id}`;
 
     const formattedDate = new Date(insert_date).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -9,7 +9,13 @@ export function Transaction({transaction_id, transaction_type, name, category_na
         <div>
             <div className="px-2 flex items-center justify-between">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-xl font-bold tracking-tight text-gray-900">{amount}</h1>
+                    {(transaction_type === "GlobalSaving" && transaction_view !== "all") || 
+                        (transaction_type === "Saving" && transaction_view === "all") || 
+                        (transaction_type === "Expense" && transaction_view === "all") ? (
+                        <h1 className="text-xl font-bold tracking-tight text-gray-900">-{amount}</h1>
+                    ) : (
+                        <h1 className="text-xl font-bold tracking-tight text-gray-900">{amount}</h1>
+                    )}
                     <p className="text-xl tracking-tight text-gray-900">{currency}</p>
                     <p className="px-4">{name}</p>
                 </div>
@@ -27,7 +33,7 @@ export function Transaction({transaction_id, transaction_type, name, category_na
                             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                             </form>
                             <h3 className="font-bold text-lg">{name}</h3>
-                            {transaction_type === "Expense" && (
+                            {transaction_type === "Expense" && transaction_view !== "all" && (
                                 <>
                                 <div className="py-4">
                                     <p>Categoría</p>
@@ -39,7 +45,7 @@ export function Transaction({transaction_id, transaction_type, name, category_na
                                 </div>
                                 </>
                             )}
-                            {transaction_type === "Saving" && (
+                            {transaction_type === "Saving" && transaction_view !== "all" && (
                                 <>
                                 <div className="py-4">
                                     <p>Objetivo de ahorro</p>

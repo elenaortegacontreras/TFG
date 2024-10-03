@@ -5,10 +5,6 @@ import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-// TODO: añadir aquí posibilidad de mostrar todas las transacciones
-// donde según el tipo de transacción cada movimiento
-// se muestre de la forma correspondiente a sus campos
-
 export function TransactionsView() {
     const location = useLocation();
     const state = location.state;
@@ -20,7 +16,7 @@ export function TransactionsView() {
     const [savings, setSavings] = useState([]);
     const [expenses, setExpenses] = useState([]);
     const [incomes, setIncomes] = useState([]);
-    // const [allTransactions, setAllTransactions] = useState([]);
+    const [allTransactions, setAllTransactions] = useState([]);
 
     useEffect(() => {
         if (state.transaction_type === 'savings') {
@@ -48,15 +44,15 @@ export function TransactionsView() {
                     console.error('Error fetching the incomes:', error);
                 });
         } 
-        // else if (state.transaction_type === 'all') {
-        //     axios.get('http://localhost:8000/transactions')
-        //         .then(response => {
-        //             setAllTransactions(response.data);
-        //         })
-        //         .catch(error => {
-        //             console.error('Error fetching all the transactions:', error);
-        //         });
-        // }
+        else if (state.transaction_type === 'all') {
+            axios.get('http://localhost:8000/transactions')
+                .then(response => {
+                    setAllTransactions(response.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching all the transactions:', error);
+                });
+        }
     }, []);
 
     const current_month_incomes = incomes.filter(income => {
@@ -89,6 +85,16 @@ export function TransactionsView() {
         return expenseDate.getMonth() + 1 !== currentMonth;
     });
 
+    const current_month_allTransactions = allTransactions.filter(transaction => {
+        const transactionDate = new Date(transaction.insert_date);
+        return transactionDate.getMonth() + 1 === currentMonth;
+    });
+
+    const other_months_allTransactions = allTransactions.filter(transaction => {
+        const transactionDate = new Date(transaction.insert_date);
+        return transactionDate.getMonth() + 1 !== currentMonth;
+    });
+
     return (
         <div>
             {state.transaction_type === 'incomes' ? (
@@ -96,10 +102,10 @@ export function TransactionsView() {
                     <Title title="Todos mis ingresos" />
                     <div>
                         <p><strong>Ingresos de este mes</strong></p>
-                        <TransactionPanel transactions={current_month_incomes}/>
+                        <TransactionPanel transactions={current_month_incomes} />
                         <div className="divider"></div>
                         <p><strong>Otros ingresos</strong></p>
-                        <TransactionPanel transactions={other_months_incomes}/>
+                        <TransactionPanel transactions={other_months_incomes} />
                     </div>                
                 </>
             ) : state.transaction_type === 'savings' ? (
@@ -107,10 +113,10 @@ export function TransactionsView() {
                     <Title title="Todos mis ahorros" />
                     <div>
                         <p><strong>Ahorros de este mes</strong></p>
-                        <TransactionPanel transactions={current_month_savings}/>
+                        <TransactionPanel transactions={current_month_savings} />
                         <div className="divider"></div>
                         <p><strong>Otros ahorros</strong></p>
-                        <TransactionPanel transactions={other_months_savings}/>
+                        <TransactionPanel transactions={other_months_savings} />
                     </div>   
                 </>
             ) : state.transaction_type === 'expenses' ? (
@@ -118,10 +124,21 @@ export function TransactionsView() {
                     <Title title="Todos mis gastos" />
                     <div>
                         <p><strong>Gastos de este mes</strong></p>
-                        <TransactionPanel transactions={current_month_expenses}/>
+                        <TransactionPanel transactions={current_month_expenses} />
                         <div className="divider"></div>
                         <p><strong>Otros gastos</strong></p>
-                        <TransactionPanel transactions={other_months_expenses}/>
+                        <TransactionPanel transactions={other_months_expenses} />
+                    </div>   
+                </>
+            ) : state.transaction_type === 'all' ? (
+                <>
+                    <Title title="Movimientos monedero" />
+                    <div>
+                        <p><strong>Movimientos de este mes</strong></p>
+                        <TransactionPanel transactions={current_month_allTransactions} transaction_view="all"/>
+                        <div className="divider"></div>
+                        <p><strong>Otros movimientos</strong></p>
+                        <TransactionPanel transactions={other_months_allTransactions} transaction_view="all"/>
                     </div>   
                 </>
             ) : (
