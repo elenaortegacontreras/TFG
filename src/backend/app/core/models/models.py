@@ -97,13 +97,14 @@ class Transaction(Base):
     shop = relationship('Shop', back_populates='transactions')
 
     __table_args__ = (
-        CheckConstraint(transaction_type.in_(['Expense', 'Income', 'Saving']), name='check_transaction_type'),
+        CheckConstraint(transaction_type.in_(['Expense', 'Income', 'Saving', 'GlobalSaving']), name='check_transaction_type'),
         CheckConstraint(payment_method.in_(['Cash', 'Card']), name='check_payment_method'),
     )
 
     # 'Expense' should have: user_id, category_id, subcategory_id,     shop_id, shop_location_pc, name, amount, description, insert_date, payment_method
     # 'Income' should have: user_id,                                                        name, amount, description, insert_date, payment_method
     # 'Saving' should have: user_id,                                        saving_goal_id, name, amount, description ,insert_date, payment_method
+    # 'GlobalSaving' should have: user_id,                                                  name, amount, description, insert_date, payment_method
 
 class Shop(Base):
     __tablename__ = 'shops'
