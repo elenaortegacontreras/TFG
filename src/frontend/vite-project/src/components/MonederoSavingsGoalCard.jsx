@@ -2,6 +2,7 @@ import iconoAhorro from '../assets/hucha_ahorro-bg.png';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { WithdrawSavingsModal } from './WithdrawSavingsModal';
 
 export function MonederoSavingsGoalCard({ currency}) { //currentMonthAmount,  currentMonthCashSavings, currentMonthCardSavings, currency}) {
     const navigate = useNavigate();
@@ -9,6 +10,19 @@ export function MonederoSavingsGoalCard({ currency}) { //currentMonthAmount,  cu
     const [walletAmount, setWalletAmount] = useState(null);
     const [walletCash, setWalletCash] = useState(null);
     const [walletCard, setWalletCard] = useState(null);
+
+    const [showCashWithdrawSavingsModal, setCashShowWithdrawSavingsModal] = useState(false);
+    const [showCardWithdrawSavingsModal, setCardShowWithdrawSavingsModal] = useState(false);
+
+    const handleCashWithdrawSavings = () => {
+        setCashShowWithdrawSavingsModal(true);  
+        setCardShowWithdrawSavingsModal(false);
+    };
+
+    const handleCardWithdrawSavings = () => {
+        setCardShowWithdrawSavingsModal(true);
+        setCashShowWithdrawSavingsModal(false);  
+    };
 
     useEffect(() => {
         axios.get('http://localhost:8000/global_wallet')
@@ -52,18 +66,24 @@ export function MonederoSavingsGoalCard({ currency}) { //currentMonthAmount,  cu
                         <div className="stat-title">Digital</div>
                         <div className="stat-value">{walletCard} {currency}</div>
                         <div className="stat-actions">
-                            <button className="btn btn-sm btn-primary">Sacar ahorro</button>
+                            <button onClick={handleCardWithdrawSavings} className="btn btn-sm btn-primary">Sacar ahorro</button>
                         </div>
                     </div>
                         <div className="stat">
                         <div className="stat-title">Efectivo</div>
                         <div className="stat-value">{walletCash} {currency}</div>
                         <div className="stat-actions">
-                            <button className="btn btn-sm btn-primary">Sacar ahorro</button>
+                            <button onClick={handleCashWithdrawSavings} className="btn btn-sm btn-primary">Sacar ahorro</button>
                         </div>
                     </div>
                 </div>
             </div>
+            { showCashWithdrawSavingsModal && (
+                <WithdrawSavingsModal type="Cash" max_amount={walletCash} currency={currency} onClose={() => setCashShowWithdrawSavingsModal(false)} />
+            )}
+            { showCardWithdrawSavingsModal && (
+                <WithdrawSavingsModal type="Card" max_amount={walletCard} currency={currency} onClose={() => setCardShowWithdrawSavingsModal(false)} />
+            )}
         </div>
     );
 }
