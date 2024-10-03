@@ -22,6 +22,11 @@ export function HomeView() {
     const [cash, setCash] = useState(0);
     const [card, setCard] = useState(0);
 
+    const currentMonth = new Date().getMonth() + 1;
+    const [currentMonthAmount, setCurrentMonthAmount] = useState(null);
+    const [currentMonthCash, setCurrentMonthCash] = useState(null);
+    const [currentMonthCard, setCurrentMonthCard] = useState(null);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -61,6 +66,18 @@ export function HomeView() {
     }, []);
 
     useEffect(() => {
+        axios.get(`http://localhost:8000/wallet/${currentMonth}`)
+            .then(response => {
+                setCurrentMonthAmount(response.data.amount);
+                setCurrentMonthCash(response.data.cash);
+                setCurrentMonthCard(response.data.card);
+            })
+            .catch(error => {
+                console.error('Error fetching the expenses:', error);
+            });
+    }, []);
+
+    useEffect(() => {
         if (expenses_amount !== null && savings_amount !== null && incomes_amount !== null) {
             setAmount(incomes_amount - savings_amount - expenses_amount);
             setCash(cashIncomes - cashSavings - cashExpenses);
@@ -92,7 +109,10 @@ export function HomeView() {
     return (
         <div>
             {amount !== null ? (
+                <>
                 <ResumeTitle amount={amount} title="Monedero" card={card} cash={cash} currency="€"/>
+                <ResumeTitle amount={currentMonthAmount} title="Current month" card={currentMonthCard} cash={currentMonthCash} currency="€"/>
+                </>
             ) : (
                 <ResumeTitle amount="loading" title="Monedero" card="loading" cash="loading" currency="€"/>
             )}
