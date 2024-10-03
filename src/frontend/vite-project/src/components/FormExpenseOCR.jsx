@@ -368,7 +368,7 @@ export function FormExpenseOCR() {
 
         { showFindLocationMiniMap && find_shop_option === 'Search' && (
           <div>
-            <FindLocationMiniMap onPotentialShopsChange={handlePotentialShopsChange} postalCode={shopLocation} selectedShop={selectedShop}/>
+            <FindLocationMiniMap onPotentialShopsChange={handlePotentialShopsChange} postalCode={shopLocation} selectedShop={selectedShop} shopName={name}/>
           </div>
         )}
 

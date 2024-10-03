@@ -103,7 +103,7 @@ export function FindLocationMiniMap(props) {
         const { lat, lon } = coordinates;
         // const lat = 37.1438607;
         // const lng = -3.6273500;
-        const meters = 2000; // Radio de búsqueda
+        const meters = 3000; // Radio de búsqueda
 
         const overpassQuery = `
             [out:json];

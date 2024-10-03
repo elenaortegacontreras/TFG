@@ -45,7 +45,7 @@ export function WalletSavingsView() {
                         saving_goal_name=""
                         payment_method=""
                         amount={monthData.wallet.cash}
-                        insert_date={`${monthData.month}/01/${monthData.year}`}
+                        insert_date={`${monthData.month+1}/01/${monthData.year}`}
                         currency="€"
                         shop_location_pc="" />
                     </div>
@@ -61,7 +61,7 @@ export function WalletSavingsView() {
                           saving_goal_name=""
                           payment_method=""
                           amount={monthData.wallet.card}
-                          insert_date={`${monthData.month}/01/${monthData.year}`}
+                          insert_date={`${monthData.month+1}/01/${monthData.year}`}
                           currency="€"
                           shop_location_pc="" />
                       </div>
@@ -83,7 +83,7 @@ export function WalletSavingsView() {
                           name={transaction.name}
                           saving_goal_name={transaction.saving_goal_name}
                           payment_method={transaction.payment_method}
-                          amount={`- ${transaction.amount}`}
+                          amount={`${transaction.amount}`}
                           insert_date={transaction.insert_date}
                           currency="€"
                           shop_location_pc={transaction.shop_location_pc}

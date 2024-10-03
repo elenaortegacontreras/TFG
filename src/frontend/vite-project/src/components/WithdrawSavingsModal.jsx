@@ -11,9 +11,6 @@ export function WithdrawSavingsModal( {type, max_amount, currency} ){
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('submitting form');
-    // si es menor o igual a la cantidad máxima permitida
-    //ejecutar la transaccion con el endpoint
     if (amount) {
         console.log('amount:', amount);
   
