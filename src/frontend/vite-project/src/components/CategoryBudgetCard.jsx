@@ -30,7 +30,8 @@ export function CategoryBudgetCard({ id, name, description, current_amount_spent
     }
 
     return (
-        <div onClick={handleCategoryClick} className="btn card bg-base-100 w-full h-auto min-h-[300px] shadow-xl">
+        // <div onClick={handleCategoryClick} className="btn card bg-base-100 w-full h-auto min-h-[300px] shadow-xl">
+        <div onClick={handleCategoryClick} className="btn card bg-base-100 w-auto h-auto min-h-[300px] min-w-[150px] shadow-xl">
             <figure className="h-32 flex justify-center items-center">
                 <div className="radial-progress bg-ghost text-ghost-content border-ghost border-4"
                     style={{ "--value": percentage }} role="progressbar">
