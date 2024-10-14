@@ -1,166 +1,326 @@
 \chapter{Estado del arte}
-\section{Crítica al estado del arte}
 
-\section{Análisis de soluciones actualmente disponibles al problema planteado}
-En la búsqueda de soluciones al problema encontramos varias alternativas. A parte 
-de la propia gestión manual, ya sea por la vía tradicional \textit{usando \textbf{papel} y boli} , 
-o bien algo más estructurado como el uso de \textbf{hojas de cálculo}, existen aplicaciones 
-que nos facilitan esta tarea e incorporan resúmenes detallados. 
+\section{Antecedentes teóricos}
 
-1. En la actualidad la mayoría de \textbf{aplicaciones bancarias} incorporan análisis de gastos. 
-Aunque nos permiten ver un resumen mensual de los gastos o incluso por categorías, en 
-general no se pueden personalizar demasiado. Algunos métodos de ahorro frecuentes son acumular 
-de manera automática los céntimos de euro que sobran al redondear cada compra en una cuenta 
-de ahorro virtual, o apartar una cantidad al final del mes. En este caso, nos centraremos 
-en el ahorro guiado por la planificación, anticipación y previsión de gastos.
+El control del dinero es una tarea de la que nadie está exento. En mayor o menor 
+medida, todas las personas analizan sus gastos e ingresos pero no siempre los tienen en 
+cuenta a la hora de tomar decisiones que implican movimientos con el dinero. El uso de 
+aplicaciones que facilitan el análisis de las finanzas personales, como la que se propone 
+en este proyecto,  motivan al usuario a tomar conciencia de cómo administran su economía 
+y a tomar decisiones más informadas, abriendo la puerta a una mayor estabilidad financiera. 
+Y por consiguiente, a una mejora en su salud financiera. Esto nos lleva al indagar 
+en los siguientes conceptos:
 
-Primero analizamos las características más interesantes (en relación al proyecto) 
-de las aplicaciones de los primeros bancos españoles más grandes según 
-este\cite{este} artículo en wikipedia:
+\subsection*{Finanzas personales}
+Las finanzas personales son las gestiones que cada individuo realiza con su dinero 
+con el propósito de satisfacer sus necesidades \cite{tesis-bienestar-financiero}.
+Abarcan mucho más que el manejo e inversión del mismo, incluyen la gestión  
+entendiéndose como el aprovechamiento del tiempo y dinero, que son limitados, así 
+como planificaríamos un viaje debemos elaborar un plan para gestionar nuestras 
+finanzas personales \cite{tyson2023personal}. 
+
+\subsection*{Bienestar financiero}
+El bienestar financiero se caracteriza por disponer de una estabilidad económica que 
+permita mantener un equilibrio adecuado entre ingresos, gastos y ahorro para el futuro 
+y enfrentar emergencias sin mayores dificultades. Va más allá de la acumulación de 
+riqueza y se enfoca en la correcta administración del dinero, la fijación de metas 
+realistas y la toma de decisiones responsables \cite{tesis-cultura-financiera}.
+
+\subsection*{Educación financiera}
+La educación financiera es el proceso que ayuda a los consumidores a conocer y 
+comprender mejor los productos y conceptos financieros. Según la OECD (Organisation 
+for Economic Co-operation and Development), esto fomenta el 
+desarrollo de habilidades y confianza para tomar decisiones financieras informadas, ser 
+conscientes de riesgos y oportunidades, y mejorar el bienestar financiero personal.
+
+Su importancia radica en que permite a las personas gestionar eficientemente sus recursos, 
+lo que contribuye a aliviar la pobreza, promover el progreso social y alcanzar un 
+desarrollo sostenible. Una sociedad financieramente educada no solo beneficia a individuos 
+y organizaciones, sino también fortalece la economía al hacerla más estable \cite{capituloIX}
+\cite{ariza2024educacion}\cite{sarango2023educacion}.
+
+
+\section{Análisis de soluciones disponibles al problema planteado}
+En la búsqueda de soluciones al problema de gestión encontramos varias alternativas. 
 
 -----------
+¿Apartado de entrevistas o algo así?
 ¿Cómo indico que he preguntado a clientes potenciales para la app? para 
-conocer las aplicaciones que usan
+conocer las aplicaciones que usan. Porque preguntando a las personas 
+que conozco, la mayoría no usa ninguna aplicación para gestionar sus gastos
+sino que lo hacen a mano con las opciones de la solución tradicional.
 -----------
 
+\subsection{Solución tradicional}
+Ya sea usando \textit{\textbf{papel y boli}}, o bien algo más 
+estructurado como el uso de \textbf{hojas de cálculo}. Hay personas que prefieren llevar las 
+cuentas de esta manera por diversos motivos: complejidad de uso en algunas aplicaciones, 
+insuficiencia de personalización para la organización de los datos, falta de entendimiento 
+de la información que se representa, o simplemente por costumbre.
+
+\begin{table}[ht!]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|p{3cm}|}
+    \hline
+    \textbf{} & \textbf{Control de gastos} & \textbf{Gestión de ahorros} & \textbf{Resúmenes gráficos} \\ \hline
+    
+    \textbf{Papel} & 
+    Responsabilidad completa sobre los cálculos para el análisis de gastos. & 
+    Planificación de ahorros y actualización del documento cuando se aporte un ahorro. & 
+    Inversión de tiempo excesiva en una tarea manual repetitiva. No automatizable. \\ \hline
+    
+    \textbf{Hoja de cáculo} & 
+    Uso de recursos como fórmulas matemáticas para automatizar cálculos. & 
+    Planificación de ahorros y actualización del documento cuando se aporte un ahorro. & 
+    Inversión de tiempo en aprendizaje y creación de gráficos en la herramienta. \\ \hline
+
+    \end{tabular}
+    \caption{Comparación entre historial escrito en papel y hojas de cálculo}
+    \label{tab:solucion_tradicional}
+\end{table}
+
+Estas soluciones, aunque son las más usadas por los entrevistados, no son las más 
+eficientes para llevar un control exhaustivo de los gastos. La falta de automatización 
+supone un esfuerzo extra para el usuario e inducción a errores en los cálculos, que puede 
+llevar a la desmotivación y abandono de la tarea. Por otro lado, la falta de visualización de 
+los datos en forma de gráficos dificulta la interpretación de los mismos y la toma de decisiones.\\
+
+\subsection{Aplicaciones bancarias}
+En la actualidad la mayoría de \textbf{aplicaciones bancarias} incorporan análisis de gastos. 
+Facilitan la visualización de los movimientos de la cuenta. 
+
+Análisis de las características más interesantes (en relación al proyecto) 
+de las aplicaciones de algunos de los bancos españoles más grandes:
+\footnote{\url{https://es.wikipedia.org/wiki/Anexo:Bancos_de_España}}
 
 \begin{itemize}
 
-    \item \textbf{CaixaBank} 
-    En la aplicación ImaginBank, con el servicio \textit{MyMonz\cite{MyMonz}}
-    se recibe un informe mensual de gastos e ingresos que podemos ver por categorías. 
+    \item \textbf{CaixaBank-ImaginBank} \\
+    ImaginBank es una marca comercial de CaixaBank, de los dos el primero es el banco más usado entre jóvenes. 
+    En la aplicación ImaginBank, con el servicio \textit{MyMonz} \footnote{\url{https://www.imagin.com/app/mymonz}}
+    se recibe un informe mensual de gastos e ingresos en la cuenta que podemos ver por categorías. 
+    A diferencia de otras aplicaciones similares, no aparece la opción de 
+    establecer un plan de consumo por categoría del gasto.
 
-    En cuanto a los planes de ahorro, en el apartado \textit{Mi Hucha} podemos crear retos\cite{retos} (máximo 5 huchas diferentes)
-    con aportaciones periódicas mes a mes o puntuales, pero de forma global.
-    A diferencia de otras aplicaciones similares, no aparece la opción de establecer un plan de 
-    consumo por categoría del gasto que nos ayude a planificarnos.
+    En cuanto a los planes de ahorro, en el apartado \textit{Mi Hucha} 
+    \footnote{\url{https://www.imagin.com/ahorro/retos-ahorro}} podemos crear 
+    retos (máximo 5 huchas diferentes) con aportaciones periódicas mes a mes 
+    o de forma puntuales. Ver figura \ref{fig:hucha_objetivo_imagin}.
 
-    \item \textbf{Banco Santander}
-    La aplicación del Banco Santander\cite{Santander} tiene una zona de \textit{Análisis de gastos}, que nos crea 
-    informes similares a los de ImaginBank. 
+    Para utilizar la aplicación necesitas ser cliente de la entidad bancaria.
+
+    \item \textbf{Banco Santander}\\
+    La aplicación del Banco Santander \footnote{\url{https://www.bancosantander.es/particulares/banca-online/apps/santander}}
+    tiene una zona de \textit{Análisis de gastos}, que nos crea informes similares a los de ImaginBank. 
 
     Por otro lado, ésta sí nos permite establecer un 
     presupuesto por categorías que podemos revisar eventualmente para guiarnos en el 
     cumplimiento de nuestro objetivo y recibir alertas al acercarnos al límite.
 
-    \item \textbf{BBVA}
+    También tiene opción de ver los movimientos de compra posicionados en el mapa, 
+    aunque esta característica no funciona de manera correcta por lo que no se considera 
+    de valor en relación con el análisis de gastos. 
+    Ver figura \ref{fig:mapa_compras_santander}.
+
+    De nuevo, es necesario ser cliente para poder usar la aplicación.\\
+
+    \begin{figure}[ht!]
+        \centering
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[height = 70mm]{imagenes/hucha-objetivo-imagin.jpg}
+            \caption{Hucha de ahorro en ImaginBank}
+            \label{fig:hucha_objetivo_imagin}
+        \end{minipage}\hfill
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[height = 70mm]{imagenes/mapa-compras-santander.jpg}
+            \caption{Mapa de compras en Banco Santander}
+            \label{fig:mapa_compras_santander}
+        \end{minipage}
+    \end{figure}
+
+    \item \textbf{BBVA}\\
     Esta última parece ser la más completa en cuanto a opciones de ahorro y análisis de gastos.
 
-    Con \textit{Mi día\cite{día} a día}  
+    Con \textit{Mi día a día} \footnote{\url{https://www.bbva.es/personas/banca-online/control-gastos-mi-dia-a-dia.html}}  
     obtenemos, al igual que en el resto de aplicaciones, el resumen con los movimientos de la cuenta.
     Respecto a los métodos para ahorrar existe una cuenta gratuita denominada 
-    cuenta metas\cite{metas} 
+    cuenta metas \footnote{\url{https://www.bbva.es/personas/productos/cuentas/cuenta-ahorro-metas.html }} 
     en la que apartar dinero a modo de hucha para conseguir hasta un máximo de 5 objetivos. 
 
-    El apartado Presupuestos\cite{Presupuestos} 
+    El apartado Presupuestos \footnote{\url{https://www.bbva.es/general/salud-financiera/economia-domestica/gestor-de-gastos-y-presupuestos.html }} 
     es el lugar donde definir una cantidad máxima de gasto deseada 
     al mes y por categoría, mide con códigos de colores la evolución del consumo 
-    respecto al presupuesto.
+    respecto al presupuesto. Ver figura \ref{fig:mapa_compras_santander}.
+    
+    \begin{figure}[ht!]
+    \centering
+    \includegraphics[height = 32mm]{imagenes/indicador_presupuestos_BBVA.png}
+    \caption{Indicador de gastos respecto a presupuestos en la aplicación de BBVA
+    \cite{presupuestos-BBVA}.}
+    \label{fig:indicador_presupuestos_BBVA}
+    \end{figure}
 
-    Encontramos también Apartados\cite{Apartados} 
+    Encontramos también Apartados 
+    \footnote{\url{https://www.bbva.es/finanzas-vistazo/tu-guia-bbva/app/apartados-una-nueva-forma-de-ahorrar.html}}
     donde el objetivo es el mismo que en presupuestos, con la diferencia de 
     que es un espacio para separar visualmente tu dinero según tus necesidades,
     apartando la cantidad que quieras para cada tipo de gasto.
 
+    Además, pone a disposición de los usuarios un uso parcial de la aplicación sin necesidad 
+    de ser cliente, importando los datos de otros bancos (solo incluye el 
+    servicio \textit{Mi día a día}).
+
 \end{itemize}
 
+Las aplicaciones bancarias, aunque permiten ver un resumen mensual de los gastos o 
+incluso por categorías, en general no se pueden personalizar demasiado. Algunos 
+métodos de ahorro llamativos por el poco esfuerzo pero ahorro constante que supone sobre el 
+usuario, proponen acumular de manera automática los céntimos de euro que sobran al 
+redondear cada compra en una cuenta de ahorro virtual. 
 
-2- A pesar de que se están incluyendo opciones para importar los 
-datos de movimientos en la cuenta, las configuraciones que se hacen dentro de la aplicación 
-que ofrece el banco generalmente no se pueden exportar a otras aplicaciones.
+A pesar de que se están incluyendo opciones para importar los datos de movimientos de 
+cuentas externas al banco, las configuraciones que se hacen dentro de 
+la aplicación bancaria generalmente no se pueden exportar a otras aplicaciones.
 Si se quiere cambiar de banco se pierde toda la información 
 y con ella los planes de ahorro o presupuestos personalizados.
 
-3. Por otro lado, existen \textbf{aplicaciones de terceros} que permiten unificar los gastos 
+\subsection{Aplicaciones de terceros}
+Por otro lado, existen \textbf{aplicaciones de terceros} que permiten unificar los gastos 
 independientemente del banco al que pertenezca el usuario. Entre las más conocidas 
 encontramos:
 
 \begin{itemize}
-    \item \textbf{Fintonic} https://www.fintonic.com/es-ES/inicio/ \\
+    \item \textbf{Fintonic} \footnote{\url{https://www.fintonic.com/es-ES/inicio/}} \\
     El usuario agrega las cuentas bancarias que desee para que la aplicación 
     acceda a los datos relacionados con los movimientos de la cuenta. 
     Un aspecto que puede causar cierta reticencia es que para ello Fintonic necesita
-    las claves de acceso a la cuenta bancaria (aunque sean de solo lectura).
-    Tiene una interfaz intuitiva, y recoge, clasifica y analiza los gastos.
+    las claves de acceso a la cuenta bancaria (para lectura de datos).
+    Tiene una interfaz intuitiva y recoge, clasifica y analiza los gastos.
     Introduce los datos de manera automática por medio de las claves proporcionadas. 
-    Gratuito, con publicidad.
+    Gratuito, con publicidad. Ver figura \ref{fig:resumen_gastos_mes_fintonic}.
 
-    \item \textbf{Money Manager}  https://moneymanagerapp.com/ \\
+    \item \textbf{Money Manager}  \footnote{\url{https://www.realbyteapps.com//}} \\
     Solo se encuentra disponible en inglés. Ofrece una gran cantidad de opciones
-    para analizar gastos e incluye la opción de añadir fotos a las transacciones. 
+    para analizar gastos e incluye la opción de añadir fotos de las transacciones. 
     Se deben introducir los datos manualmente. 
     Dispone de una versión gratuita con funciones básicas.
 
-    \item \textbf{Bluecoins} https://www.bluecoinsapp.com/ \\
+    \item \textbf{Bluecoins} \footnote{\url{https://www.bluecoinsapp.com/}} \\
     Plantea una estructura interesante para mayor detalle de presupuestos. 
     Se pueden configurar presupuestos por categorías y subcategorías relacionadas, por ejemplo 
     los gastos del coche, se pueden separar en gasolina, seguro, mantenimiento, etc. 
-    Permite añadir gastos manualmente o importarlos desde un archivo csv. 
-    Ofrece versión gratuita con anuncios.
+    Permite añadir gastos manualmente o importarlos desde un archivo CSV y especificar 
+    el tipo de pago si es en efectivo o digital, sin embargo no distingue la cantidad 
+    por tipo de pago a la hora de realizar el gráfico resumen, como se puede ver en la figura 
+    \ref{fig:resumen_gastos_bluecoins}.
+    \footnote{Un fichero CSV (\textit{Comma Separated Values}) es un archivo de texto plano 
+    que almacena los datos en forma de tabla, siendo cada línea del archivo una fila y 
+    cada valor un campo de dicha fila. Los campos de la fila se separan entre sí por comas 
+    u otro signo de puntuación.}. 
+    Ofrece versión gratuita con anuncios, de funcionalidad limitada.
 
-    \item \textbf{Money Hero} https://moneyhero.site/es  \\
-    Dispone de objetivos de ahorro e indica el progreso y recomendaciones 
-    diarias hasta alcanzarlo. 
-    En base al ritmo de consumo estima hasta cuándo dispondremos 
-    de dinero suficiente, como guía para gastarlo de manera responsable. 
-    El usuario debe introducir todos los ingresos y gastos a mano. 
-    Dispone de versión gratuita con algunas limitaciones y anuncios.
+    \item \textbf{Mint} \footnote{\url{https://mint.intuit.com/}} \\
+    Solo se encuentra disponible en inglés. Permite vincular cuentas bancarias, tarjetas, etc. para monitorizar de forma 
+    automática los gastos e ingresos. Facilita la creación de presupuestos personalizados y 
+    alerta al usuario cuando se acerca a sus límites de gasto.
+    En base al ritmo de ahorro estima el progreso hacia el objetivo, dando recomendaciones 
+    como guía para lograrlo y gestionar el dinero de manera responsable. 
+    La aplicación es gratuita con algunas limitaciones e incluye publicidad.
 \end{itemize}
 
-\section{Propuesta}
-Se plantea la creación de una aplicación móvil (con desarrollo multiplataforma) 
-para mejorar la salud financiera de los usuarios. 
+\begin{figure}[ht!]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[height = 70mm]{imagenes/resumen-gastos-mes-fintonic.jpg}
+        \caption{Resumen de gastos en Fintonic.}
+        \label{fig:resumen_gastos_mes_fintonic}
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[height = 70mm]{imagenes/resumen-gastos-bluecoins.jpg}
+        \caption{Resumen de gastos en Bluecoins.}
+        \label{fig:resumen_gastos_bluecoins}
+    \end{minipage}
+\end{figure}
 
-Resolviendo algunos de los problemas descritos en el apartado anterior, 
-se pretende que reúna funcionalidades específicas para la 
-gestión de gastos, las cuales reúnen:
+Además existen aplicaciones de gestión avanzada como \textbf{Pleo} 
+\footnote{\url{https://www.pleo.io/es}}, que ofrece una solución para la gestión 
+de gastos de empresa. Dispone de una tarjeta 
+de empresa que se puede usar para pagar gastos y que se sincroniza con la aplicación 
+para agilizar la contabilidad entre los empleados y la empresa. 
+Entre otras características ofrece análisis útiles para el administrador en la empresa 
+y permite a los empleados justificar los gastos al pedirles añadir foto del ticket recibido. 
+Ver figura \ref{fig:resumen_gastos_pleo}.
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width = 90mm]{imagenes/resumen-gastos-pleo.png}
+    \caption{Resumen de gastos de empleados en la empresa.}
+    \label{fig:resumen_gastos_pleo}
+\end{figure}
+
+
+\subsection{Proyectos académicos}
+Proyectos académicos relacionados con el ámbito de la gestión y la educación financiera.
+
 \begin{itemize}
-\item incorportación sencilla de gastos e ingresos
-\item creación de planes de ahorro y presupuestos personalizables
-\item generación de análisis y resúmenes automáticos sobre el consumo
+    \item \textbf{Sevilla Borja, Kevin Paúl}. 
+    \textit{Aplicación móvil para fomentar la educación financiera en las finanzas personales 
+    de los estudiantes de la PUCESA} (universidad de Ecuador) \cite{sevilla2024aplicacion}. \\
+    Orientada a mejorar la capacidad
+    de gestionar eficazmente las finanzas personales de los estudiantes. La aplicación 
+    permite llevar un control básico de ingresos y gastos. Su característica más significativa 
+    es la oferta de módulos educativos en la propia aplicación sobre conceptos financieros, como 
+    ayuda para reforzar su confianza en la toma de decisiones.
+
+    \item \textbf{Tamayo Valdivielso, Pablo}. 
+    \textit{Budger: desarrollo de una app financiera} \cite{tamayo2022aplicacion}. \\ 
+    Este producto desarrollado como 
+    trabajo final de máster de desarrollo de aplicaciones móviles, consiste en una aplicación 
+    con la que ayudar a los usuarios a controlar su dinero de una forma sencilla. Incluye 
+    gráficos para visualizar el resumen de los datos y 
+    permite la creación de un presupuesto global de gastos que parte del resto de los ingresos 
+    que no se dedicarán a ahorro, fomentando de esta manera la planificación del usuario.
+
+    \item \textbf{García García, Felicidad}. 
+    \textit{Tus finanzas personales} \cite{garcia2019aplicacion}. \\  
+    Aplicación móvil para dispositivos Android, 
+    desarrollada como trabajo de fin de máster para la gestión de las finanzas personales. 
+    Con finalidad de ayudar al usuario a priorizar sus gastos necesarios sobre aquellos
+    que no lo son establece una clasificación de gastos en función de su importancia. 
+    Los gastos se puden introducir de manera manual o permitir la incorporación de 
+    movimientos bancarios accediendo a las cuentas del usuario con permiso explícito para ello.
+    
 \end{itemize}
 
+\section{Conclusiones}
+Tras repasar las soluciones discutidas anteriormente, encontramos numerosas 
+características útiles dentro de las aplicaciones para ayudar a la gestión 
+de los gastos. Sin embargo, ninguna de ellas cumple con todos los aspectos que 
+se abordarán en este proyecto.
 
-Características:
+Teniendo en cuenta las características generalizadas de las diferentes soluciones, 
+obtenemos la siguiente tabla comparativa de esfuerzo por parte del usuario. Ver 
+tabla \ref{tab:comparativa_soluciones}.
 
-INTEGRACIÓN DE DATOS:
-Con objetivo de solucionar la pérdida de la información al cambiar de banco, 
-se propone optar por una \textbf{aplicación externa al banco}. 
-Para integrar los datos que se deseen ya sea con tarjeta, pagos en efectivo, transferencias 
-y demás operaciones, la aplicación propuesta permitirá añadir gastos de forma manual 
-y mediante escaneo de tickets. 
-
-ACCESIBILIDAD Y FACILIDAD DE USO:
-Se diseñará para ser usada por parte de usuarios de todas las edades?.
-
-PERSONALIZACIÓN: 
-Permitirá crear planes de ahorro / consumo ? por categoría del gasto, con el que nos adelantemos y 
-seamos conscientes en cada pago del cumplimiento de nuestros objetivos.
-
-AUTOMATIZACIÓN:
-Generación de análisis y resúmenes automáticos sobre el consumo.
-
-
-
-
-
-\section{Elección de herramientas para el desarrollo de la aplicación}
-Para desarrollar una aplicación multiplataforma, se pueden usar tecnologías como Flutter, React Native, Xamarin, etc.
-https://flutter.dev/ :"Flutter es un marco de código abierto de Google para crear aplicaciones multiplataforma (móviles, 
-web, de escritorio) de forma nativa a partir de una única base de código".
-
-
-OCR:
-necesitamos BD, reconocimiento de espaciado entre datos
-por escaneo es lo más fiable, luego viene el uso de la cámara
-Aclarar la imagen, lo mejor es una imagen en blanco y negro para que sea lo más sencillo
-
-Google tiene un servicio para extraer info de un PDF no editable con DocumentAI
-Hay librerías en python para usar OCR:
-    - pytesseract, para reconocer caracteres 
-
-- easyOCR
-- keras-OCR
-- trOCR
-- docTR
+\begin{landscape}
+\begin{table}[]
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+& \textbf{Tradicional} & \textbf{\begin{tabular}[c]{@{}l@{}}Aplicaciones\\ bancarias\end{tabular}} & \textbf{Aplicaciones de terceros} & \textbf{\begin{tabular}[c]{@{}l@{}}Proyectos\\ académicos\end{tabular}} \\ \hline
+\textbf{\begin{tabular}[c]{@{}l@{}}Anotación de movimientos\\ (gastos, ingresos y ahorros)\end{tabular}} & Alto & Muy bajo & \begin{tabular}[c]{@{}l@{}}Con integración banco: Muy bajo\\ Sin integración banco: Medio - Alto\end{tabular} & Medio - Alto \\ \hline
+\textbf{Control de dinero efectivo} & Alto & No tienen & \begin{tabular}[c]{@{}l@{}}Con integración banco: No tiene\\ Sin integración banco: Medio\end{tabular} & Medio \\ \hline
+\textbf{Control de dinero digital} & Alto & Bajo & Bajo & Bajo \\ \hline
+\textbf{\begin{tabular}[c]{@{}l@{}}Creación de categorías de\\ gastos (con presupuestos)\end{tabular}} & Alto & \begin{tabular}[c]{@{}l@{}}No personalizable\\ (automático)\end{tabular} & Medio - Bajo & Bajo \\ \hline
+\textbf{\begin{tabular}[c]{@{}l@{}}Creación de objetivos de\\ ahorro\end{tabular}} & Alto & \begin{tabular}[c]{@{}l@{}}Bajo (nº limitado\\ de objetivos)\end{tabular} & \begin{tabular}[c]{@{}l@{}}Con integración banco: No tienen\\ Sin integración banco: Medio\end{tabular} & \begin{tabular}[c]{@{}l@{}}No tienen (lo que no\\ se gasta se considera\\ ahorro)\end{tabular} \\ \hline
+\textbf{Resúmenes de gastos totales} & Alto & Muy bajo & Muy bajo & Muy bajo \\ \hline
+\textbf{\begin{tabular}[c]{@{}l@{}}Representación gráfica\\ de gastos\end{tabular}} & Medio - Alto & Muy bajo & Muy bajo & Muy bajo \\ \hline
+\textbf{\begin{tabular}[c]{@{}l@{}}Representación gráfica\\ de ahorros\end{tabular}} & Medio - Alto & No tienen & Muy bajo & Muy bajo \\ \hline
+\end{tabular}
+\label{tab:comparativa_soluciones}
+\end{table}
+\end{landscape}
 

@@ -1,57 +1,95 @@
 \chapter{Introducción}
-\section{Descripción y contexto} / \section{Descripción del problema}
+Este proyecto es software libre, y está liberado con la licencia \cite{gplv3}.\\
 
-Según su definición en la RAE la economía\cite{economía} es la 
+Puede encontrarse en el siguiente repositorio:
+\href{https://github.com/elenaortegacontreras/TFG}{elenaortegacontreras/TFG}, 
+en el cual se ha desarrollado desde el principio en abierto.
+
+\section{Contexto. Descripción del problema}
+
+Según su definición en la RAE \footnote{\url{https://dle.rae.es/economía}} la economía es la 
 \textit{Administración eficaz y razonable de los bienes}, dicho esto y teniendo en 
 cuenta que nos concierne a todos, es crucial tener control sobre ella. 
+De manera individual, las decisiones financieras influyen en la calidad de vida de las personas,
+un uso adecuado es esencial para evitar problemas como el endeudamiento, la 
+falta de ahorro o la incapacidad de cumplir metas económicas.
 
-En una época en la todo está muy caro, pero a la vez el consumo parece estar 
-desvocado, es importante consumir de manera responsable nuestro dinero. Esto 
+En una época en la que los precios son muy elevados, pero a la vez el consumo parece estar 
+desvocado, es importante administrar el dinero de manera responsable. Esto 
 implica planificación y control sobre cómo y dónde lo gastamos.
+Sin embargo, no es fácil hacer el seguimiento de las finanzas personales ya que se 
+juntan diversos factores a tener en cuenta: podemos tener varias fuentes de ingresos y/o 
+gastos, planes de ahorro, diferentes cuentas bancarias, uso de dinero tanto 
+efectivo como digital, etc. por lo que en ocasiones resulta tedioso 
+llevar las cuentas al día para analizar correctamente nuestro consumo.
 
-Sin embargo, no es fácil hacer el seguimiento de nuestras finanzas. Podemos tener 
-varias fuentes de ingresos y/o gastos, por lo que resulta tedioso 
-llevar las cuentas al día para analizar adecuadamente nuestro consumo. 
-
+La transición hacia lo digital está cambiando nuestra forma de interactuar con 
+la información, nos brinda la posibilidad de agrupar todo en un 
+único dispositivo, con el que olvidarnos de ordenar y almacenar cientos de papeles.
 En el ámbito de la economía personal, la digitalización ha supuesto (entre 
 otros) la creación de aplicaciones que nos ayudan a gestionar nuestros 
 gastos, ahorros, inversiones, etc.
 
-La transición hacia lo digital está cambiando nuestra forma de interactuar con 
-la información, nos permite acceso frecuente, práctico y sencillo a ella.
-Al agrupar todo en un solo dispositivo que consultamos en cualquier momento o 
-lugar podemos olvidarnos de ordenar y almacenar cientos de papeles.
-
 \section{Motivación}
-La motivación para la realización de este proyecto surge de la necesidad de 
-tener un control más exhaustivo de los gastos y ahorros que a la vez nos brinde 
-la comodidad de tener todo en un solo lugar y sea sencillo de usar.
+Dado el escenario descrito, la motivación para la realización de este proyecto surge del deseo 
+de contribuir a la mejora en la calidad de vida de las personas a través de un mayor control 
+sobre sus decisiones financieras.
 
------------------- COMPLETAR ------------------
+¿El párrafo que viene a continuación está bien aquí?
+¿O debería ir en el apartado 3.4 Propuesta (dentro de Estado del Arte)?
+El desarrollo de este Trabajo de Fin de Grado se centra en la creación de una solución digital que 
+facilite el seguimiento de los gastos y el control de ahorros y presupuestos. Con este fin, 
+para la introducción de gastos en la aplicación se da especial importancia a la automatización 
+de procesos ?? y facilidad de uso ??. Se generan gráficos y resúmenes que permiten analizar los
+patrones de gasto y reúne diferentes formas de visualización de los datos aportando información 
+de valor como la categorización de los gastos, la localización de los comercios, etc.\\
+
+------------------ ¿ COMPLETAR ?------------------
 
 
 \section{Objetivos} \label{sect:goals}
 \subsection{Objetivo general}
-Desarrollar una aplicación móvil, que usando tecnologías de reconocimiento
-óptico de caracteres (OCR) y geolocalización, permita llevar a cabo un 
-análisis de gastos detallado y facilite al usuario una gestión eficiente de su dinero
+Desarrollar una aplicación móvil (\textbf{SIGMA}: Sistema Inteligente de Gestión Monetaria Automatizada) 
+para la gestión financiera. Usando tecnologías de reconocimiento
+óptico de caracteres (OCR) y geolocalización, permite al usuario llevar a cabo un 
+análisis de gastos detallado y facilita una gestión eficiente de su dinero
 a través de un monedero virtual, introduciendo los datos de 
 forma sencilla.
 
 \subsection{Subobjetivos}
 \begin{enumerate}
-    \item Diseñar e implementar la interfaz de usuario de la aplicación facilitando
-        la gestión personalizada del dinero.
+    \item Estudio de las tecnologías actuales. Análisis de las aplicaciones 
+        de gestión financiera existentes en el mercado y de las tecnologías 
+        que se pueden aplicar en el desarrollo de la aplicación. Este estudio 
+        permite identificar funcionalidades básicas, características que
+        resulten diferenciadoras y reducción de costes en herramientas de terceros.
+    \item Planteamiento de un diseño escalable. Desarrollar una arquitectura de
+        software que permita añadir futuras funcionalidades o mejoras sobre lo actual 
+        sin comprometer la funcionalidad o complejidad de la estructura de la aplicación
     \item Integrar tecnología de reconocimiento óptico de caracteres (OCR) que 
-        permita escanear y analizar tickets de compra para añadir automáticamente 
-        los datos a la aplicación.
-    \item Integrar en la aplicación capacidades de geolocalización para una 
-        identificación del comercio en el que se ha realizado la compra y 
-         propuesta de categorización del tipo de gasto.     
+        permita escanear tickets de compra; como punto de partida para el procesamiento 
+        del texto obtenido.
+    \item Estudio de métodos de reconocimiento de patrones en un texto. Implementar 
+        un sistema de reconocimiento de patrones de texto que permita identificar 
+        los datos relevantes de los tickets de compra escaneados.
+    \item Facilitar la búsqueda de comercios. Integrar en la aplicación capacidades de geolocalización 
+        para una identificación del comercio en el que se ha realizado la compra 
+        ?? y propuesta de categorización del tipo de gasto ??. Además integrar un buscador 
+        independiente a la geolocalización del usuario.     
+    \item Aprendizaje de herramientas en el marco de sistemas web (backend y frontend)
+    \item Diseñar e implementar la interfaz de usuario de la aplicación facilitando
+         la personalización en la organización del dinero. Permitir al usuario la creación 
+         de categorías de gasto y objetivos de ahorro personalizados y modificables.
     \item Implementar herramientas de visualización de datos con gráficos y resúmenes 
-        automatizados que permitan analizar los patrones de gasto y ayudar al usuario 
-        a realizar un seguimiento claro de los mismos.
-    \item Implementar medidas de seguridad para proteger los datos personales y 
-        financieros de los usuarios.
+        automatizados que permitan analizar los patrones de gasto como ayuda al usuario 
+        para realizar un seguimiento claro de los mismos.
+    \item ?? Implementar medidas de seguridad para proteger los datos personales y 
+        financieros de los usuarios ??.
     
 \end{enumerate}
+
+
+
+?? \section{Personajes y viajes de usuario} ??
+?? \section{Historias de usuario} ??
+?? \section{Milestones} ??
