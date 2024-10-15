@@ -2,7 +2,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import sigmaLogo from '../assets/icono_hucha.png';
+import sigmaLogo from '../assets/logo_s.png';
 
 const user = {
   name: 'Elena Ortega Contreras',
