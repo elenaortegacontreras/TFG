@@ -12,14 +12,6 @@ export function CategoriesDoughnutChart({ categories }) {
         '#FF6384B0', '#36A2EBB0', '#FFCE56B0', '#4BC0C0B0', '#9966FFB0', '#FF9F40B0'
     ];
     
-    // indigo
-    // const colors = [
-    //     '#4B0082', '#EDE7F6', '#3A007D', '#D1C4E9', '#31006A', '#B39DDB',
-    //     '#260055', '#9575CD', '#20004A', '#7E57C2', '#170036', '#673AB7',
-    //     '#0D0022', '#5E35B1', '#7986CB', '#3F51B5', '#3949AB', '#C5CAE9'
-    // ];
-    
-
     const data = {
         labels: budgetNames,
         datasets: [
