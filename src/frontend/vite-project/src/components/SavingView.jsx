@@ -1,6 +1,6 @@
 import { Title } from './Title.jsx'
 import { TransactionPanel } from './TransactionPanel.jsx'
-import { SavingsLineChart } from './SavingsLineChart.jsx';
+import { SavingsLineChart } from './charts/SavingsLineChart.jsx';
 import { LoadingDots } from './LoadingDots.jsx';
 import { ActionsMenuEditDelete } from './ActionsMenuEditDelete.jsx';
 import { useLocation } from 'react-router-dom';

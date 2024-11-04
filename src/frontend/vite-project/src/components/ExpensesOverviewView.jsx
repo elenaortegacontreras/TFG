@@ -1,6 +1,6 @@
 import { ResumeTitle } from './ResumeTitle.jsx'
 import { CategoryBudgetPanel } from './CategoryBudgetPanel.jsx'
-import { CategoriesDoughnutChart } from './CategoriesDoughnutChart.jsx';
+import { CategoriesDoughnutChart } from './charts/CategoriesDoughnutChart.jsx';
 import { LoadingDots } from './LoadingDots.jsx';
 import { ActionsMenuAdd } from './ActionsMenuAdd.jsx';
 

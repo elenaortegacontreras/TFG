@@ -1,6 +1,6 @@
 import { ResumeTitle } from './ResumeTitle.jsx'
 import { SavingGoalPanel } from './SavingGoalPanel.jsx'
-import { SavingsLineChart } from './SavingsLineChart.jsx';
+import { SavingsLineChart } from './charts/SavingsLineChart.jsx';
 import { LoadingDots } from './LoadingDots.jsx';
 import { ActionsMenuAdd } from './ActionsMenuAdd.jsx';
 import { MonederoSavingsGoalCard } from './MonederoSavingsGoalCard.jsx';

@@ -1,6 +1,6 @@
 import { Title } from './Title.jsx'
 import { TransactionPanel } from './TransactionPanel.jsx'
-import { CategoriesDoughnutChart } from './CategoriesDoughnutChart.jsx';
+import { CategoriesDoughnutChart } from './charts/CategoriesDoughnutChart.jsx';
 import { LoadingDots } from './LoadingDots.jsx';
 import { SubcategoriesList } from './SubcategoriesList.jsx';
 import { ActionsMenuAdd } from './ActionsMenuAdd.jsx';
