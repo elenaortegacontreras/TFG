@@ -1,9 +1,9 @@
-import { ResumeTitle } from './ResumeTitle.jsx'
-import { SavingGoalPanel } from './SavingGoalPanel.jsx'
-import { SavingsLineChart } from './charts/SavingsLineChart.jsx';
-import { LoadingDots } from './LoadingDots.jsx';
-import { ActionsMenuAdd } from './ActionsMenuAdd.jsx';
-import { MonederoSavingsGoalCard } from './MonederoSavingsGoalCard.jsx';
+import { ResumeTitle } from '../ResumeTitle.jsx'
+import { SavingGoalPanel } from '../SavingGoalPanel.jsx'
+import { SavingsLineChart } from '../charts/SavingsLineChart.jsx';
+import { LoadingDots } from '../LoadingDots.jsx';
+import { ActionsMenuAdd } from '../ActionsMenuAdd.jsx';
+import { MonederoSavingsGoalCard } from '../MonederoSavingsGoalCard.jsx';
 
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';

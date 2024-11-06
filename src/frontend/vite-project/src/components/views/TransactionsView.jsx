@@ -1,6 +1,6 @@
-import { Title } from './Title.jsx'
-import { TransactionPanel } from './TransactionPanel.jsx'
-import { LoadingDots } from "./LoadingDots.jsx";
+import { Title } from '../Title.jsx'
+import { TransactionPanel } from '../TransactionPanel.jsx'
+import { LoadingDots } from "../LoadingDots.jsx";
 import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';

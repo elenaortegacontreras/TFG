@@ -1,8 +1,8 @@
-import { ResumeTitle } from './ResumeTitle.jsx'
-import { CategoryBudgetPanel } from './CategoryBudgetPanel.jsx'
-import { CategoriesDoughnutChart } from './charts/CategoriesDoughnutChart.jsx';
-import { LoadingDots } from './LoadingDots.jsx';
-import { ActionsMenuAdd } from './ActionsMenuAdd.jsx';
+import { ResumeTitle } from '../ResumeTitle.jsx'
+import { CategoryBudgetPanel } from '../CategoryBudgetPanel.jsx'
+import { CategoriesDoughnutChart } from '../charts/CategoriesDoughnutChart.jsx';
+import { LoadingDots } from '../LoadingDots.jsx';
+import { ActionsMenuAdd } from '../ActionsMenuAdd.jsx';
 
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';

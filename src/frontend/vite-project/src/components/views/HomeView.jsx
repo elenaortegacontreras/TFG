@@ -1,10 +1,10 @@
-import { ResumeTitle } from './ResumeTitle.jsx'
+import { ResumeTitle } from '../ResumeTitle.jsx'
 import { useNavigate } from 'react-router-dom';
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { BarChart } from './charts/BarChart.jsx';
-import { ActionsMenuAdd } from './ActionsMenuAdd.jsx';
+import { BarChart } from '../charts/BarChart.jsx';
+import { ActionsMenuAdd } from '../ActionsMenuAdd.jsx';
 
 
 export function HomeView() {

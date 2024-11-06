@@ -1,5 +1,5 @@
-import { ResumeTitle } from './ResumeTitle.jsx'
-import { TransactionPanel } from './TransactionPanel.jsx'
+import { ResumeTitle } from '../ResumeTitle.jsx'
+import { TransactionPanel } from '../TransactionPanel.jsx'
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';

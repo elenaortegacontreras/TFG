@@ -1,4 +1,4 @@
-import { Title } from './Title.jsx';
+import { Title } from '../Title.jsx';
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
