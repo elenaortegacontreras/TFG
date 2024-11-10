@@ -1,11 +1,8 @@
 \chapter{Introducción}
-Hablamos del contexto\ref{sec:contexto}
-Hablamos del contexto\label{sec:contexto}
-
-En esta sección se detalla la importancia de la gestión económica personal y cómo el avance de la digitalización ha transformado la manera en que interactuamos con nuestras finanzas. Se presenta un recorrido por la evolución de los servicios financieros digitales en España, desde los primeros cajeros automáticos hasta las modernas formas de pago como \textit{Bizum} y \textit{NFC}. Asimismo, se analizan los retos actuales que enfrentan los usuarios al gestionar sus finanzas personales, dadas las múltiples fuentes de ingresos y métodos de pago disponibles. Se explora cómo las soluciones \textit{Fintech} han surgido para abordar estos desafíos, aunque con ciertas limitaciones.
+En esta sección se detalla la importancia de la gestión económica personal y cómo el avance de la digitalización ha transformado la manera en que interactuamos con nuestras finanzas. Se presenta un recorrido por la evolución de los servicios financieros digitales en España, desde los primeros cajeros automáticos hasta las modernas formas de pago como \textit{Bizum} y \textit{NFC}. Asimismo, se analizan los retos actuales que enfrentan los usuarios al gestionar sus finanzas personales, dadas las múltiples fuentes de ingresos y métodos de pago disponibles. Se explora cómo las soluciones \textit{Fintech} han surgido para abordar estos desafíos.
 
 \section{Contexto. Descripción del problema} 
-Según su definición en la RAE\footnote{\href{https://dle.rae.es/economía}{https://dle.rae.es/economía}} la economía es la 
+Según su definición en la \href{https://dle.rae.es/economía}{RAE} la economía es la 
 \textit{Administración eficaz y razonable de los bienes}, dicho esto y teniendo en 
 cuenta que nos concierne a todos, es crucial tener control sobre ella. 
 De manera individual, las decisiones financieras influyen en la calidad de vida de las personas,
@@ -16,7 +13,7 @@ La transición hacia lo digital está cambiando nuestra forma de interactuar con
 la información, nos permite realizar tareas de forma remota, rápida y eficiente. 
 En los últimos años, en España la banca ha evolucionado rápidamente hacia lo digital, comenzando en los años 70 con la introducción de cajeros automáticos. En los 80, las tecnologías de la información mejoraron la eficiencia de los mercados financieros, y en los 90, surgieron los primeros servicios bancarios a distancia, como la banca telefónica. En 1995, se lanzó el primer software que permitía ver finanzas online, y en 1999 los bancos españoles comenzaron a ofrecer sus primeros servicios de consulta online. A partir del año 2006 la llegada de los smartphones y la evolución de Internet aceleraron la transformación \cite{hebrero2022fintech}.
 
-Actualmente, esta digitalización ha brindado la posibilidad de utilizar diversas formas de de pago como transferencias bancarias, el uso de tarjetas de crédito, sistemas de pago instantáneo como Bizum \footnote{\url{https://bizum.es/}}, pago con dispositivos como smartphones y relojes inteligentes mediante NFC \footnote{NFC (Near Field Communication) es una tecnología que permite una comunicación de corto alcance entre dispositivos inhalámbricos para intercambiar pequeñas cantidades de datos} y un largo etcétera. Por supuesto, no podemos olvidar el uso de dinero en efectivo, que sigue siendo una forma de pago común. 
+Actualmente, esta digitalización ha brindado la posibilidad de utilizar diversas formas de de pago como transferencias bancarias, el uso de tarjetas de crédito, sistemas de pago instantáneo como \href{https://bizum.es/}{Bizum}, pago con dispositivos como smartphones y relojes inteligentes mediante NFC \footnote{NFC (Near Field Communication) es una tecnología que permite una comunicación de corto alcance entre dispositivos inhalámbricos para intercambiar pequeñas cantidades de datos} y un largo etcétera. Por supuesto, no podemos olvidar el uso de dinero en efectivo, que sigue siendo una forma de pago común. 
 
 En una época en la que los precios son muy elevados, pero a la vez el consumo parece estar desvocado, es importante administrar el dinero de manera responsable. Esto implica planificación y control sobre cómo y dónde lo gastamos.
 Sin embargo, no es fácil hacer el seguimiento de las finanzas personales ya que se 
@@ -28,7 +25,7 @@ llevar las cuentas al día para analizar correctamente nuestro consumo.
 Como ayuda para solventar este problema, han aparecido aplicaciones que nos ayudan a gestionar nuestros gastos, ahorros, inversiones, etc. pero como ocurre en cualquier ámbito, no siempre se adaptan a las necesidades concretas de algunos usuarios. Estas herramientas que usan la tecnología para ofrecer a los usuarios servicios financieros, forman parte de las denominadas \textit{Fintech} \cite{schueffel2016taming}.
 
 \section{Motivación}
-Dado el escenario descrito, la motivación para la realización de este proyecto surge del deseo de contribuir a la mejora en la calidad de vida de las personas a través de un mayor control sobre sus decisiones financieras. 
+Dado el escenario descrito, la motivación para realizar este proyecto surge del deseo de contribuir a la mejora en la calidad de vida de las personas a través de un mayor control sobre sus decisiones financieras. 
 
 Ante la diversidad de métodos de pago mencionada y la necesidad de una gestión eficiente de las finanzas, este proyecto propone unificar la información de todas las fuentes de ingresos y gastos del usuario. Al ofrecer una visión global y realista de su situación económica, la aplicación permitirá a los usuarios tener un control centralizado sobre sus finanzas, facilitando la toma de decisiones informadas y mejorando su capacidad para planificar, anticiparse y gestionar sus recursos financieros de manera más efectiva.
 
@@ -52,19 +49,13 @@ forma sencilla.}
 
 Para el cumplimiento de este objetivo general se plantean los siguientes objetivos específicos:
 \begin{enumerate}
-    \item Analizar las herramientas  
-        de gestión financiera existentes en el mercado para su aplicación en el desarrollo del proyecto.  
-        % Este estudio permite identificar funcionalidades básicas, características que
-        % resulten diferenciadoras.
-    \item Plantear un diseño escalable y desarrollar una arquitectura de software
-    para facilitar la integración de futuras funcionalidades o mejoras. 
-    \item Integrar tecnología de reconocimiento óptico de caracteres (OCR) para escanear tickets de compra; como punto de partida en el procesamiento del texto obtenido.
-    \item ?? Estudiar métodos de reconocimiento de patrones en un texto. Implementar 
-        un sistema de reconocimiento de patrones de texto que permita identificar 
-        los datos relevantes de los tickets de compra escaneados. ??
-    \item Facilitar la búsqueda de comercios. Integrar en la aplicación capacidades de geolocalización para una identificación del comercio en el que se ha realizado la compra.
+    \item Analizar las herramientas de gestión financiera existentes en el mercado para su aplicación en el desarrollo del proyecto.  
+    \item Plantear un diseño escalable y desarrollar una arquitectura de software modular para facilitar la integración de futuras funcionalidades o mejoras. 
     \item Diseñar e implementar la interfaz de usuario para permitir la creación 
-         de categorías de gasto y objetivos de ahorro personalizados y modificables.
-    \item Implementar herramientas de visualización de datos con gráficos y resúmenes automatizados para analizar los patrones de gasto y realizar un seguimiento claro de los mismos.
+         de transacciones (ingresos, gastos y ahorros), categorías de gasto y objetivos de ahorro personalizables y modificables.
+    \item Implementar herramientas de visualización de datos por medio de mapas, gráficos y resúmenes automatizados para analizar los patrones de gasto y realizar un seguimiento claro de los mismos.
+    \item Estudiar e integrar tecnología de reconocimiento óptico de caracteres (OCR) y de reconocimiento de patrones en un texto para escanear tickets de compra; como punto de partida al procesamiento del texto obtenido.
+    \item Implementar un sistema que permita automatizar la inserción de gastos en la aplicación, extrayendo datos relevantes de los tickets de compra para que la interverción por parte del usuario en el proceso sea mínima.
+    \item Facilitar la búsqueda de comercios. Integrar en la aplicación capacidades de geolocalización para identificar en las transacciones el comercio en el que se ha realizado dicho gasto.   
     
 \end{enumerate}

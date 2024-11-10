@@ -10,11 +10,11 @@ Los personajes son perfiles de usuario que representan a los diferentes tipos de
 Algunos personajes que podrían beneficiarse de la aplicación descrita porque encuentran problemas con la administración de sus finanzas son:
 
 \begin{itemize}
-    \item Andrés, un estudiante universitario de primer año (fuera de su ciudad natal) ha dejado su hogar para mudarse a otra ciudad, donde estudia. Recibe mensualmente una asignación fija de dinero por parte de sus padres, la cual debe administrar cuidadosamente para cubrir sus gastos básicos (alquiler, alimentación, transporte y ocio). No tiene experiencia previa en la gestión de su propio dinero y suele gastar más en las primeras semanas del mes, quedándose con menos recursos para el resto. Quiere ser consciente de cuánto gasta día a día para poder ajustar su presupuesto si es necesario y terminar el mes sin problemas económicos. \\
+    \item Andrés, un estudiante universitario de primer año (fuera de su ciudad natal) ha dejado su hogar para mudarse a otra ciudad, donde estudia. Recibe mensualmente una asignación fija de dinero por parte de sus padres, la cual debe administrar cuidadosamente para cubrir sus gastos básicos (alquiler, alimentación, transporte y ocio). No tiene experiencia previa en la gestión de su propio dinero y suele gastar más en las primeras semanas del mes, quedándose con menos recursos para el resto. Quiere ser consciente de cuánto gasta día a día para poder ajustar su presupuesto si es necesario y terminar el mes sin problemas económicos.
 
-    \item Ana es diseñadora gráfica en un departamento de marketing, tiene un empleo estable y recibe un salario mensual. Le encanta la moda y, para renovar su armario, suele comprar y vender ropa de segunda mano. Actualmente está ahorrando para comprar su primer coche, sin embargo, a veces actúa impulsivamente, adquiriendo prendas que le gustan sin considerar cómo ese gasto afectará a sus objetivos. Ana piensa que le vendría bien una herramienta para controlar sus gastos de manera más consciente; y que en el momento de duda al comprar pueda visualizar gráficos sencillos que muestren cuánto lleva gastado en el mes para mantenerse enfocada en su objetivo de ahorro para el coche. \\
+    \item Ana es diseñadora gráfica en un departamento de marketing, tiene un empleo estable y recibe un salario mensual. Le encanta la moda y, para renovar su armario, suele comprar y vender ropa de segunda mano. Actualmente está ahorrando para comprar su primer coche, sin embargo, a veces actúa impulsivamente, adquiriendo prendas que le gustan sin considerar cómo ese gasto afectará a sus objetivos. Ana piensa que le vendría bien una herramienta para controlar sus gastos de manera más consciente; y que en el momento de duda al comprar pueda visualizar gráficos sencillos que muestren cuánto lleva gastado en el mes para mantenerse enfocada en su objetivo de ahorro para el coche.
     
-    \item Daniela trabaja en una consultora de marketing. Es una persona socialmente activa que disfruta saliendo a cenar con sus amigos. Con frecuencia se ofrece a pagar la cuenta completa cuando salen en grupo (casi siempre con tarjeta); a menudo sus amigos le devuelven su parte en efectivo, lo que le genera dificultades para controlar exactamente cuánto ha gastado en estos encuentros, ya que el dinero devuelto no aparece reflejado en sus aplicaciones bancarias y le resulta complicado llevar un registro claro. Daniela desea integrar y gestionar de forma automática y precisa los pagos con tarjeta y el efectivo que recibe, para que sus finanzas reflejen con exactitud lo que gasta. Además sería útil para ella poder tener una visión clara de cuánto gasta realmente en restaurantes por medio de mapas, para evitar hacer cálculos manuales cada vez que necesita conocerlo. \\
+    \item Daniela trabaja en una consultora de marketing. Es una persona socialmente activa que disfruta saliendo a cenar con sus amigos. Con frecuencia se ofrece a pagar la cuenta completa cuando salen en grupo (casi siempre con tarjeta); a menudo sus amigos le devuelven su parte en efectivo, lo que le genera dificultades para controlar exactamente cuánto ha gastado en estos encuentros, ya que el dinero devuelto no aparece reflejado en sus aplicaciones bancarias y le resulta complicado llevar un registro claro. Daniela desea integrar y gestionar de forma automática y precisa los pagos con tarjeta y el efectivo que recibe, para que sus finanzas reflejen con exactitud lo que gasta. Además sería útil para ella poder tener una visión clara de cuánto gasta realmente en restaurantes por medio de mapas, para evitar hacer cálculos manuales cada vez que necesita conocerlo.
     
     \item Manuel, de 57 años, es profesor de educación física en un colegio. Su trabajo no le ha forzado a indagar en el uso de las nuevas tecnologías más allá de las tareas básicas con los ordenadores de la escuela, por lo que no está familiarizado con las aplicaciones de gestión financiera digital. Aunque ha intentado usarlas, se siente abrumado por la cantidad de opciones y desconfía de introducir las claves de su banco en ellas. Manuel busca tener un lugar donde organizar sus finanzas, con una interfaz fácil de usar y sin demasiadas funciones avanzadas.
     
@@ -45,49 +45,112 @@ Las historias de usuario se enfocan en las necesidades específicas de los perso
     quiero ver mis gastos clasificados por su ubicación en un mapa,
     para tener una visión clara de los lugares donde realizo la mayor parte de mis compras y ajustar mis hábitos de consumo.
     \item HU6: Añadir gastos de forma manual o automáticamente\\ 
-    Como usuario que quiere llevar un control de sus gastos y que sea cómodo insertarlos en la aplicación, quiero poder añadir gastos de forma manual y automática (escaneando tickets) para poder llevar un seguimiento de mis transacciones sin implicar un gran esfuerzo.
-
-    ??? Criterios de aceptación ???:
-    - La aplicación debe permitir al usuario introducir manualmente los detalles de un gasto o ingreso, incluyendo la cantidad, la fecha y una descripción.
-    - El usuario debe poder diferenciar entre pagos digitales y en efectivo al registrar un gasto o ingreso.
-    - La aplicación debe validar los datos introducidos por el usuario y mostrar mensajes de error en caso de que haya campos obligatorios vacíos o datos incorrectos.
-    - Los gastos e ingresos añadidos manualmente deben ser almacenados en la base de datos de la aplicación para su posterior análisis y visualización.
-
-    ??? Notas adicionales ???:
-    - Aunque la automatización de la introducción de gastos e ingresos es útil, el usuario necesita la opción de añadirlos manualmente para tener un control preciso de sus finanzas.
-    - La aplicación debe proporcionar una interfaz intuitiva y fácil de usar para facilitar la introducción manual de gastos e ingresos. 
-
+    Como usuario que quiere llevar un control de sus gastos y que sea cómodo insertarlos en la aplicación, quiero poder añadir gastos de forma manual y automática (escaneando tickets) para poder llevar un seguimiento de mis transacciones sin que ello implique un gran esfuerzo.
     \item HU7: Integrar funcionalidad de gestión financiera en proyecto propio\\
-    Como Desarrollador que desea integrar alguna funcionalidad concreta de gestión financiera en su propia aplicación, quero conocer las decisiones de diseño y las plataformas utilizadas en el desarrollo del proyecto \textit{Sigma}, para vitar errores de diseño en mi propia aplicación y asegurar que la integración sea coherente.
+    Como Desarrollador que desea integrar alguna funcionalidad concreta de gestión financiera en su propia aplicación, quiero conocer las decisiones de diseño y las plataformas utilizadas en el desarrollo del proyecto \textit{Sigma}, para evitar errores de diseño en mi propia aplicación y asegurar que la integración sea coherente.
     
 \end{itemize}
 
 \section{Milestones}    
 Los milestones representan momentos clave en el desarrollo del proyecto, cuando se completan funciones o características importantes. Estos hitos ayudan a asegurar el avance y pueden usarse para evaluar el progreso. Aunque los milestones pueden variar según el proyecto, en el caso de la aplicación descrita, se pueden establecer los siguientes como punto de partida:
 
+\subsection{M0: Documentación y Diseño Inicial}
 \begin{itemize}
-    \item M0: Repositorio y documentación inicial
-    Crear el repositorio del proyecto y agregar la documentación previa a la implementación de la aplicación.
-
-    \item M1: Arquitectura y diseño base de la aplicación
-    Definir e implementar la estructura de la aplicación, incluyendo la arquitectura general y la organización del código.
-
-    \item M2: Registro de transacciones (manual y automática)
-    Implementar la funcionalidad para registrar ingresos y gastos de manera manual y automática, permitiendo diferenciar entre efectivo y transacciones digitales.
-
-    \item M3: Presupuestos personalizables
-    Desarrollar la funcionalidad que permite a los usuarios crear y gestionar presupuestos adaptados a diferentes categorías de gasto.
-
-    \item M4: Análisis y visualización de datos
-    Implementar gráficos y resúmenes automáticos que muestren los patrones de consumo, wue además permita categorizar gastos y separando por objetivos de ahorro.
-
-    \item M5: Funcionalidad de edición de movimientos
-    Añadir la capacidad para que los usuarios puedan editar y ajustar sus transacciones, permitiendo un control detallado de pagos y reembolsos.
-
-    \item M7: Entrega de memoria. Documentación final
-    Finalizar y entregar la memoria del proyecto, junto con la documentación técnica detallada para su presentación.
-
+    \item \textbf{Objetivo}: Establecer la base conceptual y técnica del proyecto.
+    \item \textbf{Actividades}:
+        \begin{itemize}
+            \item Inicio de la documentación del proyecto y revisión del estado del arte.
+            \item Desarrollo de un diseño inicial de la aplicación.
+        \end{itemize}
+    \item \textbf{Entregables}: Documento de especificación del proyecto, diseño preliminar y planificación de sprints futuros.
+    \item \textbf{Criterios de aceptación}: Documento aprobado con requisitos definidos y diseño inicial revisado y aprobado.
 \end{itemize}
 
-\section{Diagramas}
+\subsection{M1: Arquitectura del Backend y API Básica}
+\begin{itemize}
+    \item \textbf{Objetivo}: Establecer la infraestructura del backend y desarrollar la API inicial.
+    \item \textbf{Actividades}:
+        \begin{itemize}
+            \item Estructura del backend de la aplicación.
+            \item Diseño e implementación de tablas de la base de datos.
+            \item Creación de los endpoints para CRUD en la base de datos (gastos).
+            \item Pruebas unitarias de endpoints clave (e.g., creación de un gasto).
+        \end{itemize}
+    \item \textbf{Entregables}: Backend básico con endpoints funcionales para gastos, base de datos estructurada y pruebas preliminares.
+    \item \textbf{Criterios de aceptación}: Todos los endpoints CRUD están operativos y se han pasado las pruebas iniciales.
+\end{itemize}
 
+\subsection{M2: Estructura del Frontend e Integración Inicial}
+\begin{itemize}
+    \item \textbf{Objetivo}: Desarrollar el frontend básico y conectarlo con el backend.
+    \item \textbf{Actividades}:
+        \begin{itemize}
+            \item Creación de la estructura y componentes principales del frontend.
+            \item Implementación de la interfaz de usuario y formularios para gastos.
+            \item Conexión de frontend con la API y pruebas de integración.
+        \end{itemize}
+    \item \textbf{Entregables}: Frontend funcional conectado a la API, vistas y formularios para la gestión de gastos.
+    \item \textbf{Criterios de aceptación}: Funcionalidades del frontend operativas y verificación de la integración con el backend.
+\end{itemize}
+
+\subsection{M3: Visualización de Datos}
+\begin{itemize}
+    \item \textbf{Objetivo}: Añadir capacidad de visualización de datos financieros (gráficos y resúmenes de gastos).
+    \item \textbf{Actividades}:
+        \begin{itemize}
+            \item Creación de gráficos y resúmenes automáticos de gastos en el frontend.
+            \item Pruebas para validar la correcta visualización y actualización de los datos.
+        \end{itemize}
+    \item \textbf{Entregables}: Visualización de gráficos y resumen de gastos.
+    \item \textbf{Criterios de aceptación}: Gráficos y resúmenes de gastos son visibles y se actualizan automáticamente en función de los datos de la API.
+\end{itemize}
+
+\subsection{M4: Extracción Automática de Datos de Imágenes y PDFs}
+\begin{itemize}
+    \item \textbf{Objetivo}: Permitir la carga y análisis automático de imágenes y PDFs para extraer información de gastos.
+    \item \textbf{Actividades}:
+        \begin{itemize}
+            \item Implementación en el backend de procesamiento de imágenes y PDFs.
+            \item Funcionalidad en frontend para cargar documentos y visualizar datos extraídos.
+        \end{itemize}
+    \item \textbf{Entregables}: Funcionalidad completa de carga de documentos con extracción de datos automatizada.
+    \item \textbf{Criterios de aceptación}: Pruebas exitosas con diferentes formatos de documentos, extracción y visualización correcta de la información.
+\end{itemize}
+
+\subsection{M5: Geolocalización de Gastos}
+\begin{itemize}
+    \item \textbf{Objetivo}: Visualizar la localización de los gastos y permitir búsquedas por cercanía.
+    \item \textbf{Actividades}:
+        \begin{itemize}
+            \item Creación de tabla de municipios de España y mapeo de gastos por código postal.
+            \item Implementación en backend de funcionalidades para geolocalización y búsqueda de tiendas.
+            \item Visualización de gastos en un mapa en el frontend.
+        \end{itemize}
+    \item \textbf{Entregables}: Funcionalidad de geolocalización y visualización de gastos en mapa.
+    \item \textbf{Criterios de aceptación}: Pruebas de geolocalización con localización de tiendas y representación correcta en el mapa.
+\end{itemize}
+
+\subsection{M6: Retoques de Interfaz y Funcionalidades de Ahorro}
+\begin{itemize}
+    \item \textbf{Objetivo}: Mejorar la usabilidad y añadir funcionalidad para gestión de ahorros.
+    \item \textbf{Actividades}:
+        \begin{itemize}
+            \item Optimización de la interfaz de usuario con énfasis en claridad y usabilidad.
+            \item Implementación de ``Monedero de Ahorro'' para control detallado de ahorros.
+        \end{itemize}
+    \item \textbf{Entregables}: Interfaz refinada y funcionalidad de monedero para ahorros y gastos.
+    \item \textbf{Criterios de aceptación}: Verificación de la funcionalidad del monedero y aceptación de interfaz optimizada tras pruebas de usuario.
+\end{itemize}
+
+\subsection{M7: Documentación Final, Despliegue y Presentación}
+\begin{itemize}
+    \item \textbf{Objetivo}: Finalizar documentación, desplegar la aplicación en producción y preparar la entrega del proyecto.
+    \item \textbf{Actividades}:
+        \begin{itemize}
+            \item Redacción de la memoria del proyecto con detalles de desarrollo y pruebas.
+            \item Despliegue en servidor de producción y pruebas de rendimiento.
+            \item Generación de documentación técnica y guía de usuario.
+        \end{itemize}
+    \item \textbf{Entregables}: Memoria del proyecto, aplicación desplegada en producción, documentación técnica y guía de usuario.
+    \item \textbf{Criterios de aceptación}: Aplicación funcional en producción y documentación completa entregada y revisada.
+\end{itemize}

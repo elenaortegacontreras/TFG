@@ -49,7 +49,44 @@
 \setcounter{secnumdepth}{4}
 \usepackage[Lenny]{fncychap}
 
+\definecolor{vskeywordcolor}{RGB}{86, 156, 214} % Azul para palabras clave
+\definecolor{vscommentcolor}{RGB}{87, 166, 74}  % Verde para comentarios
+\definecolor{vsstringcolor}{RGB}{214, 157, 133} % Rojo para cadenas de texto
 
+\lstset{
+    breaklines=true,            % Permite cortar líneas largas
+    breakatwhitespace=false,    % Rompe líneas en cualquier punto, no solo en espacios
+    basicstyle=\ttfamily\footnotesize,  % Define fuente de tamaño más pequeño y monoespaciada
+    lineskip=-1pt,              % Reduce el espacio entre líneas
+    frame=single,               % Añade un marco alrededor del código
+    captionpos=b,               % Coloca el título del código abajo (opcional)
+    columns=fullflexible,       % Permite ajustar el ancho de las columnas
+    keepspaces=true,            % Mantiene los espacios en blanco en el código
+    xleftmargin=0.5em,          % Margen izquierdo del código
+    xrightmargin=0.5em,         % Margen derecho del código
+    aboveskip=1em,              % Espacio vertical antes del código
+    belowskip=1em,              % Espacio vertical después del código
+    keywordstyle=\color{vskeywordcolor}, % Color para palabras clave
+    commentstyle=\color{vscommentcolor}, % Color para comentarios
+    stringstyle=\color{vsstringcolor},   % Color para cadenas de texto
+    showstringspaces=false,     % No mostrar espacios en blanco en las cadenas
+}
+
+% Fuente: https://github.com/ghammock/LaTeX_Listings_JavaScript_ES6
+% Definición del lenguaje JavaScript para listados
+\usepackage{xcolor}
+\lstdefinelanguage{JavaScript}{
+  morekeywords=[1]{break, continue, delete, else, for, function, if, in,
+    new, return, this, typeof, var, void, while, with},
+  % Literals, primitive types, and reference types.
+  morekeywords=[2]{false, null, true, boolean, number, undefined,
+    Array, Boolean, Date, Math, Number, String, Object},
+  % Built-ins.
+  morekeywords=[3]{eval, parseInt, parseFloat, escape, unescape},
+  sensitive,
+  morecomment=[s]{/*}{*/},
+  morecomment=[l]//,
+}
 
 \begin{document}
 
@@ -82,7 +119,6 @@
 	% Especificación de requisitos
 	% \input{secciones/03_requisitos.tex}
 
-
 	% Análisis del problema
 	% 1. Análisis de requisitos
 	% 2. Análisis de las soluciones
@@ -110,8 +146,6 @@
 	\input{secciones/09_conclusiones}
 
 	% Trabajos futuros
-
-
 	
 	\newpage
 	\bibliography{bibliografia}
