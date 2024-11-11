@@ -9,7 +9,7 @@ export function TransactionPanel({transactions, transaction_view}) {
         <div className="border-t border-gray-200 py-4">
         <dl>
           {transactions.length === 0 ? ( 
-            <div className="p-4 text-center">No hay movimientos</div>
+            <div className="p-4 text-center"><p>No hay movimientos</p></div>
           ) : (
             <>
             {transactions.map((transaction, index) => (

@@ -77,7 +77,7 @@ export function DarkNav() {
                             )}
                             aria-current={item.current ? 'page' : undefined}
                           >
-                            {item.name}
+                            <p>{item.name}</p>
                           </a>
                         ))}
                       </div>
@@ -121,7 +121,7 @@ export function DarkNav() {
                                     'block px-4 py-2 text-sm text-gray-700',
                                   )}
                                 >
-                                  {item.name}
+                                  <p>{item.name}</p>
                                 </a>
                               )}
                             </MenuItem>
@@ -158,7 +158,7 @@ export function DarkNav() {
                       )}
                       aria-current={item.current ? 'page' : undefined}
                     >
-                      {item.name}
+                      <p>{item.name}</p>
                     </DisclosureButton>
                   ))}
                 </div>
@@ -190,7 +190,7 @@ export function DarkNav() {
                         style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                         className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                       >
-                        {item.name}
+                        <p>{item.name}</p>
                       </DisclosureButton>
                     ))}
                   </div>

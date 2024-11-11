@@ -11,23 +11,28 @@ export function SavingGoalCard({ id, name, description, current_amount_saved, ta
     let badgeType;
     if (percentage >= 90) {
         badgeType = (
-            <div className="badge badge-error gap-2">
+            <div className="badge badge-success gap-2">
                 Queda poco
             </div>
         );
     } else if (percentage >= 70) {
         badgeType = (
             <div className="badge badge-warning gap-2">
-                Ánimo
+                Bien hecho
             </div>
         );
     } else {
         badgeType = (
-            <div className="badge badge-success gap-2">
-                Bien hecho
+            <div className="badge badge-error gap-2">
+                Ánimo
             </div>
         );
-    }
+    };
+
+    const truncateText = (text, maxLength) => {
+        return text.length > maxLength ? text.slice(0, maxLength-3) + "..." : text;
+    };
+    
 
     return (
         // <div onClick={handleSavingGoalClick} className="btn card bg-base-100 w-full h-auto min-h-[300px] shadow-xl">
@@ -56,10 +61,10 @@ export function SavingGoalCard({ id, name, description, current_amount_saved, ta
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
                             </svg>
                         )}
-                        <p className="py-2">{name}</p>
+                        <p className="text-center">{truncateText(name || "Sin descripción", 12)}</p>
                     </div>
                 </h2>
-                <p className="text-center truncate">{description || "Sin descripción"}</p>
+                <p id="description" className="text-center">{truncateText(description || "Sin descripción", 15)}</p>
                 <p className="text-center">{current_amount_saved} / {target_amount} {currency}</p>
                 {badgeType}
             </div>

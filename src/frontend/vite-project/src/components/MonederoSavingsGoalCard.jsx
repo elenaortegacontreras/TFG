@@ -56,24 +56,25 @@ export function MonederoSavingsGoalCard({ currency}) { //currentMonthAmount,  cu
             <div className="flex items-center space-x-2">
                 <div className="stats stats-vertical lg:stats-horizontal shadow">
                     <div className="stat">
-                        <div className="stat-title">Total ahorrado</div>
+                        <div className="stat-title"><p>Total ahorrado</p></div>
                         <div className="stat-value">{walletAmount} {currency}</div>
                         <div className="stat-actions">
-                        <button onClick={handleWalletSavingsViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Ver movimientos</button>
+                        <button onClick={handleWalletSavingsViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
+                        <p>Ver movimientos</p></button>
                         </div>
                     </div>
                     <div className="stat">
-                        <div className="stat-title">Digital</div>
+                        <div className="stat-title"><p>Digital</p></div>
                         <div className="stat-value">{walletCard} {currency}</div>
                         <div className="stat-actions">
-                            <button onClick={handleCardWithdrawSavings} className="btn btn-sm btn-primary">Sacar ahorro</button>
+                            <button onClick={handleCardWithdrawSavings} className="btn btn-sm btn-primary"><p>Sacar ahorro</p></button>
                         </div>
                     </div>
                         <div className="stat">
-                        <div className="stat-title">Efectivo</div>
+                        <div className="stat-title"><p>Efectivo</p></div>
                         <div className="stat-value">{walletCash} {currency}</div>
                         <div className="stat-actions">
-                            <button onClick={handleCashWithdrawSavings} className="btn btn-sm btn-primary">Sacar ahorro</button>
+                            <button onClick={handleCashWithdrawSavings} className="btn btn-sm btn-primary"><p>Sacar ahorro</p></button>
                         </div>
                     </div>
                 </div>
