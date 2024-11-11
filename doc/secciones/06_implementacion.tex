@@ -417,8 +417,10 @@ Los resúmenes que aparecen en la parte superior de las vistas (componente \text
 Para el resto de resúmenes se ha seguido un proceso similar. 
 
 \begin{itemize}
-    \item Resumen de progreso en los objetivos de ahorro (componente \textit{SavingGoalPanel} en la imagen \ref{fig:componentes_graficos_resumenes}). Puesto que los objetivos de ahorro no se limitan a un mes, sino que son a largo plazo, se ha creado un endpoint que, a partir de los datos almacenados en la base de datos, calcula el progreso de cada objetivo de ahorro del usuario sumando lo aportado en el mes actual y el total desde que comenzó a ahorrar para dicho objetivo. Se creó un componente en React que muestra la información a partir del resultado de llamar a dicho enpoint.
-    \item Resumen de ahorro global (componente \textit{MonederoSavingsGoalCard} en la imagen \ref{fig:componentes_graficos_resumenes}). Cuando el mes acaba, el monedero mensual del usuario se pone a cero, porque es hora de comenzar la planificación del nuevo mes. Pero la cantidad que restó en su monedero no se pierde, sino que se considera un ahorro, porque es dinero que obtuvo de ingresos y que aún no ha gastado. Por ello, se creó un nuevo componente que recoge los ahorros que el usuario obtuvo a final de cada mes y los muestra en un resumen único dentro de la vista de ahorros. Además, podrá \textit{sacar dinero} de su monedero de ahorros para gastarlo durante este mes si lo necesita. Al igual que los anteriormente mencionados, se creó un endpoint que, a partir de los datos almacenados en la base de datos, calcula la cantidad total ahorrada por el usuario al final de cada mes (su monedero). Se creó un componente en React que muestra la información a partir del resultado de llamar a dicho enpoint.
+    \item \textbf{Resumen de progreso en los objetivos de ahorro} (componente \textit{SavingGoalPanel} en la imagen \ref{fig:componentes_graficos_resumenes}). \\
+    Puesto que los objetivos de ahorro no se limitan a un mes, sino que son a largo plazo, se ha creado un endpoint que, a partir de los datos almacenados en la base de datos, calcula el progreso de cada objetivo de ahorro del usuario sumando lo aportado en el mes actual y el total desde que comenzó a ahorrar para dicho objetivo. Se creó un componente en React que muestra la información a partir del resultado de llamar a dicho enpoint.
+    \item \textbf{Resumen de ahorro global} (componente \textit{MonederoSavingsGoalCard} en la imagen \ref{fig:componentes_graficos_resumenes}).\\
+     Cuando el mes acaba, el monedero mensual del usuario se pone a cero, porque es hora de comenzar la planificación del nuevo mes. Pero la cantidad que restó en su monedero no se pierde, sino que se considera un ahorro, porque es dinero que obtuvo de ingresos y que aún no ha gastado. Por ello, se creó un nuevo componente que recoge los ahorros que el usuario obtuvo a final de cada mes y los muestra en un resumen único dentro de la vista de ahorros. Además, podrá \textit{sacar dinero} de su monedero de ahorros para gastarlo durante este mes si lo necesita. Al igual que los anteriormente mencionados, se creó un endpoint que, a partir de los datos almacenados en la base de datos, calcula la cantidad total ahorrada por el usuario al final de cada mes (su monedero). Se creó un componente en React que muestra la información a partir del resultado de llamar a dicho enpoint.
 
 \end{itemize}
 
@@ -541,12 +543,12 @@ Al inicio se valoró usar alguna herramienta que permitiera extraer la informaci
 Se planteó la creación de un endpoint en el backend que reciba una imagen o PDF de un ticket de compra y devuelva el texto extraído de la imagen, ya procesado y listo para rellenar el formulario de creación de un nuevo gasto. Para ello, se ha creado un componente en React que permite al usuario subir una imagen y enviarla al backend para su procesamiento. Dada una entrada de imagen, la aplicación es capaz de devolver la información útil para rellenar los campos del formulario.
 
 \begin{itemize}
-    \item Solicitud POST. El cliente envía el archivo en una solicitud HTTP de tipo POST al endpoint.
-    \item Guardado del archivo. El archivo se guarda temporalmente en el servidor.
-    \item Procesamiento del archivo. Se comienza el procesamiento a partir de la ruta del archivo guardado.
-    \item Procesamiento OCR. Uso de pytesseract para extraer texto del archivo.
-    \item Extracción de información. Se procesa el texto extraído para obtener información específica del ticket como el nombre de la tienda, código postal, fecha, método de pago y monto total.
-    \item Respuesta. La información extraída se devuelve como respuesta JSON al cliente.
+    \item \textbf{Solicitud POST.} El cliente envía el archivo en una solicitud HTTP de tipo POST al endpoint.
+    \item \textbf{Guardado del archivo.} El archivo se guarda temporalmente en el servidor.
+    \item \textbf{Procesamiento del archivo.} Se comienza el procesamiento a partir de la ruta del archivo guardado.
+    \item \textbf{Procesamiento OCR.} Uso de pytesseract para extraer texto del archivo.
+    \item \textbf{Extracción de información.} Se procesa el texto extraído para obtener información específica del ticket como el nombre de la tienda, código postal, fecha, método de pago y monto total.
+    \item \textbf{Respuesta.} La información extraída se devuelve como respuesta JSON al cliente.
 \end{itemize}
 
 Para el procesamiento de las imágenes se ha usado el módulo \textbf{Image} de la librería \textbf{Pillow}, una bifuración de PIL (\textit{Python Imaging Library})\cite{rodrigues202440}. Gracias a la simplicidad de pytesseract y PIL, el proceso de extracción de texto a partir de una imagen es sencillo, por lo que se decidió expandir la funcionalidad del script para que pueda procesar tanto imágenes como PDFs (puesto que actualmente algunos comercios envían el ticket de compra al usuario en este formato). Este cambio no supone inconvenientes en el desarrollo, ya que la metodología de extracción de texto es la misma, solo es necesario añadir otra forma de cargar el archivo.
@@ -1106,7 +1108,7 @@ El usuario puede introducir una tienda en la aplicación de dos formas: por geol
 Ambos métodos parten del código postal introducido por el usuario en el formulario de gastos. El proceso para encontrar las tiendas difiere en la forma de obtener las coordenadas con las que iniciar la búsqueda. Cuando se consiguen dichas coordenadas, se construye una consulta en el formato de de Overpass QL para buscar puntos de interés (nodos) que coincidan con el criterio de búsqueda que se haya configurado. La consulta se envía a la API de Overpass y se obtiene una respuesta en formato JSON con los resultados de la búsqueda. Devuelve información de establecimientos de la que se obtienen las coordenadas, calle, nombre e identificador del elemento para introducirlo, junto con el código postal, en la base de datos, creando una nueva entrada en la tabla de tiendas por medio de un endpoint de la API de \textit{SIGMA}.
 
 \begin{itemize}
-    \item Identificación de un comercio con buscador    
+    \item \textbf{Identificación de un comercio con buscador}\\    
     En este caso, la consulta en el ???? ref ???? define diferentes filtros de búsqueda para encontrar elementos en OpenStreetMap con atributos que coincidan con el término de búsqueda (\textit{searchStr}) y estén ubicados en el radio especificado (\textit{meters} alrededor de \textit{lat, lon}). Teniendo en cuenta que las coordenadas parten de un código postal, el radio debe ser lo suficientemente generoso para abarcar la zona completa (aunque suponga exceder el área real del código postal). Siendo:
     \subitem \textit{searchStr} el término de búsqueda introducido por el usuario
     \subitem \textit{meters} la distancia en metros alrededor de la ubicación del usuario
@@ -1125,7 +1127,7 @@ Ambos métodos parten del código postal introducido por el usuario en el formul
     `;
     \end{lstlisting}
 
-    \item Introducción de un comercio con geolocalización 
+    \item \textbf{Introducción de un comercio con geolocalización}\\ 
     Concretamente, la obtención de las coordenadas alrededor de las cuales se buscarán los puntos de interés se realizó a partir de la geolocalización del usuario con la API de geolocalización de HTML5 a través de la biblioteca Leaflet Locatecontrol. Se construyó una consulta ????? ref ??? en Overpass QL que busca nodos (puntos de interés) en OpenStreetMap dentro de un área de proximidad mucho más reducida, ya que utilizará las coordenadas exactas de la ubicación del usuario, se centra en un conjunto de etiquetas específicas y no utiliza un término de búsqueda concreto, ya que por la precisión de las coordenadas el número de comercios encontrados en el área, será reducido.
     \begin{lstlisting} [language=Python, caption=Consulta de Overpass QL con geolocalización]
     const overpassQuery = `
@@ -1152,13 +1154,13 @@ Se realizaron diversas pruebas para comprobar el correcto funcionamiento de las 
 Para verificar la implementación de la funcionalidad asociada a los mapas, realicé diversas pruebas usando DBeaver, Swagger de FastAPI y el frontend de la aplicación. Las pruebas fueron orientadas a garantizar el correcto flujo de datos y la visualización precisa de gastos en el mapa. A continuación, se resume el enfoque de las pruebas realizadas para esta funcionalidad:
 
 \begin{itemize}
-    \item Almacenamiento de Datos en la Base de Datos\\
+    \item \textbf{Almacenamiento de Datos en la Base de Datos}\\
      Verifiqué que los datos introducidos en los formularios del frontend (especialmente el código postal y la tienda) se almacenaban correctamente en la base de datos tras enviarse. Comprobé manualmente que cada registro reflejaba fielmente los datos ingresados.
-    \item Pruebas de consulta a Endpoints con Swagger\\
+    \item \textbf{Pruebas de consulta a Endpoints con Swagger}\\
      Probé cada endpoint de FastAPI relacionado con la funcionalidad de mapas (consultas de coordenadas dado un código postal, y de gastos por localidad o tienda). Verifiqué que las respuestas fueran precisas y completas, devolviendo datos en el formato JSON esperado.
-    \item Visualización en Mapas (Frontend)\\
+    \item \textbf{Visualización en Mapas (Frontend)}\\
      En el frontend, revisé la vista de mapas para asegurar que los puntos de gasto se mostraran correctamente en el mapa de España. Verifiqué que la ubicación de los puntos coincidiera con la información de gastos agrupada por localidad o tienda, de acuerdo a los datos obtenidos desde la base de datos.
-    \item Consultas a la API de Overpass\\
+    \item \textbf{Consultas a la API de Overpass}\\
      Probé la integración con la API de Overpass para obtener información de tiendas cercanas a la ubicación del usuario (o código postal). Verifiqué que los datos retornados fueran precisos y se reflejaran adecuadamente en el mapa.
 \end{itemize}
 
