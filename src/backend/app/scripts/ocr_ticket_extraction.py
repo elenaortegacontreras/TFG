@@ -429,7 +429,7 @@ def get_street(text, postal_code):
 def get_shop_name(text, street):
     shop_name = 'desconocido'
 
-    text = text.replace('\r', ' ').replace(';', ' ').replace('(', ' ').replace(')', ' ').replace('-', '-')
+    text = re.sub(r'[\r;)(]', ' ', text)
 
     match = re.search(r'[a-zá-ú]+.*[sS]\.[aAlL]+', text) # S.A. (Sociedad Anónima) // S.L. (Sociedad Limitada)
 
@@ -558,11 +558,11 @@ def get_data(text):
 
 def get_data_from_image_ticket(file_name):
     if file_name.isdigit():
-        image_jpg = Image.open(f'app/tests/tickets_images/{tickets_list[int(file_name)]}')
+        image = Image.open(f'app/tests/tickets_images/{tickets_list[int(file_name)]}')
     else:
-        image_jpg = Image.open(f'app/tests/tickets_images/{file_name}')
+        image = Image.open(f'app/tests/tickets_images/{file_name}')
 
-    text = pytesseract.image_to_string(image_jpg)
+    text = pytesseract.image_to_string(image)
 
     return get_data(text)
 
@@ -570,13 +570,12 @@ def get_data_from_image_ticket(file_name):
 
 def get_data_from_pdf_ticket(file_name):
     text = ""
-
     with pdfplumber.open(f'app/tests/tickets_PDFs/{file_name}') as pdf:
         for page in pdf.pages:
             page_text = page.extract_text()
             if page_text:
                 text += page_text + '\n'
-    
+  
     return get_data(text)
 
 
