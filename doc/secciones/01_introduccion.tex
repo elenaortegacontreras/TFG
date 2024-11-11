@@ -9,18 +9,12 @@ De manera individual, las decisiones financieras influyen en la calidad de vida 
 un uso adecuado es esencial para evitar problemas como el endeudamiento, la 
 falta de ahorro o la incapacidad de cumplir metas económicas.
 
-La transición hacia lo digital está cambiando nuestra forma de interactuar con 
-la información, nos permite realizar tareas de forma remota, rápida y eficiente. 
+La transición hacia lo digital está cambiando nuestra forma de interactuar con la información, nos permite realizar tareas de forma remota, rápida y eficiente. 
 En los últimos años, en España la banca ha evolucionado rápidamente hacia lo digital, comenzando en los años 70 con la introducción de cajeros automáticos. En los 80, las tecnologías de la información mejoraron la eficiencia de los mercados financieros, y en los 90, surgieron los primeros servicios bancarios a distancia, como la banca telefónica. En 1995, se lanzó el primer software que permitía ver finanzas online, y en 1999 los bancos españoles comenzaron a ofrecer sus primeros servicios de consulta online. A partir del año 2006 la llegada de los smartphones y la evolución de Internet aceleraron la transformación \cite{hebrero2022fintech}.
 
-Actualmente, esta digitalización ha brindado la posibilidad de utilizar diversas formas de de pago como transferencias bancarias, el uso de tarjetas de crédito, sistemas de pago instantáneo como \href{https://bizum.es/}{Bizum}, pago con dispositivos como smartphones y relojes inteligentes mediante NFC \footnote{NFC (Near Field Communication) es una tecnología que permite una comunicación de corto alcance entre dispositivos inhalámbricos para intercambiar pequeñas cantidades de datos} y un largo etcétera. Por supuesto, no podemos olvidar el uso de dinero en efectivo, que sigue siendo una forma de pago común. 
+Actualmente, esta digitalización ha brindado la posibilidad de utilizar diversas formas de pago como transferencias bancarias, el uso de tarjetas de crédito, sistemas de pago instantáneo como \href{https://bizum.es/}{Bizum}, pago con dispositivos como smartphones y relojes inteligentes mediante NFC \footnote{NFC (Near Field Communication) es una tecnología que permite una comunicación de corto alcance entre dispositivos inalámbricos para intercambiar pequeñas cantidades de datos} y un largo etcétera. Por supuesto, no podemos olvidar el uso de dinero en efectivo, que sigue siendo una forma de pago común. 
 
-En una época en la que los precios son muy elevados, pero a la vez el consumo parece estar desvocado, es importante administrar el dinero de manera responsable. Esto implica planificación y control sobre cómo y dónde lo gastamos.
-Sin embargo, no es fácil hacer el seguimiento de las finanzas personales ya que se 
-juntan diversos factores a tener en cuenta: podemos tener varias fuentes de ingresos y/o 
-gastos, planes de ahorro, diferentes cuentas bancarias, uso de dinero tanto 
-efectivo como digital, etc. por lo que en ocasiones resulta tedioso 
-llevar las cuentas al día para analizar correctamente nuestro consumo.
+En una época en la que los precios son muy elevados, pero a la vez el consumo parece estar desbocado, es importante administrar el dinero de manera responsable. Esto implica planificación y control sobre cómo y dónde se gasta. Sin embargo, no es fácil hacer el seguimiento de las finanzas personales, ya que se juntan diversos factores a tener en cuenta: tener varias fuentes de ingresos y/o gastos, planes de ahorro, diferentes cuentas bancarias, uso de dinero tanto efectivo como digital, etc. por lo que en ocasiones resulta tedioso llevar las cuentas al día para analizar correctamente el consumo.
 
 Como ayuda para solventar este problema, han aparecido aplicaciones que nos ayudan a gestionar nuestros gastos, ahorros, inversiones, etc. pero como ocurre en cualquier ámbito, no siempre se adaptan a las necesidades concretas de algunos usuarios. Estas herramientas que usan la tecnología para ofrecer a los usuarios servicios financieros, forman parte de las denominadas \textit{Fintech} \cite{schueffel2016taming}.
 
@@ -29,8 +23,7 @@ Dado el escenario descrito, la motivación para realizar este proyecto surge del
 
 Ante la diversidad de métodos de pago mencionada y la necesidad de una gestión eficiente de las finanzas, este proyecto propone unificar la información de todas las fuentes de ingresos y gastos del usuario. Al ofrecer una visión global y realista de su situación económica, la aplicación permitirá a los usuarios tener un control centralizado sobre sus finanzas, facilitando la toma de decisiones informadas y mejorando su capacidad para planificar, anticiparse y gestionar sus recursos financieros de manera más efectiva.
 
-Se centra en el control del dinero analizando el consumo mes a mes y en el ahorro guiado por la planificación, anticipación y previsión de gastos. Para ello 
-se introduce el concepto de un monedero virtual, que cada mes empieza de cero, se va llenando con los ingresos y se vacía con los gastos y los ahorros dedicados a otros objetivos.\\
+Se centra en el control del dinero analizando el consumo mes a mes y en el ahorro guiado por la planificación, anticipación y previsión de gastos. Para ello se introduce el concepto de un monedero virtual, que cada mes empieza de cero, se va llenando con los ingresos y se vacía con los gastos y los ahorros dedicados a determinados objetivos. \\
 
 Este proyecto es software libre, y está liberado con la licencia \cite{gplv3}.\\
 Puede encontrarse en el siguiente repositorio:
@@ -52,7 +45,7 @@ Para el cumplimiento de este objetivo general se plantean los siguientes objetiv
     \item Diseñar e implementar la interfaz de usuario para permitir la creación 
          de transacciones (ingresos, gastos y ahorros), categorías de gasto y objetivos de ahorro suficientemente personalizables. \label{obj:O3}
     \item Implementar herramientas de visualización de datos por medio de mapas, gráficos y resúmenes automatizados para analizar los patrones de gasto y conseguir un seguimiento claro de los mismos por parte del usuario.\label{obj:O4}
-    \item Estudiar e integrar tecnología de reconocimiento óptico de caracteres (OCR) y de reconocimiento de patrones en un texto para escanear tickets de compra; como punto de partida al procesamiento del texto obtenido. \label{obj:05}
+    \item Estudiar e integrar tecnología de reconocimiento óptico de caracteres (OCR) y de reconocimiento de patrones en un texto para escanear tickets de compra. Como punto de partida al procesamiento del texto obtenido. \label{obj:05}
     \item Implementar un sistema que permita automatizar la inserción de gastos en la aplicación, extrayendo datos relevantes de los tickets de compra para que la interverción por parte del usuario en el proceso sea mínima.\label{obj:06}
     \item Facilitar la búsqueda de comercios. Integrar en la aplicación capacidades de geolocalización, para que el usuario pueda identificar en la aplicación el comercio donde ha realizado un gasto suponiéndole el mínimo esfuerzo posible.\label{obj:O7}
     \item Implementar una solución económica y sostenible, para permitir el acceso a la aplicación a un mayor número de usuarios y facilitar su mantenimiento a largo plazo.\label{obj:O8}

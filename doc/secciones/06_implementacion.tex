@@ -9,7 +9,7 @@ En esta sección se describen las herramientas de desarrollo que inicialmente se
 Para el control de versiones se ha utilizado \textbf{Git}, un sistema distribuido que permite llevar un registro de los cambios realizados en el código fuente de un proyecto. Es una herramienta muy potente y versátil que ha ayudado a completar las tareas de desarrollo y documentación de esta aplicación de manera organizada y documentada. Este proyecto se encuentra alojado en \textit{GitHub}, una plataforma de desarrollo colaborativo que utiliza \textit{Git} como sistema de control de versiones; lo que facilitaría la colaboración y el trabajo en equipo si en el futuro alguien decide participar en el desarrollo del proyecto.
 
 \subsection{Entorno de desarrollo integrado (IDE)}
-El IDE elegido ha sido \textbf{Visual Studio Code}\footnote{\url{https://code.visualstudio.com/}}(Figura \ref{fig:visual_studio_code}), un editor de código fuente multiplataforma desarrollado por Microsoft que ofrece una amplia gama de funcionalidades. En este proyecto son de especial utilidad algunas como el control integrado de \textit{Git}, la detección de errores en tiempo real (también conocido como linting) que notifica los errores de sintaxis y de código antes de la ejecución, o la posibilidad de ejecutar comandos directamente en WSL (Subsistema de Windows para Linux). Esta última funcionalidad ha sido fundamental, ya que permite desarrollar y ejecutar aplicaciones en un entorno Linux virtualizado sin la necesidad de contar con Linux nativo en el sistema, como ocurría en la implementación de este proyecto.
+El IDE elegido ha sido \textbf{Visual Studio Code}\footnote{\url{https://code.visualstudio.com/}}(Figura \ref{fig:visual_studio_code}), un editor de código fuente multiplataforma desarrollado por Microsoft que ofrece una amplia gama de funcionalidades. En este proyecto son de especial utilidad algunas como el control integrado de \textit{Git}, la detección de errores en tiempo real (también conocido como \textit{linting}) que notifica los errores de sintaxis y de código antes de la ejecución, o la posibilidad de ejecutar comandos directamente en WSL (Subsistema de Windows para Linux). Esta última funcionalidad ha sido fundamental, ya que permite desarrollar y ejecutar aplicaciones en un entorno Linux virtualizado sin la necesidad de contar con Linux nativo en el sistema, como ocurría en la implementación de este proyecto.
 
 \begin{figure}[ht!]
     \centering
@@ -29,7 +29,7 @@ Para la gestión de la base de datos se ha utilizado \textbf{DBeaver}\footnote{\
 \end{figure}
 
 \subsection{Contenerización}
-En el desarrollo de esta aplicación se ha utilizado \textit{Docker}\footnote{\url{https://www.docker.com/}}, una plataforma de código abierto que permite a los desarrolladores empaquetar y distribuir aplicaciones en contenedores. Los contenedores son entornos ligeros y portables que contienen todo lo necesario para ejecutar una aplicación, incluidas las bibliotecas, las dependencias y el código. El uso de \textit{Docker} en este proyecto facilita la creación de entornos de desarrollo y producción consistentes y replicables, lo que garantiza que la aplicación se ejecute de de forma similar en cualquier entorno.
+En el desarrollo de esta aplicación se ha utilizado \textit{Docker}\footnote{\url{https://www.docker.com/}}, una plataforma de código abierto que permite a los desarrolladores empaquetar y distribuir aplicaciones en contenedores. Los contenedores son entornos ligeros y portables que contienen todo lo necesario para ejecutar una aplicación, incluidas las bibliotecas, las dependencias y el código. El uso de \textit{Docker} en este proyecto facilita la creación de entornos de desarrollo y producción consistentes y replicables, lo que garantiza que la aplicación se ejecute de forma similar en cualquier entorno.
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\linewidth]{imagenes/docker.png}
@@ -39,22 +39,22 @@ En el desarrollo de esta aplicación se ha utilizado \textit{Docker}\footnote{\u
 
 
 \section{Creación del backend: Milestone 1}
-En una arquitectura cliente-servidor (decidida para este proyecto en el comienzo del capítulo anterior), el protocolo HTTP es el estándar de comunicación que el navegador (cliente) utiliza para enviar solicitudes al servidor web y recibir respuestas. Permite al cliente realizar acciones de acuerdo a sus necesidades. Las operaciones HTTP más comunes son las de solicitud de datos (GET), envío de datos al servidor (POST), actualización de datos (PUT) y eliminación (DELETE). 
+En la arquitectura cliente-servidor adoptada para este proyecto (capítulo anterior \ref{sec:arquitectura_software}), el protocolo HTTP es el estándar que permite la comunicación entre el navegador (cliente) y el servidor web, facilitando que el cliente realice acciones necesarias. Las operaciones más comunes incluyen la solicitud de datos (GET), el envío de datos (POST), la actualización (PUT) y la eliminación (DELETE).
 
-Para organizar y estandarizar estas interacciones, se emplea una API (Application Programming Interface). Una \textbf{API} es un conjunto de reglas y protocolos que permiten que diferentes aplicaciones se comuniquen entre sí a través de una red. En este proyecto, se utiliza una API REST (Representational State Transfer), que sigue los principios de HTTP, permitiendo que el cliente y el servidor se comuniquen mediante solicitudes HTTP. Una API REST estructura las interacciones en torno a recursos específicos y opera sobre ellos mediante los métodos GET, POST, PUT, y DELETE, brindando una forma eficiente de interactuar con el backend.
+Para estructurar y regular estas interacciones, se utiliza una API (Application Programming Interface), que define las reglas y protocolos para la comunicación entre aplicaciones a través de la red. En este caso, se emplea una API REST (Representational State Transfer), que sigue los principios de HTTP, organizando las operaciones en torno a recursos específicos y permitiendo la comunicación mediante solicitudes GET, POST, PUT y DELETE. Esto establece un método eficiente para que el cliente interactúe con el backend.
 
-La API REST en este proyecto también se beneficia de un \textbf{ORM} (Object-Relational Mapping), que facilita la interacción entre la aplicación y la base de datos. Un ORM permite manipular datos en la base de datos utilizando objetos en el código de la aplicación, evitando escribir directamente consultas SQL. Así, los desarrolladores pueden trabajar con datos a nivel de objetos (como usuarios o transacciones) en lugar de consultas SQL, lo cual simplifica el manejo de datos y mejora la legibilidad del código, a la vez que aporta seguridad al prevenir vulnerabilidades como inyecciones SQL.
+Además, la API REST se complementa con un ORM (Object-Relational Mapping), que facilita el manejo de datos entre la aplicación y la base de datos. Permite manipular los datos mediante objetos de la aplicación en lugar de consultas SQL directas, simplificando el trabajo con entidades (como usuarios o transacciones) y reduciendo riesgos de seguridad como inyecciones SQL, también mejora la legibilidad del código.
 
-Finalmente, la \textbf{base de datos} actúa como fuente de información para la API REST, almacenando todos los datos de la aplicación. La API realiza consultas a la base de datos mediante el ORM, de modo que puede manejar los datos según las solicitudes que recibe del cliente. Esta estructura modular asegura una comunicación fluida y un acceso seguro y eficiente a la información, optimizando la gestión y manipulación de los datos.
+Por su parte, la base de datos actúa como repositorio central de información para la API REST, almacenando y gestionando todos los datos de la aplicación. La API accede a esta información a través del ORM, respondiendo así a las solicitudes del cliente. Esta arquitectura modular optimiza el flujo de comunicación entre el usuario y la base de datos\cite{marquez2022backend}.
 
-Para implementar esta parte que conforma el backend de la aplicación, necesitamos escoger herramientas que se adapten a las necesidades del proyecto.
+Para implementar este backend, se requiere seleccionar herramientas que se ajusten a las necesidades específicas del proyecto.
 
 \subsection{Lenguaje de programación}
 \subsubsection{Criterios de búsqueda}
 Debe tener soporte para el desarrollo de APIs y para la conexión a la base de datos. Además debe ser compatible con bibliotecas de testing y OCR.
 
 \subsubsection{Criterios de selección}
-Para las opciones compatibles con los criterios de búsqueda se eligirá preferentemente aquella donde se cumplan la mayor parte o todos los criterios de selección descritos a continuación.
+Para las opciones compatibles con los criterios de búsqueda se escogerá preferentemente aquella donde se cumplan la mayor parte o todos los criterios de selección descritos a continuación.
 
 \begin{itemize}
     \item Conocimiento del lenguaje por parte del desarrollador.
@@ -84,19 +84,19 @@ Debe ofrecer compatibilidad con el lenguaje de programación elegido (Python). T
 \subsubsection{Criterios de selección}
 \begin{itemize}
     \item Se valorará positivamente la facilidad para documentar y si dispone de un entorno para pruebas.
-    \item Se prioriza un framework que gestione eficientemente las solicitudes HTTP, con soporte para programación asíncrona, de forma que se optimice el rendimiento a la hora de atender gran número de solicitudes de forma simultánea. ?????? Sí, pero tengo que hacer las pruebas de benchamark al final (mirar mis notas) para demostrarlo. ?????
+    \item Se prioriza un framework que gestione eficientemente las solicitudes HTTP, con soporte para programación asíncrona, de forma que se optimice el rendimiento a la hora de atender gran número de solicitudes de forma simultánea.
 \end{itemize}
 
 \subsubsection{Opciones compatibles con los criterios de búsqueda}
 \begin{itemize}
-    \item \textbf{Django}\\
-        Permite crear documentación pero no se genera de forma automática, lo que requiere un esfuerzo manual mayor. 
-        Cuenta con bibliotecas y soporte para testing. No es totalmente asíncrono, ofrece soporte asíncrono parcial.
-    \item \textbf{Flask}\\
-        Un framework ligero y modular, pero sin soporte asíncrono nativo (desde Flask 2.0 se incluye con limitaciones) y sin generación automática de documentación. Este framework también cuenta con bibliotecas y soporte para testing.
     \item \textbf{FastAPI}\\
         Fue diseñado específicamente para la creación de APIs de alto rendimiento y maneja solicitudes HTTP de manera eficiente al soportar asincronía nativa.
         Genera documentación de forma automática, lo que simplifica la validación y pruebas de los endpoints.
+    \item \textbf{Django}\\
+        Permite crear documentación, pero no se genera de forma automática, lo que requiere un esfuerzo manual mayor. 
+        Cuenta con bibliotecas y soporte para testing. No es totalmente asíncrono, ofrece soporte asíncrono parcial.
+    \item \textbf{Flask}\\
+        Un framework ligero y modular, pero sin soporte asíncrono nativo (desde Flask 2.0 se incluye con limitaciones) y sin generación automática de documentación. Este framework también cuenta con bibliotecas y soporte para testing.    
 \end{itemize}
 
 \subsubsection{Opción seleccionada y justificación}
@@ -111,7 +111,7 @@ En una aplicación de gestión financiera como la de este proyecto, se opta por 
 \subsubsection{Criterios de búsqueda}
 Debe ser una base de datos relacional. Deben existir bibliotecas de Python que permitan la conexión con la base de datos, y ser escalable y adecuada para entornos de producción.
 
-% Para esta aplicación de gestión bancaria, se prefieren bases de datos que ofrezcan soporte para consultas SQL avanzadas, gestión segura de transacciones y alta concurrencia. Es crucial que la base de datos sea confiable, escalable y adecuada para entornos de producción con múltiples usuarios.
+
 
 \subsubsection{Criterios de selección}
 \begin{itemize}
@@ -200,7 +200,7 @@ Finalmente, se obtuvo un componente backend funcional que proporciona una API RE
 \section{Creación del frontend: Milestone 2}\label{chap:milestone2}
 El frontend es la parte de la aplicación que permite al usuario interactuar con la aplicación. Es el elemento ejecutor de las acciones que el usuario desea realizar. Recibe las solicitudes del usuario, las envía al backend (mediante la API) para que sean procesadas y las devuelve al frontend para que el usuario visualice los resultados.
 
-Esta implementación del cliente debe ser capaz de mostrar la información de forma clara y facilitar al usuario una interacción intuitiva con la aplicación. Para ello, se ha seguido el diseño de la interfaz de usuario definido en el la sección \ref{sec:diseno_interfaz_usuario}.
+Esta implementación del cliente debe ser capaz de mostrar la información de forma clara y facilitar al usuario una interacción intuitiva con la aplicación. Para ello, se ha seguido el diseño de la interfaz de usuario definido en la sección \ref{sec:diseno_interfaz_usuario}.
 
 
 \subsection{Framework o biblioteca para frontend}
@@ -224,7 +224,7 @@ El framework o biblioteca debe ser compatible con FastAPI. Debe tener soporte pa
     \item \textbf{Vue}\\
         Puede usarse como biblioteca o como un framework completo. Es ligero y flexible, al ser modular permite añadir solo las funcionalidades necesarias. Es menos popular que React, pero tiene una comunidad activa y una curva de aprendizaje más suave.
     \item \textbf{Angular}\\
-        Es un framework de frontend completo que facilita el desarrollo de aplicaciones web complejas y escalables. Angular tienen un proceso de aprendizaje más complejo que React y Vue, pero ofrece un enfoque en la estructura y modularidad, además de un conjunto de herramientas muy completo.
+        Es un framework de frontend completo que facilita el desarrollo de aplicaciones web complejas y escalables. Angular tiene un proceso de aprendizaje más complejo que React y Vue, pero ofrece un enfoque en la estructura y modularidad, además de un conjunto de herramientas muy completo.
 \end{itemize}
 
 \subsubsection{Opción seleccionada y justificación}
@@ -240,7 +240,8 @@ El primer paso, por tanto, será instalar \textbf{Node.js}, que incluye \textbf{
 Para agilizar el desarrollo se ha usado la herramienta de compilación \textbf{Vite}. Entre otros, mejora el tiempo de inicio del servidor, hace una traducción rápida de JSX a Javascript y optimiza la carga del código en producción.
 
 \subsection{Implementación del frontend}
-La aplicación presenta varias vistas con estructura similar pero diferente información, por ello se ha priorizado la reutilización de componentes todo lo posible, para facilitar el mantenimiento, la escalabilidad y la coherencia visual.
+La aplicación presenta varias vistas con estructura similar, pero diferente información, por ello se ha priorizado la reutilización de componentes todo lo posible, para facilitar el mantenimiento, la escalabilidad y la coherencia visual.
+
 
 El diseño de componentes se ha ayudado de herramientas como \textbf{Tailwind CSS} junto con \textbf{DaisyUI}, que permiten usar componentes preconstruidos y estilos atractivos de forma rápida y sencilla. Y las bibliotecas \textbf{Heroicons} y \textbf{Headless UI}, que ofrecen iconos y componentes fáciles de incorporar.
 
@@ -309,7 +310,7 @@ Las principales vistas donde se muestra la información que dará valor a los da
     \item \textbf{Vista de ahorros (\textit{SavingsOverviewView}).} Muestra la cantidad total apartada como ahorro del usuario en el mes actual. Desglosa también la cantidad total entre los diferentes objetivos de ahorro y muestra el progreso de cada uno de ellos. En este caso, aunque la cifra de resumen total muestra lo ahorrado solo en el mes actual, los objetivos de ahorro se consideran a largo plazo, por lo que se muestra también el total ahorrado hasta el momento para cada uno (incluyendo las aportaciones de meses anteriores).
     \item \textbf{Vista de categoría de gasto (\textit{CategoryView}).} Muestra la cantidad total de gastos del usuario en la categoría seleccionada durante el mes actual, incluyendo los movimientos realizados en cualquier subcategoría perteneciente a la categoría seleccionada.
     \item \textbf{Vista de objetivo de ahorro (\textit{SavingsGoalView}).} Muestra la cantidad total ahorrada por el usuario en el objetivo de ahorro seleccionado durante el mes actual y el total desde que comenzó a ahorrar para dicho objetivo, incluyendo todos los movimientos de ahorro realizados. Muestra también una barra de progreso, que indica cuánto queda para alcanzarlo. 
-    \item \textbf{Las vistas de trasacciones (\textit{TransactionsView}).} muestran para el elemento que se consultada todas las transacciones separadas en dos paneles: transacciones del mes actual y transacciones de meses anteriores.
+    \item \textbf{Las vistas de trasacciones (\textit{TransactionsView}).} Muestran para el elemento que se consulta todas las transacciones separadas en dos paneles: transacciones del mes actual y transacciones de meses anteriores.
 \end{itemize}
 
 \begin{figure}[ht!]
@@ -368,7 +369,7 @@ Los resúmenes creados tienen como objetivo mostrar al usuario de forma clara y 
 
 El resumen general debe mostrar la cifra de dinero correspondiente al total de sumar cada transacción del mes que coincida con el tipo de movimiento consultado. Debe incluir el desglose de dicha cantidad en dos partes: el total en efectivo y el total en digital.
 
-Los resúmenes que aparecen en la parte superior de las vista de ahorro (componente \textit{ResumeTitle} en la imagen \ref{fig:componentes_graficos_resumenes}), se han creado añadiendo endpoints que, partiendo de las transacciones almacenadas en la base de datos, suman la cantidad del tipo de transacción (en este caso ahorro) y método de pago (efectivo o digital) que se quiere mostrar, filtrando la búsqueda para un usuario y mes determinados. Después se creó un componente en React para mostrar la información a partir del resultado de llamar a dicho enpoint.
+Los resúmenes que aparecen en la parte superior de las vistas (componente \textit{ResumeTitle} en la imagen \ref{fig:componentes_graficos_resumenes}), se han creado añadiendo endpoints que, partiendo de las transacciones almacenadas en la base de datos, suman la cantidad del tipo de transacción (en este caso ahorro) y método de pago (efectivo o digital) que se quiere mostrar, filtrando la búsqueda para un usuario y mes determinados. Después se creó un componente en React para mostrar la información a partir del resultado de llamar a dicho enpoint.
 
 \begin{lstlisting}[language=Python, caption=Componente de React para el resumen de gastos]
     import { LoadingDots } from "./LoadingDots";
@@ -423,9 +424,9 @@ Para el resto de resúmenes se ha seguido un proceso similar.
 
 
 \subsection{Implementación de gráficos}
-Ahora desde la perpectiva de los ahorros, de nuevo, se creó un endpoint que en este caso devuelve cada categoría de gasto y la cantidad gastada en cada una de ellas, filtrando por usuario y mes. Se creó un componente en React, que con la biblioteca Chart.js y los datos obtenidos del endpoint, muestra esa información en forma de gráfico.
+Ahora desde la perspectiva de los ahorros, de nuevo, se creó un endpoint que en este caso devuelve cada categoría de gasto y la cantidad gastada en cada una de ellas, filtrando por usuario y mes. Se creó un componente en React, que con la biblioteca Chart.js y los datos obtenidos del endpoint, muestra esa información en forma de gráfico.
 
-En total se han creado tres componenes para mostrar gráficos que se reutilizarán en varias vistas: un gráfico de barras que se usa en la página de inicio de la aplicación para mostrar el resumen de transacciones del mes actual (total ingresado, total gastado y total ahorrado hasta el momento) (Figura \ref{fig:bar_chart}), un gráfico de líneas que muestra los ahorros a lo largo de los meses (Figura \ref{fig:line_chart}) y un gráfico de anillo (o \textit{donut}) que muestra la cantidad gastada por categorías en la vista de gastos (Figura \ref{fig:doughnut_chart}). 
+En total se han creado tres componentes para mostrar gráficos que se reutilizarán en varias vistas: un gráfico de barras que se usa en la página de inicio de la aplicación para mostrar el resumen de transacciones del mes actual (total ingresado, total gastado y total ahorrado hasta el momento) (Figura \ref{fig:bar_chart}), un gráfico de líneas que muestra los ahorros a lo largo de los meses (Figura \ref{fig:line_chart}) y un gráfico de anillo (o \textit{donut}) que muestra la cantidad gastada por categorías en la vista de gastos (Figura \ref{fig:doughnut_chart}). 
 
 \begin{lstlisting}[language=Python, caption=Componente de React para el gráfico de tipo donut]
     import React from 'react';
@@ -499,7 +500,7 @@ Finalmente, se modificaron las vistas (formadas únicamente por listas de transa
 
 La introducción manual de gastos en la aplicación puede resultar tediosa y lenta, especialmente cuando el usuario tiene que ingresar todos los detalles de un ticket de compra. No es sorprendente que, debido al esfuerzo involucrado, los usuarios dejen de completar los campos opcionales de las transacciones, lo que resulta en la pérdida de información valiosa para el análisis de sus gastos.
 
-Dado este problema, se creó un objetivo al inicio del desarrollo de la aplicación, por el que se debía implementar un mecanismo para autorellenar los campos de un formulario en la aplicación a partir de la información obtenida de un ticket de compra. El usuario solo tendría que aportar una imagen del ticket y la aplicación se encargaría de extraer la información relevante y rellenar los campos correspondientes, posteriormente el usuario podría validar y modificar los datos si fuera necesario.
+Dado este problema, se creó un objetivo al inicio del desarrollo de la aplicación, por el que se debía implementar un mecanismo para rellenar automáticamente los campos de un formulario en la aplicación a partir de la información obtenida de un ticket de compra. El usuario solo tendría que aportar una imagen del ticket y la aplicación se encargaría de extraer la información relevante y completar los campos correspondientes, posteriormente el usuario podría validar y modificar los datos si fuera necesario.
 
 \subsection{Herramienta OCR}
 La tecnología \textbf{OCR} (\textit{Reconocimiento óptico de caracteres}) permite la lectura de texto en imágenes, lo que facilita la extracción del texto en tickets de compra, sobre este texto se puede realizar un procesamiento posterior para obtener los datos necesarios. La implementación de esta tecnología en la aplicación permitirá al usuario ahorrar tiempo y esfuerzo en la introducción manual de gastos, mejorando la experiencia de usuario y aumentando la probabilidad de que complete todos los campos de las transacciones. Se evaluaron diferentes opciones para incorporar OCR\cite{govindaraju2009guide}.
@@ -530,7 +531,7 @@ Se ha optado por la biblioteca \textbf{Tesseract OCR} con \textbf{pytesseract}, 
 
 El reconocimiento del texto de tickets por OCR presenta ciertas limitaciones cuando se emplean fuentes con estilos decorativos, letras cursivas, si la calidad de la imagen no es buena o si el ticket tiene partes que se han comenzado a borrar. Si bien se ha probado con el uso de APIs con versiones gratuitas para comparar la extracción (como \textit{Flashtext} o \textit{OCR.space}), el resultado de la lectura es muy similar al de Tesseract OCR, y se asume en este punto que la extracción de texto no será perfecta.
 
-Dado el propósito de utilizar OCR en la aplicación, no será problema que la precisión no sea del 100\%, ya que el usuario podrá validar los datos si es necesario. Aún así, puesto que el objetivo para el que se usa OCR es procesar el texto obtenido para agilizar la introducción de datos en la aplicación, en el código desarrollado para tal uso, se ha incluido la implementación de numerosas funciones que validan los datos obtenidos. De esta forma (a excepción del campo con el nombre del comercio) \textbf{si no se puede asegurar el relleno correcto de un campo, no se autorellenará en el formulario para evitar un sobreesfuerzo al usuario}.
+Dado el propósito de utilizar OCR en la aplicación, no será problema que la precisión no sea del 100\%, ya que el usuario podrá validar los datos si es necesario. Aun así, puesto que el objetivo para el que se usa OCR es procesar el texto obtenido para agilizar la introducción de datos en la aplicación, en el código desarrollado para tal uso, se ha incluido la implementación de numerosas funciones que validan los datos obtenidos. De esta forma (a excepción del campo con el nombre del comercio) \textbf{si no se puede asegurar el relleno correcto de un campo, no se autorellenará en el formulario para evitar un sobreesfuerzo al usuario}.
 
 
 
@@ -548,13 +549,13 @@ Se planteó la creación de un endpoint en el backend que reciba una imagen o PD
     \item Respuesta. La información extraída se devuelve como respuesta JSON al cliente.
 \end{itemize}
 
-Para el procesamiento de las imágenes se ha usado el módulo \textbf{Image} de la librería \textbf{Pillow}, una bifuración de PIL (\textit{Python Imaging Library}). Gracias a la simplicidad de pytesseract y PIL, el proceso de extracción de texto a partir de una imagen es sencillo, por lo que se decidió expandir la funcionalidad del script para que pueda procesar tanto imágenes como PDFs (puesto que actualmente algunos comercios envían el ticket de compra al usuario en este formato). Este cambio no supone inconvenientes en el desarrollo ya que la metodología de extracción de texto es la misma, solo es necesario añadir otra forma de cargar el archivo.
+Para el procesamiento de las imágenes se ha usado el módulo \textbf{Image} de la librería \textbf{Pillow}, una bifuración de PIL (\textit{Python Imaging Library})\cite{rodrigues202440}. Gracias a la simplicidad de pytesseract y PIL, el proceso de extracción de texto a partir de una imagen es sencillo, por lo que se decidió expandir la funcionalidad del script para que pueda procesar tanto imágenes como PDFs (puesto que actualmente algunos comercios envían el ticket de compra al usuario en este formato). Este cambio no supone inconvenientes en el desarrollo, ya que la metodología de extracción de texto es la misma, solo es necesario añadir otra forma de cargar el archivo.
 
-EL código para la extracción de los datos del ticket se ha realizado mediante un script en Python (de acuerdo al lenguaje de programación del backend). La implementación de la lectura de datos de un ticket a partir de una imagen o PDF sigue varios pasos, la funcionalidad del script se puede divididir en las tareas que se describen a continuación.
+EL código para la extracción de los datos del ticket se ha realizado mediante un script en Python (de acuerdo al lenguaje de programación del backend). La implementación de la lectura de datos de un ticket a partir de una imagen o PDF sigue varios pasos, la funcionalidad del script se puede dividir en las tareas que se describen a continuación.
 
 
 \subsubsection{Extracción del texto de la imagen}
-El módulo \textbf{Image} de la biblioteca \textbf{PIL} \textit{Python Imaging Library}, permite cargar y manipular imágenes. Se realiza la carga de la imagen desde el archivo almacenado en el servidor y se extrae el texto completo del ticket con la función \textit{image\_to\_string} de \textbf{pytesseract}.
+El módulo \textbf{Image} de la biblioteca \textbf{PIL} permite cargar y manipular imágenes. Se realiza la carga de la imagen desde el archivo almacenado en el servidor y se extrae el texto completo del ticket con la función \textit{image\_to\_string} de \textbf{pytesseract}.
     
 \begin{lstlisting}[language=Python, caption=Extracción de texto de una imagen]
     from PIL import Image
@@ -606,7 +607,7 @@ De ellos, se valoró cuáles serían de utilidad para completar el formulario de
 \end{figure}
 
 \subsubsection{Extracción de campos}
-Dado que los tickets suelen ser textos breves, en la mayoría de casos se optó por el uso de expresiones regulares (regex) para buscar y extraer información específica. Las expresiones regulares son especialmente útiles para esta tarea, ya que permiten definir patrones precisos de búsqueda y son rápidas en volúmenes reducidos de texto. Así, se crean funciones específicas para identificar y extraer cada dato relacionado a un campo del formulario.
+Dado que los tickets suelen ser textos breves, en la mayoría de casos se optó por el uso de expresiones regulares (regex) para buscar y extraer información específica. Las expresiones regulares son especialmente útiles para esta tarea, ya que permiten definir patrones precisos de búsqueda y son rápidas en volúmenes reducidos de texto. Así, se crean funciones específicas para identificar y extraer cada dato relacionado con un campo del formulario.
 
 Cada función es llamada desde una función principal que recibe el texto extraído del ticket y devuelve un diccionario con los campos identificados y el valor extraído. En caso de no encontrar un campo, se devuelve en él valor 'desconocido'.
 
@@ -662,7 +663,7 @@ Cada función es llamada desde una función principal que recibe el texto extra�
         return payment_method
     \end{lstlisting}
 
-    \item \textbf{Fecha.} Se busca la fecha, que puede aparecer en diferentes formatos, se han contemplado varios formatos posibles (\textit{dd\_mm\_yyyy, dd\_mm\_yy, yyyy\_mm\_dd}). Primero elimina los espacios en blanco del texto y luego intenta extraer la fecha en cada uno de los formatos mencionados, estableciendo prioridad en los intentos ya que el formato de fecha más frecuente en España es \textit{dd\_mm\_yyyy}. Si no se encuentra una fecha en ninguno de los formatos, devuelve 'desconocido'. Para cada formato se comprueba la validez de la fecha, y que no se extraiga más de una fecha en el texto (ya que en algunos tickets se muestra la fecha límite para devoluciones), si no se cumple alguna de estas condiciones se devuelve 'desconocido'.
+    \item \textbf{Fecha.} Se busca la fecha, que puede aparecer en diferentes formatos, se han contemplado varios formatos posibles (\textit{dd\_mm\_yyyy, dd\_mm\_yy, yyyy\_mm\_dd}). Primero elimina los espacios en blanco del texto y luego intenta extraer la fecha en cada uno de los formatos mencionados, estableciendo prioridad en los intentos, ya que el formato de fecha más frecuente en España es \textit{dd\_mm\_yyyy}. Si no se encuentra una fecha en ninguno de los formatos, devuelve 'desconocido'. Para cada formato se comprueba la validez de la fecha, y que no se extraiga más de una fecha en el texto (ya que en algunos tickets se muestra la fecha límite para devoluciones), si no se cumple alguna de estas condiciones se devuelve 'desconocido'.
 
     \begin{lstlisting} [language=Python, caption=Extracción la fecha en un ticket]
     # returns date with dd/mm/aaaa format o 'desconocido' if not found
@@ -697,7 +698,7 @@ Cada función es llamada desde una función principal que recibe el texto extra�
         return shop_data
     \end{lstlisting}
 
-\subitem \textbf{Código postal}. Se busca un patrón de cinco dígitos aislado en el texto, se asume que en la mayoría casos este será el código postal de la tienda. Si no se encuentra, devuelve 'desconocido'. \label{codigo_postal}
+\subitem \textbf{Código postal}. Se busca un patrón de cinco dígitos aislado en el texto, se asume que en la mayoría casos este será el código postal de la tienda. Si no se encuentra, devuelve 'desconocido'. \label{item:codigo_postal}
     \begin{lstlisting} [language=Python, caption=Extracción del código postal]
     # returns postal code or 'desconocido' if not found
     def get_postal_code(text):
@@ -792,7 +793,7 @@ La identificación de cadenas de texto sin patrones claros como el nombre de la 
 
 El resto de los campos del formulario están sometidos a validaciones estrictas para asegurar la calidad de los datos; si no cumplen con los requisitos, el sistema no registra los valores. Este enfoque prioriza la precisión, de modo que el usuario evite corregir manualmente campos incorrectos. A diferencia del resto, para simplificar el proceso de entrada de datos, el campo 'concepto' de gasto se rellena con el nombre del comercio aunque no sea una coincidencia perfecta, ya que solo sirve como referencia identificativa de la transacción.
 
-El resto de información que se ha procesado pero no ha sido relevante o no ha sido posible extraerla con precisión, se ha descartado. Por ejemplo, la dirección del comercio (calle y municipio), el NIF, el IVA o si había descuentos. Los métodos implementados están disponible en el repositorio donde se aloja el proyecto, aunque se ha decidido no incluirlos en la aplicación para no sobrecargar al usuario con información innecesaria, manteniendo así la simplicidad de la interfaz.
+El resto de información que se ha procesado, pero no ha sido relevante o no ha sido posible extraerla con precisión, se ha descartado. Por ejemplo, la dirección del comercio (calle y municipio), el NIF, el IVA o si había descuentos. Los métodos implementados están disponible en el repositorio donde se aloja el proyecto, aunque se ha decidido no incluirlos en la aplicación para no sobrecargar al usuario con información innecesaria, manteniendo así la simplicidad de la interfaz.
 
 
 \subsubsection{Pruebas}
@@ -903,7 +904,7 @@ Debe ser compatible con React y permitir el uso de datos de OpenStreetMap para v
 \end{itemize}
 
 \subsubsection{Opción seleccionada y justificación}
-Se ha optado por la biblioteca \textbf{Leaflet} por su equilibrio entre funcionalidad y simplicidad, y su integración sencilla con React. Leaflet ofrece el wrapper \textit{react-leaflet} para facilitar la integración de mapas interactivos en aplicaciones React, conviertiendo el mapa en un componente de React que puede personalizarse fácilmente y reutilizarse en la aplicación\cite{khan2023reactjs}.
+Se ha optado por la biblioteca \textbf{Leaflet} por su equilibrio entre funcionalidad y simplicidad, y su integración sencilla con React. Leaflet ofrece el \textit{wrapper} react-leaflet para facilitar la integración de mapas interactivos en aplicaciones React, conviertiendo el mapa en un componente de React que puede personalizarse fácilmente y reutilizarse en la aplicación\cite{khan2023reactjs}.
 
 
 \subsection{Herramienta para la obtención de las coordenadas geográficas de una localidad}
@@ -935,7 +936,7 @@ A la hora de agrupar todas las transacciones del usuario por localidades, se deb
 \end{itemize}
 
 \subsubsection{Opción seleccionada y justificación}\label{sec:justificacion_pgeocode}
-Python Geocode, por sus prestaciones, sería la mejor opción para obtener las coordenadas de un punto de referencia de la localidad asociada a dicho código postal, permitiendo así la representación geográfica del gasto. Sin embargo, ninguna de las herramientas solucionan de forma directa el problema de los códigos postales, ya que no se puede garantizar que el punto de referencia obtenido sea único para representar todos los gastos en la localidad, y realizar comprobaciones adicionales (sumado al tiempo de respuesta de las consultas) puede compromenter la eficiencia.\\
+Python Geocode, por sus prestaciones, sería la mejor opción para obtener las coordenadas de un punto de referencia de la localidad asociada a dicho código postal, permitiendo así la representación geográfica del gasto. Sin embargo, ninguna de las herramientas solucionan de forma directa el problema de los códigos postales, ya que no se puede garantizar que el punto de referencia obtenido sea único para representar todos los gastos en la localidad, y realizar comprobaciones adicionales (sumado al tiempo de respuesta de las consultas) puede comprometer la eficiencia.\\
 Teniendo en cuenta lo anterior, se decide que la mejor solución será crear una tabla en la base de datos (ya que el tamaño de los datos a almacenar no es demasiado grande) que asocie cada código postal con las coordenadas geográficas de un único punto de referencia de la localidad. Aprovechando la personalización de la tabla para garantizar la unicidad de los códigos postales, las ventajas de usar base de datos que optimizan las consultas y en especial debido a que los códigos postales son datos estáticos que no cambian con frecuencia.\\
 De esta forma, se garantiza que la consulta de los gastos por localidades sea precisa y eficiente.
 
@@ -969,11 +970,11 @@ En la búsqueda de soluciones, el código postal dificulta la calidad en las res
     \item \textbf{Google Places API o Here Places AP}
     Es una API de Google que permite buscar y obtener información sobre lugares y comercios. Ofrece una amplia variedad de funcionalidades y datos, su precio está sujeto al número de consultas. Tiene un plan limitado a 100000 consultas gratis por mes que puede ser suficiente para el uso de la aplicación\cite{google_places_api}.
     \item \textbf{Here Places API}\\
-    Similares a Google Places API, ofrece bastante información de los comercios. Dispone de un plan gratuito que permite hasta 1000 consultas diarias, dependiendo del número de usuarios de la aplicación, puede ser suficiente. Sin embargo, ya no se encuentra en desarrollo, lo que puede ser problmático a largo plazo\cite{here_places_api}.
+    Similares a Google Places API, ofrece bastante información de los comercios. Dispone de un plan gratuito que permite hasta 1000 consultas diarias, dependiendo del número de usuarios de la aplicación, puede ser suficiente. Sin embargo, ya no se encuentra en desarrollo, lo que puede ser problemático a largo plazo\cite{here_places_api}.
 \end{itemize}
 
 \subsubsection{Opción seleccionada y justificación}
-El uso de la herramienta es muy básico, ya que tan solo se necesita obtener las coordenadas geográficas. Por tanto, se ha optado por la \textbf{OpenStreetMap Overpass API} por ser gratuita, sencilla de integrar en la aplicación y aportar información sufificiente.
+El uso de la herramienta es muy básico, ya que tan solo se necesita obtener las coordenadas geográficas. Por tanto, se ha optado por la \textbf{OpenStreetMap Overpass API} por ser gratuita, sencilla de integrar en la aplicación y aportar información suficiente.
 
 La Overpass API es una interfaz que permite realizar consultas avanzadas en los datos de OpenStreetMap (OSM). En lugar de descargar toda la base de datos de OSM (que es extremadamente grande), Overpass API permite obtener únicamente la información geográfica que necesitas a partir de consultas personalizadas\cite{overpassAPI2023}.
 
@@ -984,7 +985,7 @@ Se debe elegir una herramienta que acceda a la localización del usuario a trav�
 \subsubsection{Criterios de búsqueda}
 Esta herramienta debe ser gratuita y compatible con React. Debe funcionar en dispositivos móviles y ordenadores. \\
 
-En este punto es importante destacar que si bien, los ordenadores no suelen tener GPS, el desarrollo web nos ofrece una ventaja: el uso del navegador web. Mediante la API de Geolocalización de HTML5, la mayoría de navegadores permiten acceder a la ubicación del dispositivo de varias maneras, dependiendo del hardware disponible. De esta forma si no se dispone de GPS en el dispositivo, se puede obtener la ubicación a través de la dirección IP o la red Wi-Fi a la que está conectado (aunque la precisión sea menor).
+En este punto es importante destacar que si bien, los ordenadores no suelen tener GPS, el desarrollo web nos ofrece una ventaja: el uso del navegador web. Mediante la API de Geolocalización de HTML5, la mayoría de navegadores permiten acceder a la ubicación del dispositivo de varias maneras, dependiendo del hardware disponible. De esta forma si no se dispone de GPS en el dispositivo, se puede obtener la ubicación a través de la dirección IP o la red wifi a la que está conectado (aunque la precisión sea menor).
 
 \subsubsection{Criterios de selección}
 \begin{itemize}
@@ -1011,10 +1012,10 @@ Por tanto, se escogió \textbf{Leaflet Locatecontrol} por su integración sencil
 \subsection{Implementación de la funcionalidad de mapas}
 En este milestone se desarrollaron las funcionalidades de la aplicación que permitieron la incorporación de tiendas, así como la creación de una nueva visualización en mapas del análisis mensual de gastos que realizan los usuarios (agrupándolos por localidades o tiendas).
 
-Continuando con la simplicidad en la introducción de gastos, se ha decidió no hacer obligatorios los campos de código postal y tienda en el formulario de gastos, por lo que el usuario podrá elegir:
+Continuando con la simplicidad en la introducción de gastos, se decidió no hacer obligatorios los campos de código postal y tienda en el formulario de gastos, por lo que el usuario podrá elegir:
 
 \begin{itemize}
-    \item Si desea introducir el código postal o no. Este campo se autorellenará si se ha podido obtener del ticket, por lo que en la mayoría de los casos el usuario no tendrá que introducirlo manualmente. Si se ha completado, el usuario tendrá disponible la representación en el mapa del total de gastos mensuales en esa localidad. 
+    \item Si desea introducir el código postal o no. Este campo se auto rellenará si se ha podido obtener del ticket, por lo que en la mayoría de los casos el usuario no tendrá que introducirlo manualmente. Si se ha completado, el usuario tendrá disponible la representación en el mapa del total de gastos mensuales en esa localidad. 
     
     \item Si desea introducir la tienda o no. Tendrá que haberse rellenado el código postal para poder seleccionar una tienda de la lista ofrecida por la aplicación. Si se ha completado, el usuario tendrá disponible la representación en el mapa del total de gastos mensuales en esa tienda.
 \end{itemize}
@@ -1023,14 +1024,14 @@ A lo largo de esta sección se describen los endpoints desarrollados para obtene
 
 
 \subsection{Mapa de gastos por localidad}
-El código postal es un dato que aparece frecuentemente en los tickets de compra. Sigue un patrón sencillo por lo que es probable que se pueda extraer con precisión de forma automática con el mecanismo implementado en el Milestone 4 \label{codigo_postal}. 
+El código postal es un dato que aparece frecuentemente en los tickets de compra. Sigue un patrón sencillo por lo que es probable que se pueda extraer con precisión de forma automática con el mecanismo implementado en el Milestone 4 \ref{item:codigo_postal}. 
 
 
 
 \subsubsection{Solución al problema de códigos postales}
-Para evitar inconsistencias (o un procesamiento excesivamente dependiente de APIs externas), se creó una nueva tabla (independiente del resto) en la base de datos PostgreSQL con toda la información necesaria de localidades y códigos postales de España. Esta tabla se creó tomando como base un fichero CSV descargado de la web \textit{CentraldeComunicación.es} que contiene una lista de códigos postales de España y sus correspondientes coordenadas geográficas. A esta información se le añadieron los datos de provinvia (nombre y código) extraídos de la \textit{Relación de municipios y sus códigos por provincias} del 1 de enero de 2024 publicada por el Instituto Nacional de Estadística. Por último, para solventar el problema de los códigos postales diferentes para una misma localidad, se creó una columna en la tabla que asigna como elegido solo un código postal por localidad; entendiendo una localidad como una región de nombre único que se determinará por la columna \textit{entidad\_singular\_nombre} de la tabla de municipios que usa la aplicación (como se muestra en la Figura \ref{fig:CSV_municipios}). De esta forma, aunque cada transacción guarde un código postal diferente, se agruparán (y representarán) en una única zona en el mapa si se considera que pertenecen a la misma localidad.
+Para evitar inconsistencias (o un procesamiento excesivamente dependiente de APIs externas), se creó una nueva tabla (independiente del resto) en la base de datos PostgreSQL con toda la información necesaria de localidades y códigos postales de España. Esta tabla se creó tomando como base un fichero CSV descargado de la web \textit{CentraldeComunicación.es} que contiene una lista de códigos postales de España y sus correspondientes coordenadas geográficas. A esta información se le añadieron los datos de provincia (nombre y código) extraídos de la \textit{Relación de municipios y sus códigos por provincias} del 1 de enero de 2024 publicada por el Instituto Nacional de Estadística. Por último, para solventar el problema de los códigos postales diferentes para una misma localidad, se creó una columna en la tabla que asigna como elegido solo un código postal por localidad; entendiendo una localidad como una región de nombre único que se determinará por la columna \textit{entidad\_singular\_nombre} de la tabla de municipios que usa la aplicación (como se muestra en la Figura \ref{fig:CSV_municipios}). De esta forma, aunque cada transacción guarde un código postal diferente, se agruparán (y representarán) en una única zona en el mapa si se considera que pertenecen a la misma localidad.
 
-Ejemplo: si un usuario realiza una compra en un supermercado en la localidad de Granada, y el ticket recoge el código postal 18008, y otro usuario realiza una compra en un supermercado en la misma localidad, pero el ticket recoge el código postal 18006, ambas transacciones se agruparán en el mapa en la localidad de Granada, representando el total de gastos en esa localidad. Para determinar las coordenadas geográficas asociadas a la localidad de Granada se tomarán las latitud y longitud del código postal 18001 porque en la tabla ese código es el elegido para extraer las coordenadas (columna \textit{coords\_elegidas}) de la localidad de Granada.
+Ejemplo: si un usuario realiza una compra en un supermercado en la localidad de Granada, y el ticket recoge el código postal 18008, y otro usuario realiza una compra en un supermercado en la misma localidad, pero el ticket recoge el código postal 18006, ambas transacciones se agruparán en el mapa en la localidad de Granada, representando el total de gastos en esa localidad. Para determinar las coordenadas geográficas asociadas a la localidad de Granada se tomarán la latitud y longitud del código postal 18001 porque en la tabla ese código es el elegido para extraer las coordenadas (columna \textit{coords\_elegidas}) de la localidad de Granada.
 
 \begin{figure}[ht!]
     \centering
@@ -1041,9 +1042,9 @@ Ejemplo: si un usuario realiza una compra en un supermercado en la localidad de 
 
 
 \subsubsection{Visualización de los gastos en el mapa}
-Para la representación de los gastos en el mapa se necesitan analizar las transacciones correspondientes a operaciones de gasto realizadas en el mes actual y extraer las coordenadas geográficas de los localidades para representarlos en un punto concreto en el mapa. 
+Para la representación de los gastos en el mapa se necesitan analizar las transacciones correspondientes a operaciones de gasto realizadas en el mes actual y extraer las coordenadas geográficas de las localidades para representarlos en un punto concreto en el mapa. 
 
-Como solución se ha implementó un endpoint en el backend que obtiene los gastos por ubicación para el mes actual. Primero filtra las transacciones del mes y año actuales, agrupadas por código postal. Del resultado extrae cada código postal con el total de gastos asociado a él y le añade las coordenadas y nombres de localidades. Finalmente, devuelve una lista de gastos con coordenadas y nombres de entidades.
+Como solución se implementó un endpoint en el backend que obtiene los gastos por ubicación para el mes actual. Primero filtra las transacciones del mes y año actuales, agrupadas por código postal. Del resultado extrae cada código postal con el total de gastos asociado a él y le añade las coordenadas y nombres de localidades. Finalmente, devuelve una lista de gastos con coordenadas y nombres de entidades.
 
 \begin{lstlisting} [language=Python, caption=Endpoint para obtener los gastos por localidad]
 @app.get("/expenses_by_location", tags=["Map"], status_code=status.HTTP_200_OK)
@@ -1094,7 +1095,7 @@ def get_expenses_by_location(db: Session = Depends(get_db)):
 \subsection{Mapa de gastos por comercio}
 Para ofrecer un análisis geográfico más detallado de los gastos, se implementó la visualización sobre el mapa de gastos por tienda. Para ello, en los formularios de introducción de gastos se hizo visible un campo (no usado hasta el momento) para que el usuario pueda introducir la tienda donde realizó la compra. 
 
-Este campo se completa seleccionando un item sobre una lista de tiendas predefinidas, evitando así la introducción manual de la dirección de la tienda y por tanto el sobreesfuerzo del usuario. Además, para facilitar la selección de la tienda, se implementó un componente en el frontend de un pequeño mapa para que el usuario verifique la ubicación de la tienda seleccionada.
+Este campo se completa seleccionando un item sobre una lista de tiendas predefinidas, evitando así la introducción manual de la dirección de la tienda y por tanto el sobresfuerzo del usuario. Además, para facilitar la selección de la tienda, se implementó un componente en el frontend de un pequeño mapa para que el usuario verifique la ubicación de la tienda seleccionada.
 
 Las información de tiendas se recoge en la base de datos en una tabla que se irá construyendo a medida que los usuarios vayan introduciendo comercios en la aplicación.
 
@@ -1102,11 +1103,11 @@ Las información de tiendas se recoge en la base de datos en una tabla que se ir
 \subsubsection{Introducción de un comercio en la aplicación}
 El usuario puede introducir una tienda en la aplicación de dos formas: por geolocalización o por búsqueda.
 
-Ambos métodos parten del código postal introducido por el usuario en el formulario de gastos. El proceso para encontrar las tiendas difiere en la forma de obtener las coordenadas con las que iniciar la búsqueda. Cuando se consiguen dichas coordenadas, se contruye una consulta en el formato de de Overpass QL para buscar puntos de interés (nodos) que coincidan con el criterio de búsqueda que se haya configurado. La consulta se envía a la API de Overpass y se obtiene una respuesta en formato JSON con los resultados de la búsqueda. Devuelve información de establecimientos de la que se obtienen las coordenadas, calle, nombre e identificador del elemento para introducirlo, junto con el código postal, en la base de datos, creando una nueva entrada en la tabla de tiendas por medio de un endpoint de la API de \textit{SIGMA}.
+Ambos métodos parten del código postal introducido por el usuario en el formulario de gastos. El proceso para encontrar las tiendas difiere en la forma de obtener las coordenadas con las que iniciar la búsqueda. Cuando se consiguen dichas coordenadas, se construye una consulta en el formato de de Overpass QL para buscar puntos de interés (nodos) que coincidan con el criterio de búsqueda que se haya configurado. La consulta se envía a la API de Overpass y se obtiene una respuesta en formato JSON con los resultados de la búsqueda. Devuelve información de establecimientos de la que se obtienen las coordenadas, calle, nombre e identificador del elemento para introducirlo, junto con el código postal, en la base de datos, creando una nueva entrada en la tabla de tiendas por medio de un endpoint de la API de \textit{SIGMA}.
 
 \begin{itemize}
     \item Identificación de un comercio con buscador    
-    En este caso, la consulta en el ???? ref ???? define diferentes filtros de búsqueda para encontrar elementos en OpenStreetMap con atributos que coincidan con el término de búsqueda (searchStr) y estén ubicados en el radio especificado (meters alrededor de lat, lon). Teniendo en cuenta que las coordenadas parten de un código postal, el radio debe ser lo suficientemente generoso para abarcar la zona completa (aunque suponga exceder el área real del código postal). Siendo:
+    En este caso, la consulta en el ???? ref ???? define diferentes filtros de búsqueda para encontrar elementos en OpenStreetMap con atributos que coincidan con el término de búsqueda (\textit{searchStr}) y estén ubicados en el radio especificado (\textit{meters} alrededor de \textit{lat, lon}). Teniendo en cuenta que las coordenadas parten de un código postal, el radio debe ser lo suficientemente generoso para abarcar la zona completa (aunque suponga exceder el área real del código postal). Siendo:
     \subitem \textit{searchStr} el término de búsqueda introducido por el usuario
     \subitem \textit{meters} la distancia en metros alrededor de la ubicación del usuario
     \subitem \textit{lat, lon} las coordenadas geográficas asociadas al \textbf{código postal} completado en el formulario.
@@ -1125,7 +1126,7 @@ Ambos métodos parten del código postal introducido por el usuario en el formul
     \end{lstlisting}
 
     \item Introducción de un comercio con geolocalización 
-    Concretamente, la obtención de las coordenadas alrededor de las cuales se buscarán los puntos de interés se realizó a partir de la geolocalización del usuario con la API de geolocalización de HTML5 a través de la biblioteca Leaflet Locatecontrol. Se construyó una consulta ????? ref ??? en Overpass QL que busca nodos (puntos de interés) en OpenStreetMap dentro de un área de proximidad mucho más reducida ya que utilizará las coordenadas exactas de la ubicación del usuario, se centra en un conjunto de etiquetas específicas y no utiliza un término de búsqueda concreto, ya que por la precisión de las coordenadas el número de comercios encontrados en el área, será reducido.
+    Concretamente, la obtención de las coordenadas alrededor de las cuales se buscarán los puntos de interés se realizó a partir de la geolocalización del usuario con la API de geolocalización de HTML5 a través de la biblioteca Leaflet Locatecontrol. Se construyó una consulta ????? ref ??? en Overpass QL que busca nodos (puntos de interés) en OpenStreetMap dentro de un área de proximidad mucho más reducida, ya que utilizará las coordenadas exactas de la ubicación del usuario, se centra en un conjunto de etiquetas específicas y no utiliza un término de búsqueda concreto, ya que por la precisión de las coordenadas el número de comercios encontrados en el área, será reducido.
     \begin{lstlisting} [language=Python, caption=Consulta de Overpass QL con geolocalización]
     const overpassQuery = `
         [out:json];
@@ -1141,7 +1142,7 @@ Ambos métodos parten del código postal introducido por el usuario en el formul
 
 \end{itemize}
 
-Finalmente, el usuario selecciona un comercio de la lista de resultados devuelta por la API de Overpass y ésta se añade a la base de datos de la aplicación. Para que el usuario pueda verificar la ubicación de la tienda seleccionada, se creó un componente para mostrar un pequeño mapa en el formulario de gastos donde aparece la tienda seleccionada.
+Finalmente, el usuario selecciona un comercio de la lista de resultados devuelta por la API de Overpass y esta se añade a la base de datos de la aplicación. Para que el usuario pueda verificar la ubicación de la tienda seleccionada, se creó un componente para mostrar un pequeño mapa en el formulario de gastos donde aparece la tienda seleccionada.
 
 \subsubsection{Visualización de los gastos en el mapa}
 La representación de los gastos en el mapa se realiza de forma similar a la de los gastos por localidad. Tan solo cambia la consulta al backend, se creó un nuevo endpoint para obtener los gastos por tienda en lugar de por localidad. Se reutilizó el componente de React para mostrar, en este caso, el resultado de la consulta a la API que devuelve una lista donde cada elemento contiene las coordenadas geográficas, nombre de la tienda y cantidad total de gastos asociada.
