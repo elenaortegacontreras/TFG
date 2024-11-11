@@ -16,7 +16,6 @@ SQLALCHEMY_DATABASE_URL = f"postgresql://{user}:{password}@{hostname}:{port}/{da
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 
-# Crear una sesión de base de datos
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import L from 'leaflet';
-import 'leaflet.locatecontrol';
 import axios from 'axios';
 import { LoadingDots} from './LoadingDots.jsx';
 
