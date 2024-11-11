@@ -4,10 +4,10 @@ import { CategoryBudgetCard } from './CategoryBudgetCard.jsx';
 
 export function CategoryBudgetPanel({ budgets }) {
     return (
-        <div className="container mx-auto p-4">
+        <div className="container mx-auto">
             <div className="flex flex-wrap justify-center">
                 {budgets.map((budget) => (
-                    <div key={budget.id} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
+                    <div key={budget.id} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-1">
                         <CategoryBudgetCard
                             id={budget.id}
                             name={budget.name} 
