@@ -76,7 +76,8 @@ export function ExpensesOverviewView() {
             <div className="divider"></div>
 
             <div className="panel flex w-full justify-evenly">
-                <button onClick={handleAllExpensesViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Ver todos mis gastos</button>
+                <button onClick={handleAllExpensesViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
+                <p>Ver todos mis gastos</p></button>
             </div>
 
             <div className="divider"></div>

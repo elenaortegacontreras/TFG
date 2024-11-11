@@ -93,7 +93,7 @@ export function MapView() {
     return (
         <div>
             {state.type === 'location' ? (
-            <Title title="Mapa de gastos por municipio" />
+            <Title title="Mapa de gastos por localidad" />
             ) : state.type === 'shop' ? (
             <Title title="Mapa de gastos por tienda" />
             ) : null}

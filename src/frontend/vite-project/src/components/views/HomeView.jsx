@@ -114,15 +114,15 @@ export function HomeView() {
         <div>
             {amount !== null ? (
                 <>
-                <ResumeTitle amount={amount} title="Monedero" card={card} cash={cash} currency="€"/>
-                <ResumeTitle amount={currentMonthAmount} title="Current month" card={currentMonthCard} cash={currentMonthCash} currency="€"/>
+                <ResumeTitle amount={currentMonthAmount} title="Monedero del mes" card={currentMonthCard} cash={currentMonthCash} currency="€"/>
                 </>
             ) : (
                 <ResumeTitle amount="loading" title="Monedero" card="loading" cash="loading" currency="€"/>
             )}
 
             <div className="panel flex w-full justify-evenly">
-                <button onClick={handleAllTransactionsViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Ver todos mis movimientos</button>
+                <button onClick={handleAllTransactionsViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
+                <p>Ver todos mis movimientos</p></button>
             </div>
 
             <div>
@@ -163,11 +163,13 @@ export function HomeView() {
             
                 <div className="panel flex w-full justify-evenly">
                     <div className="panel flex w-full justify-evenly">
-                    <button onClick={handleLocationMapViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Mapa municipios</button>
+                    <button onClick={handleLocationMapViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
+                        <p>Mapa municipios</p></button>
                     </div>
                     <div className="divider divider-horizontal"></div>
                     <div className="panel flex w-full justify-evenly">
-                    <button onClick={handleShopMapViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Mapa comercios</button>
+                    <button onClick={handleShopMapViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
+                        <p>Mapa comercios</p></button>
                     </div>
                 </div>
 

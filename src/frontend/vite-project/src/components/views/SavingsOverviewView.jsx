@@ -92,7 +92,8 @@ export function SavingsOverviewView() {
             <div className="divider"></div>
 
             <div className="panel flex w-full justify-evenly">
-                <button onClick={handleAllSavingsViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Ver todos mis ahorros</button>
+                <button onClick={handleAllSavingsViewClick} style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
+                <p>Ver todos mis ahorros</p></button>
             </div>
 
             <div className="divider"></div>
