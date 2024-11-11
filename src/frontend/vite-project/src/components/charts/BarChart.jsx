@@ -18,11 +18,22 @@ export function BarChart({ incomes_amount, expenses_amount, savings_amount }) {
     };
 
     const options = {
-        // scales: {
-        //     y: {
-        //         beginAtZero: true
-        //     }
-        // },
+        scales: {
+            x: {
+                ticks: {
+                    font: {
+                        size: 20 // Tamaño de letra para las etiquetas del eje X
+                    }
+                }
+            },
+            y: {
+                ticks: {
+                    font: {
+                        size: 16 // Tamaño de letra para las etiquetas del eje Y
+                    }
+                }
+            }
+        },
         plugins: {
             legend: {
                 display: false

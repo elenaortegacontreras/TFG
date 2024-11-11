@@ -45,9 +45,37 @@ export function SavingsLineChart({ savings }) {
         ]
     };
 
+    const options = {
+        scales: {
+            x: {
+                ticks: {
+                    font: {
+                        size: 16 // Tamaño de letra para las etiquetas del eje X
+                    }
+                }
+            },
+            y: {
+                ticks: {
+                    font: {
+                        size: 16 // Tamaño de letra para las etiquetas del eje Y
+                    }
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    font: {
+                        size: 16 // Tamaño de letra para las etiquetas de la leyenda
+                    }
+                }
+            }
+        }
+    };
+
     return (
         <div>
-            <Line data={chartData} />
+            <Line data={chartData} options={options} />
         </div>
     );
 }

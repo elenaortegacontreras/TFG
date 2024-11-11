@@ -24,9 +24,21 @@ export function CategoriesDoughnutChart({ categories }) {
         ]
     };
 
+    const options = {
+        plugins: {
+            legend: {
+                labels: {
+                    font: {
+                        size: 16 // Tamaño de letra para las etiquetas de la leyenda
+                    }
+                }
+            }
+        }
+    };
+
     return (
         <div>
-            <Doughnut data={data} />
+            <Doughnut data={data} options={options}  />
         </div>
     );
 }
