@@ -22,6 +22,11 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{pdflscape}
+\usepackage{amsmath}
+
+% \usepackage{array} % Para celdas personalizadas
+% \usepackage{geometry} % Para ajustar los márgenes
+% \geometry{a4paper, margin=1in}
 
 \usepackage[table,xcdraw]{xcolor}
 \hypersetup{
@@ -52,6 +57,7 @@
 \definecolor{vskeywordcolor}{RGB}{86, 156, 214} % Azul para palabras clave
 \definecolor{vscommentcolor}{RGB}{87, 166, 74}  % Verde para comentarios
 \definecolor{vsstringcolor}{RGB}{214, 157, 133} % Rojo para cadenas de texto
+\renewcommand{\lstlistingname}{Código}
 
 \lstset{
     breaklines=true,            % Permite cortar líneas largas
@@ -108,44 +114,19 @@
 	\listoftables 
 	\newpage
 
-	% Introducción 
+
 	\input{secciones/01_introduccion}
 
-	% Estado del arte
-	% 	1. Crítica al estado del arte
-	% 	2. Propuesta
 	\input{secciones/02_estado_del_arte}
+	
+	\input{secciones/03_analisis}
+	\input{secciones/04_planificacion}
 
-	% Especificación de requisitos
-	% \input{secciones/03_requisitos.tex}
+	\input{secciones/05_diseño}
 
-	% Análisis del problema
-	% 1. Análisis de requisitos
-	% 2. Análisis de las soluciones
-	% 3. Solucion propuesta
-	% 4. Análisis de seguridad
-	\input{secciones/04_analisis}
+	\input{secciones/06_implementacion}
 
-	\input{secciones/05_planificacion}
-
-	% Desarrollo bajo sprints: 
-	% 	1. Permitir registros y login de usuarios
-	% 	2. Desarrollo del sistema de incidencias
-	% 	3. Desarrollo del sistema de denuncias administrativas y accidentes
-	% 	4. Desarrollo del sistema de croquis
-	%   5. Instalación de la aplicación de manera automática
-	% Presupuesto
-
-	\input{secciones/06_diseño}
-
-	\input{secciones/07_implementacion}
-
-	% \input{secciones/08_costes}
-
-	% Conclusiones
-	\input{secciones/09_conclusiones}
-
-	% Trabajos futuros
+	\input{secciones/07_conclusiones}
 	
 	\newpage
 	\bibliography{bibliografia}

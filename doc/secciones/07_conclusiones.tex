@@ -1,0 +1,59 @@
+\chapter{Conclusiones y trabajos futuros}
+
+\section{Conclusiones}
+A lo largo del desarrollo de este proyecto, se han alcanzado satisfactoriamente los objetivos establecidos en la fase inicial. Estos objetivos sirvieron como guía para asegurar que cada funcionalidad cumpliera con los requerimientos del usuario y aportara una solución eficaz en el ámbito de la gestión financiera. A continuación, se detallan las conclusiones obtenidas en relación con cada uno de los objetivos planteados:
+
+\begin{itemize}
+    \item \textbf{Análisis de herramientas de gestión financiera} (objetivo \ref{obj:O1}): Logrado en capítulo \label{chap:estado_del_arte}. El estudio de las herramientas existentes en el mercado permitió identificar las características y limitaciones más relevantes en el área de la gestión financiera personal. Gracias a este análisis, se establecieron funcionalidades clave para la aplicación, con un enfoque en simplicidad, personalización.
+
+    \item \textbf{Arquitectura modular y escalable} (objetivo \ref{obj:O2}): Diseñada en el capítulo \ref{chap:diseno}, y cuya implementación se ha mantenido a lo largo de todo el proyecto. Se ha diseñado e implementado una arquitectura de software modular, cumpliendo con el objetivo de facilitar la escalabilidad del proyecto. Esto asegura que futuras integraciones, como nuevas funcionalidades o mejoras en el rendimiento, puedan añadirse sin afectar a los componentes existentes.
+
+    \item \textbf{Implementación de la interfaz de usuario para interactuar con la base de datos} (objetivo \ref{obj:O3}): Logrado en capítulo \ref{chap:milestone2}. La interfaz permite a los usuarios gestionar sus transacciones de ingresos, gastos y ahorros de manera eficiente. Se implementaron opciones para categorizar gastos y definir objetivos de ahorro personalizables, permitiendo a los usuarios tener un control claro sobre su situación financiera. Se cumple,
+
+    \item \textbf{Visualización de datos mediante gráficos, mapas y resúmenes} (objetivo \ref{obj:O4}): Logrado en capítulo \ref{chap:milestone3}. El sistema de visualización de datos proporciona gráficos y resúmenes automáticos de gastos, ofreciendo a los usuarios un análisis visual y detallado de sus patrones de consumo. Además, la visualización de gastos en mapas ayuda a los usuarios a relacionar sus gastos con ubicaciones geográficas específicas, lo cual contribuye a una mejor comprensión y seguimiento de los hábitos de consumo.
+    
+    \item \textbf{Estudio e integración de tecnología OCR y procesamiento de tickets para automatizar la inserción de gastos} (objetivos \ref{obj:05} y \ref{obj:06}): Logrado en capítulo \ref{chap:milestone4}.La implementación de la tecnología OCR y procesamiento de tickets en el sistema permite escanear y extraer de forma eficiente la información de los tickets de compra, logrando así una automatización en la inserción de gastos que minimiza la intervención manual del usuario. 
+
+    \item \textbf{Geolocalización y búsqueda de comercios} (objetivo \ref{obj:O7}): Logrado en capítulo \ref{chap:milestone5}.La integración de la funcionalidad de geolocalización permite identificar y registrar el comercio asociado a cada transacción en función de la ubicación del usuario (o de coordenadas cercanas al comercio). Esto facilita a los usuarios al localizar sus gastos en los diferentes comercios. Esta funcionalidad contribuye a una mayor precisión y detalle en el análisis de gastos.
+    
+    \item \textbf{Implementación de una solución económica y sostenible para maximizar el acceso y facilitar el mantenimiento a largo plazo} (objetivo \ref{obj:O8}): Logrado a lo largo de la implementación en los capítulos \ref{chap:milestone2}, \ref{chap:milestone3}, \ref{chap:milestone4} y \ref{chap:milestone5}. Para hacer la aplicación accesible y económica, se ha priorizado el uso de tecnologías de gratuitas (preferiblemente de código abierto) y ligeras, como bibliotecas y herramientas con estas características que reducen los costos sin comprometer el rendimiento. No se almacenan datos pesados como imágenes de tickets, ya que solo se extraen los datos relevantes mediante OCR, lo que disminuye significativamente el consumo de almacenamiento y recursos. Este enfoque también simplifica el mantenimiento y permite que la aplicación funcione sin necesidad de infraestructura costosa, garantizando su sostenibilidad y accesibilidad para más usuarios a lo largo del tiempo.
+
+\end{itemize}
+
+Por tanto, este proyecto ha logrado desarrollar una solución funcional en el ámbito de la gestión financiera personal, proporcionando una herramienta que integra tecnologías avanzadas y ofrece una experiencia de usuario optimizada. La aplicación representa una contribución al estado del arte en la gestión de finanzas personales, ya que combina funciones de análisis de datos, automatización y geolocalización adaptadas a las necesidades reales de los usuarios.
+
+A lo largo del desarrollo, he tenido la oportunidad de enriquecerme en varios aspectos. Construir esta solución desde cero y de forma autónoma me permitió fortalecer mis habilidades de análisis y planificación, ya que fue necesario estructurar una arquitectura coherente desde el inicio, con una visión clara de las funcionalidades y restricciones requeridas en cada fase de implementación.
+
+Además, la búsqueda de soluciones y su implementación me brindaron la oportunidad de aprender y aplicar nuevas tecnologías y herramientas que han ampliado significativamente mis conocimientos y habilidades en el desarrollo de aplicaciones web.
+
+También fue particularmente gratificante desarrollar una solución propia para una problemática que enfrentaba personalmente, y descubrir que esta misma solución resultaba de utilidad para personas de mi entorno. Al compartir y discutir los primeros planteamientos con otros, logré refinar y enfocar de mejor manera las necesidades del proyecto, alcanzando una comprensión más precisa de sus objetivos y una implementación alineada con las expectativas de los usuarios.
+
+Este proyecto ha representado un desafío constante que, finalmente, ha cumplido las expectativas iniciales, aportándome una experiencia valiosa en el desarrollo de software, desde la concepción de la idea hasta la implementación de una solución funcional. Me ha permitido adquirir nuevas competencias técnicas y una comprensión más profunda del proceso de desarrollo y de la importancia de diseñar soluciones sólidas desde el principio, habilidades que, sin duda, serán aplicables a futuros proyectos.
+
+
+\section{Trabajos futuros}
+A pesar de que la aplicación SIGMA constituye una solución completa, pienso que tiene una gran perpectiva de crecimiento y mejora. Algunas de las posibles mejoras y ampliaciones que se podrían implementar en futuras versiones de la aplicación son las siguientes:
+
+\begin{itemize}
+    \item \textbf{Despliegue en la nube}: Actualmente, la aplicación se ejecuta en un entorno local; se podría considerar la posibilidad de desplegarla en la nube para mejorar la accesibilidad y la escalabilidad. Esto permitiría a los usuarios acceder a la aplicación desde cualquier lugar y dispositivo, facilitaría la gestión de múltiples usuarios y la integración con otros servicios en la nube.
+    \item \textbf{Integración de más fuentes de datos}: Actualmente, la aplicación usa los códigos postales de España; se podría ampliar la base de datos para incluir códigos postales de otros países. El mecanismo de tickets y la estructura de los mismos es muy similar en multitud de países, por lo que esto permitiría a los usuarios que acceden desde el extranjero disponer también de la funcionalidad de geolocalización y búsqueda de comercios. Además de las vistas de resúmenes en mapas.
+    \item \textbf{Clústering en el mapa}: Implementar un sistema de clústering en el mapa para agrupar los marcadores según el nivel de zoom, de forma que se pueda generar un único mapa en lúgar de separar la vista de mapa con la agrupación por comercios y la vista de mapa con la agrupación por localidad. Un ejemplo de ello sería que al máximo nivel de zoom se muestren los marcadores de los comercios, en un nivel de zoom intermedio se agrupen los marcadores por localidad y para completar la experiencia de usuario, al nivel mínimo de zoom se muestren agrupados por provincia.
+    \item \textbf{Permitir la realización de fotografías de tickets desde la aplicación}: Implementar la funcionalidad de lectura automática directamente desde la cámara del dispositivo, permitiendo a los usuarios escanear tickets de compra de manera rápida y sencilla. Esto mejoraría la experiencia del usuario y reduciría aún más la intervención manual en el proceso de registro de gastos.
+    \item \textbf{Gestión de múltiples monederos}: La solución actual promueve la gestión de un único monedero; se podría implementar la posibilidad de gestionar varios monederos, lo que permitiría a los usuarios separar sus gastos e ingresos en diferentes cuentas. Esto sería útil para usuarios con múltiples fuentes de ingresos o para aquellos que deseen llevar un control separado de sus gastos personales y profesionales.
+    \item \textbf{Incluir un sistema de alertas y notificaciones}: Implementar un sistema de alertas y notificaciones personalizadas que informe a los usuarios sobre sus gastos, ingresos y ahorros cuando se produzcan cambios importantes, así como sobre posibles desviaciones en su presupuesto. Esto permitiría a los usuarios recibir recomendaciones y recordatorios en tiempo real, lo que contribuiría a una gestión aún más eficiente de sus finanzas.
+    \item \textbf{Análisis predictivo de gastos}: Implementar un sistema de análisis predictivo que permita a los usuarios anticipar sus gastos futuros en función de sus patrones de consumo analizados en meses anteriores. Esto podría ayudar a los usuarios a planificar y ajustar sus presupuestos de manera más efectiva.
+\end{itemize}
+
+Estas mejoras y ampliaciones propuestas podrían enriquecer la aplicación SIGMA y proporcionar a los usuarios una experiencia más completa y personalizada en la gestión de sus finanzas personales. La implementación de estas funcionalidades contribuirían a consolidar la aplicación como una solución avanzada y eficaz en el ámbito de la gestión financiera.
+
+
+\subsection{Perspectiva comercial}
+En un futuro, la aplicación SIGMA si llega a un número elevado de usuarios y se consolida como una solución eficaz en el mercado, puede requerir costes de mantenimiento y soporte más elevados. Para garantizar su sostenibilidad y viabilidad a largo plazo, se podrían considerar diferentes estrategias comerciales que permitan monetizar la aplicación y generar ingresos. Algunas posibles estrategias para la aplicación podrían ser:
+
+\begin{itemize}
+    \item \textbf{Modelos freemium/premium}: Ofrecer una versión básica de la aplicación de forma gratuita con funcionalidades limitadas, y ofrecer una versión premium que sí incluya funcionalidades avanzadas (las más costosas como las relacionadas con geolocalización, el OCR o almacenamiento de tickets) a cambio de una suscripción mensual o anual.
+    \item \textbf{Servicio para aplicaciones bancarias}: Ofrecer la aplicación como un servicio de integración para aplicaciones bancarias existentes, permitiendo a los usuarios acceder a la funcionalidad de gestión financiera directamente desde la aplicación de su banco. Esto podría generar ingresos a través de acuerdos de colaboración con entidades bancarias.
+\end{itemize}
+
+Los casos anteriores se retroalimentan entre sí, ya que la aplicación en su plan básico gratuito puede funcionar para atraer a nuevos usuarios y fomentar su uso, de modo que sea más fácil para los clientes ver el valor añadido de la versión premium. Y por otro lado, la integración con aplicaciones bancarias también podría ser una estrategia efectiva para llegar a un público más amplio.
+
