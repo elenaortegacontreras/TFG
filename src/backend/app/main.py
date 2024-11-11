@@ -2,7 +2,7 @@ from fastapi import FastAPI, status, Depends
 from sqlalchemy.orm import Session
 from app.core.models.database import engine, get_db, Base
 from typing import List
-from sqlalchemy import func
+from sqlalchemy import func, extract
 
 from app.core.models.models import User, Category, Subcategory, Goal, Transaction, Shop
 from app.core.schemas.schemas import UserRequest, UserResponse, CategoryRequest, CategoryResponse, SubcategoryRequest, SubcategoryResponse, GoalRequest, GoalResponse, TransactionRequest, TransactionResponse, ShopRequest, ShopResponse
@@ -554,12 +554,40 @@ def create_shop(shop: ShopRequest, db: Session = Depends(get_db)):
     return new_shop
 
 # SHOPS (expenses by shop)
+# @app.get("/expenses_by_shop", tags=["Shops"], status_code=status.HTTP_200_OK)
+# def get_expenses_by_shop(db: Session = Depends(get_db)):
+#     expenses_by_shop_query = db.query(
+#         Transaction.shop_id,
+#         func.coalesce(func.sum(Transaction.amount), 0).label('current_amount_spent')
+#     ).filter(Transaction.shop_id != None).group_by(Transaction.shop_id).all()
+
+#     expenses_by_shop = [row._asdict() for row in expenses_by_shop_query]
+
+#     expenses_with_shop_info = []
+#     for expense in expenses_by_shop:
+#         shop_id = expense['shop_id']
+#         shop = db.query(Shop).filter(Shop.id == shop_id).first()
+#         if shop:
+#             expense['shop_name'] = shop.name
+#             expense['shop_latitude'] = shop.lat
+#             expense['shop_longitude'] = shop.lon
+#             expenses_with_shop_info.append(expense)        
+
+#     return expenses_with_shop_info
+
 @app.get("/expenses_by_shop", tags=["Shops"], status_code=status.HTTP_200_OK)
 def get_expenses_by_shop(db: Session = Depends(get_db)):
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+
     expenses_by_shop_query = db.query(
         Transaction.shop_id,
         func.coalesce(func.sum(Transaction.amount), 0).label('current_amount_spent')
-    ).filter(Transaction.shop_id != None).group_by(Transaction.shop_id).all()
+    ).filter(
+        Transaction.shop_id != None,
+        extract('month', Transaction.insert_date) == current_month,
+        extract('year', Transaction.insert_date) == current_year
+    ).group_by(Transaction.shop_id).all()
 
     expenses_by_shop = [row._asdict() for row in expenses_by_shop_query]
 
@@ -666,7 +694,7 @@ def get_wallet_balance_by_month(month: int, db: Session = Depends(get_db)):
     return {"amount": amount, "cash": cash, "card": card}
 
 # OCR Ticket Data Extraction
-@app.post("/extract_text", tags=["OCR"],)
+@app.post("/extract_text", tags=["Ticket extraction"],)
 def extract_text(file: UploadFile = File(...)):
 
     if file.filename.endswith('.pdf'):
@@ -707,10 +735,17 @@ def get_location_by_postal_code(postal_code: str, db: Session = Depends(get_db))
 
 @app.get("/expenses_by_location", tags=["Map"], status_code=status.HTTP_200_OK)
 def get_expenses_by_location(db: Session = Depends(get_db)):
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+
     expenses_by_location_query = db.query(
         Transaction.shop_location_pc,
         func.coalesce(func.sum(Transaction.amount), 0).label('current_amount_spent')
-    ).filter(Transaction.shop_location_pc != None).group_by(Transaction.shop_location_pc).all()
+    ).filter(
+        Transaction.shop_location_pc != None,
+        extract('month', Transaction.insert_date) == current_month,
+        extract('year', Transaction.insert_date) == current_year
+    ).group_by(Transaction.shop_location_pc).all()
 
     expenses_by_location = [row._asdict() for row in expenses_by_location_query]
 
@@ -719,10 +754,19 @@ def get_expenses_by_location(db: Session = Depends(get_db)):
         postal_code = expense['shop_location_pc']
         coordinates = get_location_by_postal_code(postal_code, db)
         if coordinates != {"desconocido"}:
-            expense['latitude'] = coordinates['latitude']
-            expense['longitude'] = coordinates['longitude']
-            expense['entidad_nombre'] = coordinates['entidad_nombre']
-            expenses_with_coordinates.append(expense)        
+            existing_expense = next((exp for exp in expenses_with_coordinates if exp['entidad_nombre'] == coordinates['entidad_nombre']), None)
+            if existing_expense:
+                existing_expense['current_amount_spent'] += expense['current_amount_spent']
+                existing_expense['postal_codes'].append(postal_code)
+            else:
+                expense_by_loc = {
+                    'postal_codes': [postal_code],
+                    'latitude': coordinates['latitude'],
+                    'longitude': coordinates['longitude'],
+                    'entidad_nombre': coordinates['entidad_nombre'],
+                    'current_amount_spent': expense['current_amount_spent']
+                }
+                expenses_with_coordinates.append(expense_by_loc)
 
     return expenses_with_coordinates
 
