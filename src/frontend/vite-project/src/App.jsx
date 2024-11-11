@@ -2,26 +2,23 @@ import { useState } from 'react'
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css'
 
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-
 import { DarkNav } from './components/DarkNav.jsx'
-import { CategoryView } from './components/CategoryView.jsx'
-import { TransactionsView } from './components/TransactionsView.jsx'
-import { SavingView } from './components/SavingView.jsx'
-import { ExpensesOverviewView } from './components/ExpensesOverviewView.jsx'
-import { SavingsOverviewView } from './components/SavingsOverviewView.jsx'
-import { IncomesOverviewView } from './components/IncomesOverviewView.jsx';
-import { FormExpense } from './components/FormExpense.jsx'
-import { FormExpenseOCR } from './components/FormExpenseOCR.jsx'
+import { CategoryView } from './components/views/CategoryView.jsx'
+import { TransactionsView } from './components/views/TransactionsView.jsx'
+import { SavingView } from './components/views/SavingView.jsx'
+import { ExpensesOverviewView } from './components/views/ExpensesOverviewView.jsx'
+import { SavingsOverviewView } from './components/views/SavingsOverviewView.jsx'
+import { IncomesOverviewView } from './components/views/IncomesOverviewView.jsx';
+import { FormExpense } from './components/views/FormExpense.jsx'
+import { FormExpenseOCR } from './components/views/FormExpenseOCR.jsx'
 import { SignInOrRegistration } from './inprogress/SignInOrRegistration.jsx'
-import { FormSaving } from './components/FormSaving.jsx'
-import { FormIncome } from './components/FormIncome.jsx'
-import { FormCategoryBudget } from './components/FormCategoryBudget.jsx'
-import { FormSubcategoryBudget } from './components/FormSubcategoryBudget.jsx'
-import { FormSavingGoal } from './components/FormSavingGoal.jsx'
-import { HomeView } from './components/HomeView.jsx'
-import { MapView } from './components/MapView.jsx'
+import { FormSaving } from './components/views/FormSaving.jsx'
+import { FormIncome } from './components/views/FormIncome.jsx'
+import { FormCategoryBudget } from './components/views/FormCategoryBudget.jsx'
+import { FormSubcategoryBudget } from './components/views/FormSubcategoryBudget.jsx'
+import { FormSavingGoal } from './components/views/FormSavingGoal.jsx'
+import { HomeView } from './components/views/HomeView.jsx'
+import { MapView } from './components/views/MapView.jsx'
 import { WalletSavingsView } from './components/WalletSavingsView.jsx'
 
 function App() {
@@ -33,20 +30,6 @@ function App() {
       <DarkNav />
 
       <main className="fullHeight bg-white shadow">
-
-            {/* <SignInOrRegistration /> */}
-
-            {/* <CategoryView title="Cat. Transporte"/> */}
-            {/* <TransactionsView title="Transacciones"/> */}
-            {/* <SavingView title="Móvil nuevo"/> */}
-            {/* <TransactionsOverviewView /> */}
-            {/* <SavingsOverviewView /> */}
-            {/* <FormExpense /> */}
-            {/* <FormSaving /> */}
-            {/* <FormIncome /> */}
-            {/* <HomeView /> */}
-            {/* <NewExpenseView /> */}
-
         <Routes>
           <Route path="/" element={<HomeView />} />
           <Route path="/transactions" element={<TransactionsView />} />
