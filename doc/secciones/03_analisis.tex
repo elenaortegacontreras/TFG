@@ -2,7 +2,7 @@
 
 El desarrollo de este Trabajo de Fin de Grado se centra en la creación de una solución digital capaz de incluir todas las transacciones monetarias de un usuario, independientemente del origen de las mismas, centralizando la información en un único lugar. La aplicación facilitará el seguimiento de los gastos y el control de ahorros y presupuestos de manera sencilla para el usuario. Con este fin, para la introducción de gastos en la aplicación se da especial importancia a la automatización de procesos. Se generan gráficos y resúmenes que permiten analizar los patrones de gasto y reúne diferentes formas de visualización de los datos aportando información de valor como la categorización de los gastos o la localización de los comercios.
 
-Una vez establecido lo que la aplicación debe lograr, se puede tomar un enfoque del trabajo guiado por las necesidades concretas de los usuarios, asegurando que las funcionalidades propuestas respondan a sus problemas reales. En esta sección se describen los personajes, historias de usuario y milestones, elementos fundamentales para orientar el diseño y desarrollo de la plataforma web. 
+Una vez establecido lo que la aplicación debe lograr, se puede tomar un enfoque del trabajo guiado por las necesidades concretas de los usuarios, asegurando que las funcionalidades propuestas respondan a sus problemas reales. En esta sección se describen los personajes, historias de usuario y milestones, elementos fundamentales para orientar el diseño y desarrollo de la plataforma. 
 
 \section{Personajes y viajes de usuario}
 Los personajes son perfiles de usuario que representan a los diferentes tipos de usuarios que interactuarán con la aplicación. Estos ayudan a guiar el diseño y el desarrollo de la aplicación teniendo en cuenta las necesidades y expectativas de los usuarios reales.
@@ -10,13 +10,13 @@ Los personajes son perfiles de usuario que representan a los diferentes tipos de
 Algunos personajes que podrían beneficiarse de la aplicación descrita porque encuentran problemas con la administración de sus finanzas son:
 
 \begin{itemize}
-    \item \textbf{Andrés}, un estudiante universitario de primer año (fuera de su ciudad natal) ha dejado su hogar para mudarse a otra ciudad, donde estudia. Recibe mensualmente una asignación fija de dinero por parte de sus padres, la cual debe administrar cuidadosamente para cubrir sus gastos básicos (alquiler, alimentación, transporte y ocio). No tiene experiencia previa en la gestión de su propio dinero y suele gastar más en las primeras semanas del mes, quedándose con menos recursos para el resto. Quiere ser consciente de cuánto gasta día a día para poder ajustar su presupuesto si es necesario y terminar el mes sin problemas económicos.
+    \item \textbf{Andrés}, 19 años, un estudiante universitario de primer año (fuera de su ciudad natal) ha dejado su hogar para mudarse a otra ciudad, donde estudia. Recibe mensualmente una asignación fija de dinero por parte de sus padres, la cual debe administrar cuidadosamente para cubrir sus gastos básicos (alquiler, alimentación, transporte y ocio). No tiene experiencia previa en la gestión de su propio dinero y suele gastar más en las primeras semanas del mes, quedándose con menos recursos para el resto. Quiere ser consciente de cuánto gasta día a día para poder ajustar su presupuesto si es necesario y terminar el mes sin problemas económicos.
 
-    \item \textbf{Ana} es diseñadora gráfica en un departamento de marketing, tiene un empleo estable y recibe un salario mensual. Le encanta la moda y, para renovar su armario, suele comprar y vender ropa de segunda mano. Actualmente está ahorrando para comprar su primer coche, sin embargo, a veces actúa impulsivamente, adquiriendo prendas que le gustan sin considerar cómo ese gasto afectará a sus objetivos. Ana piensa que le vendría bien una herramienta para controlar sus gastos de manera más consciente; y que en el momento de duda al comprar pueda visualizar gráficos sencillos que muestren cuánto lleva gastado en el mes para mantenerse enfocada en su objetivo de ahorro para el coche.
+    \item \textbf{Ana}, tiene 27 años y es diseñadora gráfica en un departamento de marketing, tiene un empleo estable y recibe un salario mensual. Le encanta la moda y, para renovar su armario, suele comprar y vender ropa de segunda mano. Actualmente está ahorrando para comprar su primer coche, sin embargo, a veces actúa impulsivamente, adquiriendo prendas que le gustan sin considerar cómo ese gasto afectará a sus objetivos. Ana piensa que le vendría bien una herramienta para controlar sus gastos de manera más responsable; y que en el momento de duda cuando va a comprar pueda visualizar gráficos sencillos que muestren ``de un vistazo'' cuánto lleva gastado en el mes para mantenerse enfocada en su objetivo de ahorro para el coche.
     
-    \item \textbf{Daniela} trabaja en una consultora de marketing. Es una persona socialmente activa que disfruta saliendo a cenar con sus amigos. Con frecuencia se ofrece a pagar la cuenta completa cuando salen en grupo (casi siempre con tarjeta); a menudo sus amigos le devuelven su parte en efectivo, lo que le genera dificultades para controlar exactamente cuánto ha gastado en estos encuentros, ya que el dinero devuelto no aparece reflejado en sus aplicaciones bancarias y le resulta complicado llevar un registro claro. Daniela desea integrar y gestionar de forma automática y precisa los pagos con tarjeta y el efectivo que recibe, para que sus finanzas reflejen con exactitud lo que gasta. Además sería útil para ella poder tener una visión clara de cuánto gasta realmente en restaurantes por medio de mapas, para evitar hacer cálculos manuales cada vez que necesita conocerlo.
+    \item \textbf{Daniela}, 39 años, trabaja en una consultora de marketing. Es una persona socialmente activa que disfruta saliendo a cenar con sus amigos. Con frecuencia se ofrece a pagar la cuenta completa cuando salen en grupo (casi siempre con tarjeta); a menudo sus amigos le devuelven su parte en efectivo, lo que le genera dificultades para controlar exactamente cuánto ha gastado en estos encuentros, ya que el dinero devuelto no aparece reflejado en sus aplicaciones bancarias y le resulta complicado llevar un registro claro. Daniela desea integrar y gestionar de forma automática y precisa los pagos con tarjeta y el efectivo que recibe, para que sus finanzas reflejen con exactitud lo que gasta. Además sería útil para ella poder tener una visión clara de cuánto gasta realmente en restaurantes por medio de mapas, para evitar hacer cálculos manuales cada vez que necesita consultarlo.
     
-    \item \textbf{Manuel}, de 57 años, es profesor de educación física en un colegio. Su trabajo no le ha forzado a indagar en el uso de las nuevas tecnologías más allá de las tareas básicas con los ordenadores de la escuela, por lo que no está familiarizado con las aplicaciones de gestión financiera digital. Aunque ha intentado usarlas, se siente abrumado por la cantidad de opciones y desconfía de introducir las claves de su banco en ellas. Manuel busca tener un lugar donde organizar sus finanzas, con una interfaz fácil de usar y sin demasiadas funciones avanzadas.
+    \item \textbf{Manuel}, de 57 años, es profesor de educación física en un colegio. Su trabajo no le ha forzado a indagar en el uso de las nuevas tecnologías más allá de las tareas básicas con los ordenadores de la escuela, por lo que no está familiarizado con las aplicaciones de gestión financiera digital. Aunque ha intentado usarlas, se siente abrumado por la cantidad de opciones y desconfía de introducir las claves de su banco en ellas. Manuel busca disponer de un lugar donde organizar sus finanzas, con una interfaz fácil de usar y sin demasiadas funciones avanzadas.
     
 \end{itemize}
 
@@ -24,30 +24,28 @@ Algunos personajes que podrían beneficiarse de la aplicación descrita porque e
 Las historias de usuario se enfocan en las necesidades específicas de los personajes y ayudan a definir las funcionalidades clave que se implementarán en la aplicación.
 
 \begin{itemize}
-    \item \textbf{HU1}: Seguimiento conjunto de pagos digitales y en efectivo\\
+    \item \textbf{HU1}: Seguimiento centralizado de pagos digitales y en efectivo\\
     Como usuario que realiza pagos en efectivo y digitales,
     quiero poder añadir mis gastos, ahorros e ingresos en un único lugar
-    para tener un registro completo y preciso de mis finanzas, independientemente del método de pago.
+    para tener un registro completo y preciso de mis finanzas, independientemente del método de pago, pero sin perder la trazabilidad del mismo.
     \item \textbf{HU2}: Creación de Presupuestos Personalizados\\
     Como usuario que quiere controlar su consumo,
-    quiero crear presupuestos personalizados para diferentes categorías de gasto (comida, ocio, ahorro),
-    para seguir un plan claro y controlar mis finanzas de manera eficiente.
+    quiero crear presupuestos personalizados para diferentes categorías de gasto (comida, ocio, ahorro), para seguir un plan claro y controlar mis finanzas de manera eficiente.
     \item \textbf{HU3}: Creación de Objetivos de Ahorro\\
     Como usuario que busca planificar sus finanzas a largo plazo,
     quiero establecer objetivos de ahorro personalizados para diferentes metas (viajes, regalos, mejoras en el hogar),
     para motivarme a ahorrar y tener una visión clara de mis metas financieras.
     \item \textbf{HU4}: Análisis Automático de Consumo\\
-    Como usuario que busca optimizar sus finanzas,
-    quiero obtener análisis automáticos sobre mis gastos, visualizados en gráficos y categorizados,
-    para entender de forma sencilla mi consumo y ajustar mi comportamiento financiero
+    Como usuario que busca agilizar la gestión de sus finanzas,
+    quiero obtener análisis automáticos sobre mis gastos, visualizados en gráficos y categorizados, para entender de forma sencilla mi consumo y ajustar mi comportamiento financiero.
     \item \textbf{HU5}: Visualización de Gastos por Localización\\
-    Como usuario que quiere entender dónde gasto más,
+    Como usuario que quiere entender dónde gasta más,
     quiero ver mis gastos clasificados por su ubicación en un mapa,
     para tener una visión clara de los lugares donde realizo la mayor parte de mis compras y ajustar mis hábitos de consumo.
     \item \textbf{HU6}: Añadir gastos de forma manual o automáticamente\\ 
     Como usuario que quiere llevar un control de sus gastos y que sea cómodo insertarlos en la aplicación, quiero poder añadir gastos de forma manual y automática (escaneando tickets) para poder llevar un seguimiento de mis transacciones sin que ello implique un gran esfuerzo.
     \item \textbf{HU7}: Integrar funcionalidad de gestión financiera en proyecto propio\\
-    Como Desarrollador que desea integrar alguna funcionalidad concreta de gestión financiera en su propia aplicación, quiero conocer las decisiones de diseño y las plataformas utilizadas en el desarrollo del proyecto \textit{SIGMA}, para evitar errores de diseño en mi propia aplicación y asegurar que la integración sea coherente.
+    Como desarrollador que desea integrar alguna funcionalidad concreta de gestión financiera en su propia aplicación, quiero conocer las decisiones de diseño y las plataformas utilizadas en el desarrollo del proyecto \textit{SIGMA}, para evitar errores de diseño en mi propia aplicación y asegurar que la integración sea coherente.
     
 \end{itemize}
 
@@ -61,5 +59,5 @@ Los milestones representan momentos clave en el desarrollo del proyecto, cuando 
     \item \textbf{M3}: Generación de gráficos y resúmenes de transacciones.
     \item \textbf{M4}: Extracción automática de datos a partir de tickets de compra (basado en OCR).
     \item \textbf{M5}: Localización de comercios (basado en GPS) y generación de resúmenes de gastos localizados en mapas.
-    \item \textbf{M6}: Mejoras visuales de la interfaz de usuario y finalización de la memoria del proyecto.
+    \item \textbf{M6}: Mejora visual de la interfaz de usuario y finalización de la memoria del proyecto.
 \end{itemize}
