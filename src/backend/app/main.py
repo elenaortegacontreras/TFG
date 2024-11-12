@@ -13,11 +13,10 @@ from fastapi import UploadFile, File
 from sqlalchemy import text
 from datetime import datetime
 
-# Transaction.__table__.drop(bind=engine, checkfirst=True)
-# Shop.__table__.drop(bind=engine, checkfirst=True)
-# CUIDADO - NO BORRAR TABLA MUNICIPIOS
-# Base.metadata.drop_all(bind=engine, checkfirst=True) # Borrar las tablas en la base de datos
-# user_model.Base.metadata.create_all(bind=engine) # Crear la tabla en la base de datos
+import bcrypt
+
+
+# CUIDADO - NO BORRAR TABLA MUNICIPIOS (con drop_all)
 
 # Transaction.__table__.drop(bind=engine, checkfirst=True)
 # Subcategory.__table__.drop(bind=engine, checkfirst=True)
@@ -50,6 +49,11 @@ def root():
     return {"Funciona :)"}
 
 # USERS
+def hash_password(plain_password):
+    return bcrypt.hashpw(plain_password.encode('utf-8'), bcrypt.gensalt())
+
+def check_password(plain_password, hashed_password):
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password)
 
 @app.get("/users", tags=["Users"], status_code=status.HTTP_200_OK, response_model=List[UserResponse])
 def get_all_users(db: Session = Depends(get_db)):
@@ -58,6 +62,16 @@ def get_all_users(db: Session = Depends(get_db)):
 
 @app.post("/users", tags=["Users"], status_code=status.HTTP_201_CREATED, response_model=UserResponse)
 def create_user(user: UserRequest, db: Session = Depends(get_db)):
+    # Verifica si el email o el teléfono ya existen
+    db_user = db.query(User).filter((User.email == user.email) | (User.phone == user.phone)).first()
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email o teléfono ya registrado")
+
+    # Cifra la contraseña
+    hashed_password = hash_password(user.password)
+    user.password = hashed_password
+
+    # Crea el nuevo usuario
     new_user = User(**user.dict())
     db.add(new_user)
     db.commit()

@@ -1,5 +1,5 @@
 from app.core.models.database import Base
-from sqlalchemy import Column, Integer, String, BigInteger, ForeignKey, DECIMAL, DOUBLE_PRECISION, Date, TIMESTAMP, func, UniqueConstraint, CheckConstraint
+from sqlalchemy import Column, Integer, String, BigInteger, ForeignKey, DECIMAL, DOUBLE_PRECISION, Date, TIMESTAMP, func, UniqueConstraint, CheckConstraint, LargeBinary
 from sqlalchemy.orm import relationship
 
 # User model -----------------------------------------------------------------
@@ -9,7 +9,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     phone = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False, index=True)
-    password = Column(String, nullable=False)
+    password = Column(LargeBinary, nullable=False)
     first_name = Column(String, nullable=False)
     last_name = Column(String)
 
