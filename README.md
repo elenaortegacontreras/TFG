@@ -1,10 +1,10 @@
-# Trabajo de Fin de Grado: *Título*
+# Trabajo de Fin de Grado: SIGMA: Sistema Inteligente de Gestión Monetaria Automatizada
 
 **Este sería el README de tu proyecto. Consulta las [instrucciones de
 instalación](INSTALL.md)
 
-### Autor(a): Nombre
-### Tutor(a)(es): Nombre(s)
+### Autora: Elena Ortega Contreras
+### Tutor: José Manuel Soto Hidalgo
 ___
 
 La documentación de este proyecto está realizada con `LaTeX`, por lo
